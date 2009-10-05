@@ -1,0 +1,2053 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>linq.js Reference</title>
+
+    <script type="text/javascript" src="linq.js"></script>
+
+    <script type="text/javascript">
+        var textStack = []
+        document.write = function()
+        {
+            E.From(arguments).ForEach("textStack.push($)");
+        }
+
+        function evaluate(code)
+        {
+            textStack.length = 0;
+            var value;
+            try
+            {
+                eval(code + '.Take(1001).WriteLine()');
+                value = textStack.join("");
+            } catch (e)
+            {
+                textStack.length = 0;
+                try
+                {
+                    var value = eval("(" + code + ")");
+                    document.write(value);
+                    value = textStack.join("");
+                }
+                catch (e2)
+                {
+                    value = "error";
+                }
+            }
+            return value;
+        }
+
+        function expand()
+        {
+            var code = (this.innerText || this.textContent);
+            var value = evaluate(code);
+            var p = document.createElement("p");
+            p.innerHTML = value;
+            this.appendChild(p);
+            this.onclick = collapse;
+        }
+
+        function collapse()
+        {
+            this.removeChild(this.lastChild);
+            this.onclick = expand;
+        }
+
+        function execute()
+        {
+            var value = evaluate(this.value);
+            document.getElementById("codeResult").innerHTML = value;
+        }
+
+        window.onload = function()
+        {
+            E.From(document.getElementsByTagName("pre"))
+                .ForEach("$.onclick = expand");
+
+            var input = document.getElementById("codeInput");
+            input.onkeyup = execute;
+            execute.apply(input);
+        }
+    </script>
+
+    <style type="text/css">
+        pre
+        {
+            cursor: pointer;
+        }
+        table
+        {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        td
+        {
+            border: solid black;
+            border-width: 1px 0 1px 0;
+        }
+        h2
+        {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>
+        linq.js Reference</h1>
+    <p>
+        <a href="http://neue.cc/">http://neue.cc/</a><br />
+        <a href="http://linqjs.codeplex.com/">http://linqjs.codeplex.com/</a>
+    </p>
+    <h2>
+        LINQ Pad</h2>
+    <table>
+        <tr>
+            <td style="width: 50%; vertical-align: top">
+                <textarea rows="10" id="codeInput" style="width: 100%">E.Range(0, 20)&#13;.Where("$ % 3 == 0")&#13;.Select("value, index => {index:index, value:value * 10}")&#13;.WriteLine("$.index + ':' + $.value")</textarea>
+            </td>
+            <td style="vertical-align: top">
+                <p id="codeResult" style="padding-left: 20px">
+                </p>
+            </td>
+        </tr>
+    </table>
+    <h2 class="clear:both">
+        Generating Methods</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    Choice
+                </td>
+                <td>
+                    Linq.Object
+                </td>
+                <td>
+                    params T obj
+                </td>
+                <td>
+                    <pre>E.Choice("a","b","c","d").Take(10)</pre>
+                    <pre>E.Choice(["a","b","c","d"]).Take(10)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Cycle
+                </td>
+                <td>
+                    Linq.Object
+                </td>
+                <td>
+                    params T obj
+                </td>
+                <td>
+                    <pre>E.Cycle(1,"foo",true).Take(10)</pre>
+                    <pre>E.Cycle([1,"foo",true]).Take(10)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Empty
+                </td>
+                <td>
+                    Linq.Object
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>E.Empty()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="5">
+                    From
+                </td>
+                <td rowspan="5">
+                    Linq.Object
+                </td>
+                <td>
+                    Array obj
+                </td>
+                <td>
+                    <pre>var arr = [1,124,"aaa",function(){},false];
+E.From(arr)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Object obj
+                </td>
+                <td>
+                    <pre>var obj = {a:3,b:"3",z:function(){},d:true};
+E.From(obj).Select("$.Key + ':' + $.Value")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    NodeList obj
+                </td>
+                <td>
+                    <pre>var node = document.getElementsByTagName("h2");
+E.From(node).Select("$.innerHTML")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Number obj
+                </td>
+                <td>
+                    <pre>E.From(5)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    String obj
+                </td>
+                <td>
+                    <pre>E.From("foobar")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>Make</td>
+                <td>Linq.Object</td>
+                <td>T element</td>
+                <td><pre>E.Make("foobar")</pre></td>
+            </tr>
+            <tr>
+                <td rowspan="3">
+                    Matches
+                </td>
+                <td rowspan="3">
+                    Linq.Object
+                </td>
+                <td>
+                    string input, RegExp pattern
+                </td>
+                <td>
+                    <pre>E.Matches("xbcyBCzbc", /(.)bc/i)
+.Select("'index='+$.index+' all='+$[0]+' capture='+$[1]")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    string input, string pattern
+                </td>
+                <td>
+                    <pre>E.Matches("xbcyBCzbc", "(.)bc")
+.Select("'index='+$.index+' all='+$[0]+' capture='+$[1]")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    string input, string pattern, string flags
+                </td>
+                <td>
+                    <pre>E.Matches("xbcyBCzbc", "(.)bc", "i")
+.Select("'index='+$.index+' all='+$[0]+' capture='+$[1]")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    Range
+                </td>
+                <td rowspan="2">
+                    Linq.Object
+                </td>
+                <td>
+                    int start, int count
+                </td>
+                <td>
+                    <pre>E.Range(10,5)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    int start, int count, int step
+                </td>
+                <td>
+                    <pre>E.Range(10,5,3)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    RangeDown
+                </td>
+                <td rowspan="2">
+                    Linq.Object
+                </td>
+                <td>
+                    int start, int count
+                </td>
+                <td>
+                    <pre>E.RangeDown(10,5)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    int start, int count, int step
+                </td>
+                <td>
+                    <pre>E.RangeDown(10,5,3)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    RangeTo
+                </td>
+                <td rowspan="2">
+                    Linq.Object
+                </td>
+                <td>
+                    int start, int to
+                </td>
+                <td>
+                    <pre>E.RangeTo(10,18)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    int start, int to, int step
+                </td>
+                <td>
+                    <pre>E.RangeTo(1,9,3)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    RangeDownTo
+                </td>
+                <td rowspan="2">
+                    Linq.Object
+                </td>
+                <td>
+                    int start, int to
+                </td>
+                <td>
+                    <pre>E.RangeDownTo(3,-3)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    int start, int to, int step
+                </td>
+                <td>
+                    <pre>E.RangeDownTo(3,-3,3)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    Repeat
+                </td>
+                <td rowspan="2">
+                    Linq.Object
+                </td>
+                <td>
+                    T obj
+                </td>
+                <td>
+                    <pre>E.Repeat(3).Take(5)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    T obj, int count
+                </td>
+                <td>
+                    <pre>E.Repeat("foo",10)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    Times
+                </td>
+                <td rowspan="2">
+                    Linq.Object
+                </td>
+                <td>
+                    T func()
+                </td>
+                <td>
+                    <pre>E.Times("Math.random()").Take(5)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    T func(), int count
+                </td>
+                <td>
+                    <pre>E.Times("Math.random()", 5)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="3">
+                    ToInfinity
+                </td>
+                <td rowspan="3">
+                    Linq.Object
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>E.ToInfinity().Take(5)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    int start
+                </td>
+                <td>
+                    <pre>E.ToInfinity(1000).Take(5)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    int start, int step
+                </td>
+                <td>
+                    <pre>E.ToInfinity(1000,5).Take(5)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="3">
+                    ToNegativeInfinity
+                </td>
+                <td rowspan="3">
+                    Linq.Object
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>E.ToNegativeInfinity().Take(5)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    int start
+                </td>
+                <td>
+                    <pre>E.ToNegativeInfinity(1000).Take(5)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    int start, int step
+                </td>
+                <td>
+                    <pre>E.ToNegativeInfinity(1000,5).Take(5)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Unfold
+                </td>
+                <td>
+                    Linq.Object
+                </td>
+                <td>
+                    T seed, T func(T)
+                </td>
+                <td>
+                    <pre>E.Unfold(5, "$+3").Take(10)</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>
+        Projection and Filtering Methods</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan="3">CascadeBreadthFirst</td>
+                <td rowspan="3">Linq.Object</td>
+                <td>T[] func(T)</td>
+                <td>
+                    <pre>E.Make(1).CascadeBreadthFirst("$+$").Take(5)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>T[] func(T), T resultSelector(T)</td>
+                <td>
+                    <pre>E.Make(1).CascadeBreadthFirst("$+$","$*$").Take(5)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>T[] func(T), T resultSelector(T, int)</td>
+                <td>
+                    <pre>E.Make(document.body)
+.CascadeBreadthFirst("$.childNodes", "v,n=>{value:v,nestLevel:n}")
+.Where("$.nestLevel<3 && $.value.nodeType == 1")
+.Select("$.nestLevel + ':' + $.value.tagName")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="3">CascadeDepthFirst</td>
+                <td rowspan="3">Linq.Object</td>
+                <td>T[] func(T)</td>
+                <td>
+                    <pre>E.Make(1).CascadeDepthFirst("$+$").Take(5)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>T[] func(T), T resultSelector(T)</td>
+                <td>
+                    <pre>E.Make(1).CascadeDepthFirst("$+$","$*$").Take(5)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>T[] func(T), T resultSelector(T, int)</td>
+                <td>
+                    <pre>E.Make(document.body)
+.CascadeDepthFirst("$.childNodes", "v,n=>{value:v,nestLevel:n}")
+.Where("$.nestLevel<3 && $.value.nodeType == 1")
+.Select("$.nestLevel + ':' + $.value.tagName")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Flatten
+                </td>
+                <td>
+                    Linq.Object
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>var array = [1,[234,2,[62,3]],[234,5],3];
+E.From(array).Flatten()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Pairwise
+                </td>
+                <td>
+                    Linq.Object
+                </td>
+                <td>
+                    T selector(T, T)
+                </td>
+                <td>
+                    <pre>E.Range(1,10)
+.Pairwise("prev,next=>prev + ':' + next")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="3">
+                    Scan
+                </td>
+                <td rowspan="3">
+                    Linq.Object
+                </td>
+                <td>
+                    T func(T, T)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Scan("a,b=>a+b")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    T seed, T func(T, T)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Scan(100,"a,b=>a+b")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    T seed, T func(T, T), T resultSelector(T)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Scan(100,"a,b=>a+b","$*10")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    Select
+                </td>
+                <td rowspan="2">
+                    Linq.Object
+                </td>
+                <td>
+                    T selector(T)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Select("$*10")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    T selector(T, int)
+                </td>
+                <td>
+                    <pre>E.RangeDown(10,10).Select("value,index=>index + ':' + value")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="4">
+                    SelectMany
+                </td>
+                <td rowspan="4">
+                    Linq.Object
+                </td>
+                <td>
+                    T[] collectionSelector(T)
+                </td>
+                <td>
+                    <pre>E.Range(1,3).SelectMany("E.Repeat($,3)")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    T[] collectionSelector(T, int)
+                </td>
+                <td>
+                    <pre>E.Range(5,5)
+.SelectMany("value,index=>E.Repeat('str'+value,index+1)")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    T[] collectionSelector(T), resultSelector(T, T)
+                </td>
+                <td>
+                    <pre>E.Range(1,3)
+.SelectMany("E.Repeat($,3)","first,middle=>first + ':' + middle*10")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    T[] collectionSelector(T, int), resultSelector(T, T)
+                </td>
+                <td>
+                    <pre>E.Range(5,5)
+.SelectMany("v,i=>E.Repeat('str'+v,i+1)","f,m=>f + ':' + m")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Slice
+                </td>
+                <td>
+                    Linq.Object
+                </td>
+                <td>
+                    int size
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Slice(4)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    Where
+                </td>
+                <td rowspan="2">
+                    Linq.Object
+                </td>
+                <td>
+                    bool predicate(T)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Where("$%2==0")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    bool predicate(T, int)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Where("value,index=>value*index>10")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    ZipWith
+                </td>
+                <td rowspan="2">
+                    Linq.Object
+                </td>
+                <td>
+                    T[] second,T selector(T, T)
+                </td>
+                <td>
+                    <pre>E.RangeDown(10,10)
+.ZipWith(E.Range(1,10),"outer,inner=>outer + ':' + inner")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    T[] second,T selector(T, T, int)
+                </td>
+                <td>
+                    <pre>E.RangeDown(10,10)
+.ZipWith(E.Range(1,10),"outer,inner,index=>index + ':' + outer*inner")</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>
+        Join Methods</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    Join
+                </td>
+                <td>
+                    Linq.Object
+                </td>
+                <td>
+                    T[] inner, T outerKeySelector(T), T innerKeySelector(T), T resultSelector(T, T)
+                </td>
+                <td>
+                    <pre>var array1 = [13,413,5,135,61,631,13,61,3];
+var array2 = [13,134,53,6,3,7,13,7,7,135,61,3,13];
+E.From(array1)
+.Join(E.From(array2),"","","outer,inner=>outer + ':' + inner")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    GroupJoin
+                </td>
+                <td>
+                    Linq.Object
+                </td>
+                <td>
+                    T[] inner, T outerKeySelector(T), T innerKeySelector(T), T resultSelector(T, T[])
+                </td>
+                <td>
+                    <pre>var array1 = [13,413,5,135,61,631,13,61,3];
+var array2 = [13,134,53,6,3,7,13,7,7,135,61,3,13];
+E.From(array1)
+.GroupJoin(array2,"","","outer,lookup=>outer + ':' + lookup.ToString('-')")</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>
+        Set Methods</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    All
+                </td>
+                <td>
+                    Boolean
+                </td>
+                <td>
+                    bool predicate(T)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).All("$<5")</pre>
+                    <pre>E.Range(1,10).All("$<15")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    Any
+                </td>
+                <td rowspan="2">
+                    Boolean
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>E.Range(1,0).Any()</pre>
+                    <pre>E.Range(1,10).Any()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    bool predicate(T)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Any("$==5")</pre>
+                    <pre>E.Range(1,10).Any("$==15")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Concat
+                </td>
+                <td>
+                    Linq.Object
+                </td>
+                <td>
+                    T[] second
+                </td>
+                <td>
+                    <pre>E.Range(1,5).Concat(E.Repeat("foo",5))</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Insert
+                </td>
+                <td>
+                    Linq.Object
+                </td>
+                <td>
+                    int index, T[] second
+                </td>
+                <td>
+                    <pre>E.Range(1,5).Insert(3,E.Repeat("foo",5))</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    Contains
+                </td>
+                <td rowspan="2">
+                    Boolean
+                </td>
+                <td>
+                    T value
+                </td>
+                <td>
+                    <pre>E.Range(1,5).Contains(3)</pre>
+                    <pre>E.Range(1,5).Contains(10)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    T value, T compareSelector(T)
+                </td>
+                <td>
+                    <pre>E.Range(1,5).Select("{test:$}").Contains(3)</pre>
+                    <pre>E.Range(1,5).Select("{test:$}").Contains(3,"$.test")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    DefaultIfEmpty
+                </td>
+                <td>
+                    Linq.Object
+                </td>
+                <td>
+                    T defaultValue
+                </td>
+                <td>
+                    <pre>E.Range(1,5).DefaultIfEmpty("default")</pre>
+                    <pre>E.Range(1,0).DefaultIfEmpty("default")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    Distinct
+                </td>
+                <td rowspan="2">
+                    Linq.Object
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>var array = [1,412,5,3,5,412,7];
+E.From(array).Distinct()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    T compareSelector(T)
+                </td>
+                <td>
+                    <pre>var seq = E.Range(1,10).Select("{test:$%3}");
+seq.Distinct("$.test").Select("$.test")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    Except
+                </td>
+                <td rowspan="2">
+                    Linq.Object
+                </td>
+                <td>
+                    T[] second
+                </td>
+                <td>
+                    <pre>var array1 = [1,412,5,3,5,412,7];
+var array2 = [20,12,5,5,7,310];
+E.From(array1).Except(array2)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    T[] second, T compareSelector(T)
+                </td>
+                <td>
+                    <pre>var seq1 = E.Range(1,10).Select("{test:$%5}");
+var seq2 = E.Range(1,10).Select("{test:$%2}");
+seq1.Except(seq2,"$.test").Select("$.test")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    Intersect
+                </td>
+                <td rowspan="2">
+                    Linq.Object
+                </td>
+                <td>
+                    T[] second
+                </td>
+                <td>
+                    <pre>var array1 = [1,412,5,3,5,412,7];
+var array2 = [20,12,5,5,7,310];
+E.From(array1).Intersect(array2)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    T[] second, T compareSelector(T)
+                </td>
+                <td>
+                    <pre>var seq1 = E.Range(1,10).Select("{test:$%5}");
+var seq2 = E.Range(1,10).Select("{test:$%2}");
+seq1.Intersect(seq2,"$.test").Select("$.test")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    SequenceEqual
+                </td>
+                <td rowspan="2">
+                    Boolean
+                </td>
+                <td>
+                    T[] second
+                </td>
+                <td>
+                    <pre>E.Range(1,5).SequenceEqual(E.Range(1,5))</pre>
+                    <pre>E.Range(1,5).SequenceEqual(E.Range(1,6))</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    T[] second, T compareSelector(T)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Select("{test:$%5}")
+.SequenceEqual(E.Range(1,10).Select("{test:$%5}"),"$.test")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    Union
+                </td>
+                <td rowspan="2">
+                    Linq.Object
+                </td>
+                <td>
+                    T[] second
+                </td>
+                <td>
+                    <pre>var array1 = [1,412,5,3,5,412,7];
+var array2 = [20,12,5,5,7,310];
+E.From(array1).Union(array2)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    T[] second, T compareSelector(T)
+                </td>
+                <td>
+                    <pre>var seq1 = E.Range(1,5).Select("{test:$}");
+var seq2 = E.Range(3,7).Select("{test:$}");
+seq1.Union(seq2,"$.test").Select("$.test")</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>
+        Ordering Methods</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    OrderBy
+                </td>
+                <td>
+                    Linq.Object
+                </td>
+                <td>
+                    T keySelector(T)
+                </td>
+                <td>
+                    <pre>
+var array = [1,51,61,75,8,35,43];
+E.From(array).OrderBy("")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    OrderByDescending
+                </td>
+                <td>
+                    Linq.Object
+                </td>
+                <td>
+                    T keySelector(T)
+                </td>
+                <td>
+                    <pre>
+var array = [1,51,61,75,8,35,43];
+E.From(array).OrderByDescending("")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    ThenBy
+                </td>
+                <td>
+                    Linq.Object
+                </td>
+                <td>
+                    T keySelector(T)
+                </td>
+                <td>
+                    <pre>
+var list = [
+           { a: 2, b: 4, c: 1 },
+           { a: 2, b: 3, c: 7 },
+           { a: 2, b: 3, c: 3 },
+           { a: 4, b: 7, c: 5 },
+           { a: 7, b: 3, c: 2 },
+           { a: 4, b: 1, c: 5 }];
+E.From(list).OrderBy("$.a").ThenBy("$.c").ThenBy("$.b")
+.Select("$.a + ':' + $.b + ':' + $.c")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    ThenByDescending
+                </td>
+                <td>
+                    Linq.Object
+                </td>
+                <td>
+                    T keySelector(T)
+                </td>
+                <td>
+                    <pre>
+var list = [
+           { a: 2, b: 4, c: 1 },
+           { a: 2, b: 3, c: 7 },
+           { a: 2, b: 3, c: 3 },
+           { a: 4, b: 7, c: 5 },
+           { a: 7, b: 3, c: 2 },
+           { a: 4, b: 1, c: 5 }];
+E.From(list).OrderBy("$.a").ThenByDescending("$.c").ThenByDescending("$.b")
+.Select("$.a + ':' + $.b + ':' + $.c")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Reverse
+                </td>
+                <td>
+                    Linq.Object
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Reverse()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Shuffle
+                </td>
+                <td>
+                    Linq.Object
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Shuffle()</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>
+        Grouping Methods</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan="3">
+                    GroupBy
+                </td>
+                <td rowspan="3">
+                    Linq.Object
+                </td>
+                <td>
+                    T keySelector(T)
+                </td>
+                <td>
+                    <pre>E.Range(1,5).GroupBy("$%2==0")
+.Select("$.Key + ':' + $.Value.ToString('-')")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    T keySelector(T), T elementSelector(T)
+                </td>
+                <td>
+                    <pre>E.Range(1,5).GroupBy("$%2==0","$*10")
+.Select("$.Key + ':' + $.Value.ToString('-')")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    T keySelector(T), T elementSelector(T), T resultSelector(T, T)
+                </td>
+                <td>
+                    <pre>E.Range(1,5)
+.GroupBy("$%2==0","","key,value=>key+':'+value.ToString('-')")</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>
+        Aggregate Methods</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan="3">
+                    Aggregate
+                </td>
+                <td rowspan="3">
+                    T
+                </td>
+                <td>
+                    T func(T, T)
+                </td>
+                <td>
+                    <pre>E.Range(1,5).Aggregate("a,b=>a*b")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    T seed, T func(T, T)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Aggregate(100,"a,b=>a+b")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    T seed, T func(T, T), T resultSelector(T)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Aggregate(100,"a,b=>a+b","$*10")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    Average
+                </td>
+                <td rowspan="2">
+                    Number
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Average()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Number selector(T)
+                </td>
+                <td>
+                    <pre>E.From([{a:"foo",b:5},{a:"bar",b:20},{a:"foobar",b:10}])
+.Average("$.b")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    Count
+                </td>
+                <td rowspan="2">
+                    Number
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Count()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    bool predicate(T)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Count("$>7")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    Max
+                </td>
+                <td rowspan="2">
+                    Number
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Max()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Number selector(T)
+                </td>
+                <td>
+                    <pre>E.From([{a:"foo",b:5},{a:"bar",b:20},{a:"foobar",b:10}])
+.Max("$.b")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    Min
+                </td>
+                <td rowspan="2">
+                    Number
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Min()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Number selector(T)
+                </td>
+                <td>
+                    <pre>E.From([{a:"foo",b:5},{a:"bar",b:20},{a:"foobar",b:10}])
+.Min("$.b")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    Sum
+                </td>
+                <td rowspan="2">
+                    Number
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Sum()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Number selector(T)
+                </td>
+                <td>
+                    <pre>E.From([{a:"foo",b:5},{a:"bar",b:20},{a:"foobar",b:10}])
+.Sum("$.b")</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>
+        Paging Methods</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    ElementAt
+                </td>
+                <td>
+                    T
+                </td>
+                <td>
+                    int index
+                </td>
+                <td>
+                    <pre>E.Range(1,10).ElementAt(3)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    ElementAtOrDefault
+                </td>
+                <td>
+                    T
+                </td>
+                <td>
+                    int index, T defaultValue
+                </td>
+                <td>
+                    <pre>E.Range(1,10).ElementAtOrDefault(15,-1)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    First
+                </td>
+                <td rowspan="2">
+                    T
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>E.Range(1,10).First()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    bool predicate(T)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).First("$>4")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    FirstOrDefault
+                </td>
+                <td rowspan="2">
+                    T
+                </td>
+                <td>
+                    T defaultValue
+                </td>
+                <td>
+                    <pre>E.Empty().FirstOrDefault(-1)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    T defaultValue, bool predicate(T)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).FirstOrDefault(-1,"$>15")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    Last
+                </td>
+                <td rowspan="2">
+                    T
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Last()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    bool predicate(T)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Last("$<4")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    LastOrDefault
+                </td>
+                <td rowspan="2">
+                    T
+                </td>
+                <td>
+                    T defaultValue
+                </td>
+                <td>
+                    <pre>E.Empty().LastOrDefault(-1)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    T defaultValue, bool predicate(T)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).LastOrDefault(-1,"$>15")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    Single
+                </td>
+                <td rowspan="2">
+                    T
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>E.From("a").Single()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    bool predicate(T)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Single("$==4")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    SingleOrDefault
+                </td>
+                <td rowspan="2">
+                    T
+                </td>
+                <td>
+                    T defaultValue
+                </td>
+                <td>
+                    <pre>E.Empty().SingleOrDefault(-1)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    T defaultValue, bool predicate(T)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).SingleOrDefault(-1,"$==15")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Skip
+                </td>
+                <td>
+                    Linq.Object
+                </td>
+                <td>
+                    int count
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Skip(5)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    SkipWhile
+                </td>
+                <td rowspan="2">
+                    Linq.Object
+                </td>
+                <td>
+                    bool predicate(T)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).SkipWhile("$<=5")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    bool predicate(T, int index)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).SkipWhile("value,index=>value+index<=5")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Take
+                </td>
+                <td>
+                    Linq.Object
+                </td>
+                <td>
+                    int count
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Take(5)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    TakeWhile
+                </td>
+                <td rowspan="2">
+                    Linq.Object
+                </td>
+                <td>
+                    bool predicate(T)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).TakeWhile("$<=5")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    bool predicate(T, int index)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).TakeWhile("value,index=>value+index<=5")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    IndexOf
+                </td>
+                <td>
+                    int
+                </td>
+                <td>
+                    T item
+                </td>
+                <td>
+                    <pre>E.Range(1,10).IndexOf(3)</pre>
+                    <pre>E.Range(1,10).IndexOf(15)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    LastIndexOf
+                </td>
+                <td>
+                    int
+                </td>
+                <td>
+                    T item
+                </td>
+                <td>
+                    <pre>E.From([1,2,3,2,5]).LastIndexOf(2)</pre>
+                    <pre>E.From([1,2,3,2,5]).LastIndexOf(20)</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>
+        Convert Methods</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    ToArray
+                </td>
+                <td>
+                    Array
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>E.Range(1,10).ToArray()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    ToJSON
+                </td>
+                <td>
+                    String
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>E.From([null, [true, 3], { key:"value", fn:function(){} }]).ToJSON()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    ToLookup
+                </td>
+                <td rowspan="2">
+                    Object
+                </td>
+                <td>
+                    T keySelector(T)
+                </td>
+                <td>
+                    <pre>var result = E.From(["temp.xls", "temp.pdf", "temp.jpg", "temp2.pdf"])
+.ToLookup("$.match(/\\.(.+$)/)[1]");
+E.From(result).Select("$.Key + ' : ' + $.Value")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    T keySelector(T), T elementSelector(T)
+                </td>
+                <td>
+                    <pre>var result = E.From(["temp.xls", "temp.pdf", "temp.jpg", "temp2.pdf"])
+.ToLookup("$.match(/\\.(.+$)/)[1]","$.match(/(.+)\\.[^.]+$/)[1]");
+E.From(result).Select("$.Key + ' : ' + $.Value")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    ToObject
+                </td>
+                <td>
+                    Object
+                </td>
+                <td>
+                    T keySelector(T), T elementSelector(T)
+                </td>
+                <td>
+                    <pre>var obj = E.Range(1,10).Select("value,index=>{id:'id_' + index,value:value}")
+.ToObject("$.id","$.value");
+E.From(obj).Select("$.Key + ':' + $.Value")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="3">
+                    ToString
+                </td>
+                <td rowspan="3">
+                    String
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>E.Range(0,10).ToString()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    String separator
+                </td>
+                <td>
+                    <pre>E.Range(0,10).ToString("-")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    String separator, T selector(T)
+                </td>
+                <td>
+                    <pre>E.From([{k:"foo"},{k:"bar"}]).ToString("-","$.k")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    ToTable
+                </td>
+                <td>
+                    String
+                </td>
+                <td>
+                    params T selector(T)
+                </td>
+                <td>
+                    <pre>E.From([{a:"foo",b:"bar"},{a:"head",b:"body"},{a:"apple",b:"orange"}])
+.ToTable("$.a","$.b")</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>
+        Action Methods</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan="2">
+                    Do
+                </td>
+                <td rowspan="2">
+                    Linq.Object
+                </td>
+                <td>
+                    void action(T)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Do(function(i){
+    document.write('do:'+ i +'|');})
+ .Where("$%2==0")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    void action(T, index)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Do(function(value,index){
+    document.write("do:" + index + '-' + value + "&lt;br/>");})
+.OrderBy("").Take(2)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="4">
+                    ForEach
+                </td>
+                <td rowspan="4">
+                    void
+                </td>
+                <td>
+                    void action(T)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).ForEach(function(i){
+    document.write(i);})</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    void action(T, index)
+                </td>
+                <td>
+                    <pre>E.Range(1,10).ForEach(function(value,index){
+    document.write(index + ':' + value + "&lt;br/>");})</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>bool func(T) </td>
+                <td>
+                    <pre>E.Range(1, 10).ForEach(function(i)
+{
+    if (i % 2 == 0) return true;
+    if (i > 6) return false;
+    document.write(i + "&lt;br/>");
+})</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>bool func(T, index) </td>
+                <td>
+                    <pre>E.Repeat("aaa", 10).ForEach(function(s,index)
+{
+    if (index % 2 == 0) return true;
+    if (index > 6) return false;
+    document.write(index + s + "&lt;br/>");
+})</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="3">
+                    Write
+                </td>
+                <td rowspan="3">
+                    void
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Write()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    String separator
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Write("-")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    String separator, T selector(T)
+                </td>
+                <td>
+                    <pre>E.From([{a:"foo",b:1},{a:"bar",b:3}])
+.Write("-","$.a + ':' + $.b")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    WriteLine
+                </td>
+                <td rowspan="2">
+                    void
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>E.Range(1,10).WriteLine()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    T selector(T)
+                </td>
+                <td>
+                    <pre>E.From([{a:"foo",b:1},{a:"bar",b:3}])
+.WriteLine("$.a + ':' + $.b")</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>
+        For Debug Methods</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    Force
+                </td>
+                <td>
+                    void
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Trace().Force()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="3">
+                    Trace
+                </td>
+                <td rowspan="3">
+                    Linq.Object
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Trace().Force()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    String message
+                </td>
+                <td>
+                    <pre>E.Range(1,10).Trace("Gen").Where("$%3==0").Trace("Filtered").Force()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    String message, T selector(T)
+                </td>
+                <td>
+                    <pre>E.From([{a:"foo",b:1},{a:"bar",b:3}])
+.Trace("Gen","$.a").Force()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="3">
+                    TraceF
+                </td>
+                <td rowspan="3">
+                    Linq.Object<br />
+                    (to Firebug Console)
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>E.From([{a:"foo",b:1},{a:"bar",b:3}]).TraceF().Force()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    String message
+                </td>
+                <td>
+                    <pre>E.Range(1,10).TraceF("Gen").Where("$%3==0").TraceF("Filtered").Force()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    String message, T selector(T)
+                </td>
+                <td>
+                    <pre>E.From([{a:"foo",b:1},{a:"bar",b:3}])
+.TraceF("Gen","$.a").Force()</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

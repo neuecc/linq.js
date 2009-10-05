@@ -1,0 +1,261 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>linq.js sample</title>
+    <script type="text/javascript" src="linq.js"></script>
+    <script type="text/javascript">
+        var textStack = []
+        document.write = function()
+        {
+            for (var i = 0; i < arguments.length; i++)
+            {
+                textStack.push(arguments[i]);
+            }
+        }
+
+        window.onload = function()
+        {
+            E.From(document.getElementsByTagName("pre"))
+                .ForEach(function(ele)
+                {
+                    eval(ele.innerText || ele.textContent);
+                    var p = document.createElement("p");
+                    p.innerHTML = textStack.join("");
+                    ele.appendChild(p);
+                    textStack.length = 0;
+                });
+        }
+    </script>
+</head>
+<body>
+
+<h2>Tutorial of Lambda Expression</h2>
+    <pre>
+    // Anonymous function
+    E.Range(1, 3).Select(function(value, index) { return index + ':' + value }).WriteLine();
+    // String like Lambda Expression (arguments => expression)
+    E.Range(1, 3).Select("value,index=>index+':'+value").WriteLine();
+    
+    // If the number of arguments is one , you can omit argument and use id '$'
+    E.Range(1, 3).Select("i=>i*2").WriteLine();
+    E.Range(1, 3).Select("$*2").WriteLine();
+    
+    // You can omit "x=>x" by using ""
+    E.Range(4, 7).Join(E.Range(8, 5), "x=>x", "x=>x", "outer,inner=>outer*inner").WriteLine();;
+    E.Range(4, 7).Join(E.Range(8, 5), "", "", "outer,inner=>outer*inner").WriteLine();
+    </pre>
+
+<h2>Range and Where and Select</h2>
+    <pre>
+    E.Range(1, 10)
+        .Where("$%3==0")
+        .Select("$*10")
+        .WriteLine();
+    </pre>
+
+<h2>From(Array) and Trace(for Debugging)</h2>
+    <pre>
+    // use 'TraceF' output Firebug's console
+    var array = [213, 2, 2112, 34, 532, 65];
+    E.From(array).Trace("AfterFrom")
+        .Where("$>100").Trace("AfterWhere")
+        .WriteLine();
+    </pre>
+    
+<h2>FizzBuzz (can use ForEach with index)</h2>
+    <pre>
+    E.Range(1, 30)
+        .Select(function(i)
+        {
+            return (i % 15 == 0) ? "FizzBuzz" :
+                   (i % 3 == 0) ? "Fizz" :
+                   (i % 5 == 0) ? "Buzz" :
+                   i;
+        })
+        .ForEach(function(value, index)
+        {
+            document.write(index + 1 + ":" + value + "&lt;br />");
+        });
+    </pre>
+
+<h2>ForEach example2</h2>
+    <pre>
+    E.Range(1, 10).ForEach(function(i)
+    {
+        if (i % 2 == 0) return true;
+        if (i > 6) return false;
+        document.write(i);
+    });
+    </pre>
+    
+<h2>From(Object) is convert to KeyValuePair / Grouping Example</h2>
+    <pre>
+    var fileList = ["temp.xls", "temp2.xls", "temp.pdf", "temp.jpg", "temp2.pdf"];
+    var result = E.From(fileList).ToLookup("$.match(/\\.(.+$)/)[1]", "");
+    E.From(result).ForEach(function(kvp)
+    {
+        document.write(kvp.Key + "::&lt;br />");
+        E.From(kvp.Value).WriteLine();
+    });
+    </pre>
+
+<h2>From(Object) Example 2 / SelectMany / Pairwise</h2>
+    <pre>
+    var data = [{ 2000: 90 }, { 2001: 85 }, { 2002: 102 }, { 2003: 78 }, { 2004: 74 }, { 2005: 89 }, { 2006: 100 }, { 2007: 94}];
+    var hoge = E.From(data)
+        .SelectMany("E.From($)")
+        .Pairwise("prev,next=>{prev:prev,next:next}")
+        .Where("$.next.Value < $.prev.Value")
+        .WriteLine("$.next.Key + ':' + $.next.Value");
+    </pre>
+
+<h2>LazyEvaluation and InfinityList</h2>
+    <pre>
+    var randomSeq = E.ToInfinity().Select("Math.random()");
+    randomSeq.Take(10).WriteLine();
+    </pre>
+
+<h2>Using InfinityList</h2>
+    <pre>
+    var result = E.ToInfinity(1).Where("$*$*Math.PI>10000").First();
+    document.write(result);
+    </pre>
+    <pre>
+    var result = E.ToInfinity(1).Select("$*$*Math.PI").Where("$>10000").First();
+    document.write(result);
+    </pre>
+
+<h2>Regular Expression Matches</h2>
+    <pre>
+    var input = "abcdefgABzDefabgdg";
+    E.Matches(input, "ab(.)d", "i").ForEach(function(match)
+    {
+        for (var prop in match)
+        {
+            document.write(prop + " : " + match[prop] + "&lt;br />");
+        }
+        document.write("toString() : " + match.toString() + "&lt;br />");
+        document.write("&lt;br />");
+    });
+    </pre>
+
+<h2>Shuffle and nonparameter/nested Lambda Expression</h2>
+    <pre>
+    E.Repeat(null, 10000)
+        .Select("E.Range(0,10).Shuffle().First()")
+        .GroupBy("", "", "key,gp=>{key:key,count:gp.Count()}")
+        .OrderBy("$.key")
+        .WriteLine("$.key + ':' + $.count");
+    </pre>
+
+<h2>OrderBy / ThenBy</h2>
+    <pre>
+    var list = [
+        { a: 2, b: 4, c: 1 },
+        { a: 6, b: 6, c: 3 },
+        { a: 2, b: 3, c: 7 },
+        { a: 4, b: 4, c: 5 },
+        { a: 7, b: 3, c: 2 },
+        { a: 4, b: 4, c: 3 }
+    ];
+    E.From(list).OrderBy("$.a").ThenByDescending("$.b").ThenBy("$.c")
+        .WriteLine("$.a + ':' + $.b + ':' + $.c");
+    </pre>
+
+<h2>Choice - Make Dice</h2>
+    <pre>
+    var array = E.Range(1,6).ToArray();
+    var Dice = function(){return E.Choice(array).First()};
+    var result = Dice(); // 1 or 2 or 3 or...6
+    document.write(result);
+    </pre>
+
+<h2>Choice - Make Dice 2</h2>
+    <pre>
+    var result = E.Choice(E.Range(1, 6).ToArray()).Take(3).Sum();
+    document.write(result);
+    </pre>
+
+<h2>Make Alphabet</h2>
+    <pre>
+    var result = E.RangeTo('a'.charCodeAt(0), 'z'.charCodeAt(0))
+      .Select("String.fromCharCode($)").ToString();
+    document.write(result);
+    </pre>
+
+<h2>Left outer self join / Select with index</h2>
+    <pre>
+    var array = [1, 2, 4, 4, 3, 3, 4, 0, 0];
+    var arrayWithIndex = E.From(array).Select("value, index =>  { value:value, index:index }");
+    arrayWithIndex.GroupJoin(arrayWithIndex, "$.index", "$.index-1", "orig,gp=>{orig:orig,gp:gp}")
+        .SelectMany("$.gp.DefaultIfEmpty()", "t,alias=>{orig:t.orig,alias:alias}")
+        .Where("$.alias == null || $.orig.value != $.alias.value")
+        .Select("$.orig.value")
+        .Write("-");
+    </pre>
+
+<h2>Enumerable ToJSON</h2>
+    <pre>
+    var array = [null, "az", [true, 52, [62, { z: { z: "na"}}], false], { a: 43, b: null }, 10];
+    var json = E.From(array).ToJSON();
+    document.write(json);
+    </pre>
+
+<h2>Do and Force</h2>
+    <pre>
+    var fire1 = function(){E.Repeat("ForEach:fire",3).ForEach("document.write($ + '&lt;br/>')")};
+    fire1();
+    fire1();
+    var fire2 = E.Repeat("Do:fire",3).Do("document.write($ + '&lt;br/>')");
+    fire2.Force();
+    fire2.Take(2).Force();
+    </pre>
+
+<h2>Scope of lambda expression</h2>
+    <pre>
+    var number = 3;
+    // Can't Find number | lambda expression can use only global variable
+    // E.Range(1,10).Where("$ == number").WriteLine();
+    E.Range(1,10).Where(function(i){return i == number}).WriteLine();
+    </pre>
+
+<h2>Object Compare - use ToJSON</h2>
+    <pre>
+    var seq = E.Range(1, 5).Select("{key:$<3,evenodd:$%2==0}");
+    seq.Distinct().Write("|","'key=' + $.key + ' ' + 'evenodd=' + $.evenodd");
+    document.write("&lt;br/>");
+    seq.Distinct("$.key").Write("|","'key=' + $.key + ' ' + 'evenodd=' + $.evenodd");
+    document.write("&lt;br/>");
+    seq.Distinct("$.evenodd").Write("|","'key=' + $.key + ' ' + 'evenodd=' + $.evenodd");
+    document.write("&lt;br/>");
+    seq.Distinct("E.Repeat($,1).ToJSON()").Write("|","'key=' + $.key + ' ' + 'evenodd=' + $.evenodd");
+    </pre>
+
+<h2>Unfold - Fibonacci</h2>
+    <pre>
+    var fib = E.Unfold({ a: 1, b: 1 }, "{a:$.b, b:$.a + $.b}").Select("$.a");
+    fib.Take(10).WriteLine();
+    </pre>
+
+<h2>Nondeterministic Programs</h2>
+    <pre>
+    var apart = E.Range(1, 5);
+    var answers = apart
+        .SelectMany(function(baker){ return apart
+        .SelectMany(function(cooper){ return apart
+        .SelectMany(function(fletcher){ return apart
+        .SelectMany(function(miller){ return apart
+        .Select(function(smith){ return {
+            baker: baker, cooper: cooper, fletcher: fletcher, miller: miller, smith: smith}})})})})})
+        .Where("E.From($).Distinct('$.Value').Count() == 5")
+        .Where("$.baker != 5")
+        .Where("$.cooper != 1")
+        .Where("$.fletcher != 1 && $.fletcher != 5")
+        .Where("$.miller > $.cooper")
+        .Where("Math.abs($.smith - $.fletcher) != 1")
+        .Where("Math.abs($.fletcher - $.cooper) != 1");
+
+    answers.SelectMany("E.From($)").WriteLine("$.Key + ':' + $.Value");
+    </pre>
+</body>
+</html>
