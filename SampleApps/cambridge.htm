@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Cambridge Generator</title>
+    <script src="../linq.js"></script>
+    <script src="../Extension/linq.tools.js"></script>
+
+    <script type="text/javascript">
+        var specialChar = Linq.Tools.HashSet.Create(",", ".", "!", "?", "、", "。", "！", "？");
+        
+        function cambridge(s)
+        {
+            var lastChar = Linq.Tools.StringBuilder.Create();
+            var trimedStr = s;
+            while (specialChar.Contains(trimedStr.charAt(trimedStr.length - 1)))
+            {
+                lastChar.Append(trimedStr.charAt(trimedStr.length - 1));
+                trimedStr = trimedStr.substr(0, trimedStr.length - 1);
+            }
+
+            if ((trimedStr.length > 3) && !(/^(.)\1*$/.test(trimedStr)))
+            {
+                var shuffledStr = trimedStr;
+                while (shuffledStr == trimedStr)
+                {
+                    shuffledStr = Linq.Tools.Template("{0}{1}{2}",
+                        trimedStr.charAt(0),
+                        E.From(trimedStr).Skip(1).Take(trimedStr.length - 2).Shuffle().ToString(),
+                        trimedStr.charAt(trimedStr.length - 1));
+                }
+                return shuffledStr + lastChar.Reverse().ToString();
+            }
+            else
+            {
+                return s;
+            }
+        }
+
+        window.onload = function()
+        {
+            var inputArea = document.getElementById("inputTextArea");
+            
+            inputArea.onkeyup = inputArea.onmouseup = function()
+            {
+                var text = E.From(this.value.split(/[\s　\t\n]/))
+                    .Select("cambridge($)")
+                    .ToString(" ");
+                document.getElementById("resultArea").innerHTML = text;
+            }
+
+            inputArea.onkeyup();
+        }
+    </script>
+</head>
+<body>
+    <h1>
+        Cambridge Generator</h1>
+    <textarea id="inputTextArea" rows="8" style="width: 500px">According to a research at Cambridge University, it does not matter in what order the letters in a word are, the only important thing is that the first and last letter be at the right place. The rest can be a total mess and you can still read it without problem. This is because the human mind does not read every letter by itself, but the word as a whole.</textarea>
+    <p id="resultArea" style="width: 500px">
+    </p>
+</body>
+</html>
