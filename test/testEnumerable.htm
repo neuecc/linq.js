@@ -1,0 +1,250 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>linq.js test:Enumerable</title>
+
+    <script type="text/javascript" src="../jsunit/app/jsUnitCore.js"></script>
+
+    <script type="text/javascript" src="../linq.js"></script>
+
+</head>
+<body>
+    <!-- This file is linq.js test for JsUnit -->
+
+    <script>
+        var result;
+        var correct;
+
+        function testChoice()
+        {
+            result = E.Choice(1, 10, 31, 42).Take(10);
+            var array = [1, 10, 31, 42, 1, 10, 31, 42, 1, 10];
+            correct = result.SequenceEqual(E.From(array));
+            assertEquals(false, correct);
+        }
+
+        function testChoice2()
+        {
+            result = E.Choice(E.Range(1, 5).ToArray()).Take(10);
+            var array = [1, 2, 3, 4, 5, 1, 2, 3, 4, 5];
+            correct = result.SequenceEqual(E.From(array));
+            assertEquals(false, correct);
+        }
+
+        function testCycle()
+        {
+            result = E.Cycle(1, 10, 31, 42).Take(10).ToArray()
+            correct = [1, 10, 31, 42, 1, 10, 31, 42, 1, 10];
+            assertArrayEquals(correct, result);
+        }
+
+        function testCycle2()
+        {
+            result = E.Cycle(E.Range(1, 5).ToArray()).Take(10).ToArray()
+            correct = [1, 2, 3, 4, 5, 1, 2, 3, 4, 5];
+            assertArrayEquals(correct, result);
+        }
+
+        function testEmpty()
+        {
+            result = E.Empty().ToArray();
+            correct = [];
+            assertArrayEquals(correct, result);
+        }
+
+        function testFrom()
+        {
+            result = E.From("temp").ToArray();
+            correct = ["t", "e", "m", "p"];
+            assertArrayEquals(correct, result);
+        }
+
+        function testFrom2()
+        {
+            result = E.From(3).ToArray();
+            correct = [3];
+            assertArrayEquals(correct, result);
+        }
+
+        function testFrom3()
+        {
+            var array = [1, 2, 3, 4, 5];
+            result = E.From(array).ToArray();
+            correct = array;
+            assertArrayEquals(correct, result);
+        }
+
+        function testFrom4()
+        {
+            var obj = { foo: "bar", func: function() { } };
+            result = E.From(obj).ToArray();
+            correct = [{ key: "foo", value: "bar"}];
+            assertEquals(correct.length, result.length);
+        }
+
+        function testMake()
+        {
+            result = E.Make("hoge").ToArray();
+            correct = E.Repeat("hoge", 1).ToArray();
+            assertArrayEquals(correct, result);
+        }
+
+        function testMatches1()
+        {
+            result = E.Matches("xbcyBCzbc", /(.)bc/i).Select("$.index+$[1]").ToArray();
+            correct = ["0x", "3y", "6z"];
+            assertArrayEquals(correct, result);
+        }
+
+        function testMatches2()
+        {
+            result = E.Matches("xbcyBCzbc", "(.)bc").Select("$.index+$[1]").ToArray(); ;
+            correct = ["0x", "6z"];
+            assertArrayEquals(correct, result);
+        }
+
+        function testMatches3()
+        {
+            result = E.Matches("xbcyBCzbc", "(.)bc","i").Select("$.index+$[1]").ToArray(); ;
+            correct = ["0x", "3y", "6z"];
+            assertArrayEquals(correct, result);
+        }
+        
+        function testRange()
+        {
+            result = E.Range(1, 10).ToArray();
+            correct = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            assertArrayEquals(correct, result);
+        }
+
+        function testRange2()
+        {
+            result = E.Range(1, 5, 3).ToArray();
+            correct = [1, 4, 7, 10, 13];
+            assertArrayEquals(correct, result);
+        }
+
+        function testRangeDown()
+        {
+            result = E.RangeDown(1, 10).ToArray();
+            correct = [1, 0, -1, -2, -3, -4, -5, -6, -7, -8];
+            assertArrayEquals(correct, result);
+        }
+
+        function testRangeDown2()
+        {
+            result = E.RangeDown(1, 5, 3).ToArray();
+            correct = [1, -2, -5, -8, -11];
+            assertArrayEquals(correct, result);
+        }
+
+        function testRangeTo()
+        {
+            result = E.RangeTo(5, 10).ToArray();
+            correct = [5, 6, 7, 8, 9, 10];
+            assertArrayEquals(correct, result);
+        }
+
+        function testRangeTo2()
+        {
+            result = E.RangeTo(1, 10, 3).ToArray();
+            correct = [1, 4, 7, 10];
+            assertArrayEquals(correct, result);
+        }
+
+        function testRangeDownTo()
+        {
+            result = E.RangeDownTo(-2, -8).ToArray();
+            correct = [-2, -3, -4, -5, -6, -7, -8];
+            assertArrayEquals(correct, result);
+        }
+
+        function testRangeDownTo2()
+        {
+            result = E.RangeDownTo(-2, -8, 2).ToArray();
+            correct = [-2, -4, -6, -8];
+            assertArrayEquals(correct, result);
+        }
+
+
+        function testRepeat1()
+        {
+            result = E.Repeat("temp").Take(3).ToArray();
+            correct = ["temp", "temp", "temp"];
+            assertArrayEquals(correct, result);
+        }
+
+        function testRepeat2()
+        {
+            result = E.Repeat("temp", 5).ToArray();
+            correct = ["temp", "temp", "temp", "temp", "temp"];
+            assertArrayEquals(correct, result);
+        }
+
+        function testTimes()
+        {
+            result = E.Times(function() { return "temp" }).Take(3).ToArray();
+            correct = ["temp", "temp", "temp"];
+            assertArrayEquals(correct, result);
+        }
+
+        function testTimes2()
+        {
+            result = E.Times(function() { return "temp" }, 5).ToArray();
+            correct = ["temp", "temp", "temp", "temp", "temp"];
+            assertArrayEquals(correct, result);
+        }
+
+        function testToInfinity()
+        {
+            result = E.ToInfinity().Where("i=>i%2==0").Take(10).ToArray();
+            correct = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18];
+            assertArrayEquals(correct, result);
+        }
+
+        function testToInfinity2()
+        {
+            result = E.ToInfinity(101).Take(5).ToArray();
+            correct = [101, 102, 103, 104, 105];
+            assertArrayEquals(correct, result);
+        }
+
+        function testToInfinity3()
+        {
+            result = E.ToInfinity(101, 5).Take(5).ToArray();
+            correct = [101, 106, 111, 116, 121];
+            assertArrayEquals(correct, result);
+        }
+
+        function testToNegativeInfinity()
+        {
+            result = E.ToNegativeInfinity().Where("i=>i%2==0").Take(10).ToArray();
+            correct = [0, -2, -4, -6, -8, -10, -12, -14, -16, -18];
+            assertArrayEquals(correct, result);
+        }
+
+        function testToNegativeInfinity2()
+        {
+            result = E.ToNegativeInfinity(3).Take(10).ToArray();
+            correct = [3, 2, 1, 0, -1, -2, -3, -4, -5, -6];
+            assertArrayEquals(correct, result);
+        }
+
+        function testToNegativeInfinity3()
+        {
+            result = E.ToNegativeInfinity(3, 5).Take(4).ToArray();
+            correct = [3, -2, -7, -12];
+            assertArrayEquals(correct, result);
+        }
+
+        function testUnfold()
+        {
+            result = E.Unfold(5, "$+3").Take(5).ToArray();
+            correct = [5, 8, 11, 14, 17];
+            assertArrayEquals(correct, result);
+        }
+
+    </script>
+
+</body>
+</html>
