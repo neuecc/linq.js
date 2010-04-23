@@ -1,0 +1,807 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>linq.tools.js Reference</title>
+
+    <script type="text/javascript" src="../linq.js"></script>
+
+    <script type="text/javascript" src="linq.tools.js"></script>
+
+    <script type="text/javascript">
+        var textStack = []
+        document.write = function()
+        {
+            E.From(arguments).ForEach("textStack.push($)");
+        }
+
+        function evaluate(code)
+        {
+            textStack.length = 0;
+            var value;
+            try
+            {
+                var value = eval("(" + code + ")");
+                document.write(value);
+            }
+            catch (e)
+            {
+                eval(code);
+            }
+            value = textStack.join("");
+            return value;
+        }
+
+        function expand()
+        {
+            var code = (this.innerText || this.textContent);
+            var value = evaluate(code);
+            var p = document.createElement("p");
+            p.innerHTML = value;
+            this.appendChild(p);
+            this.onclick = collapse;
+        }
+
+        function collapse()
+        {
+            this.removeChild(this.lastChild);
+            this.onclick = expand;
+        }
+
+        function execDateFormat()
+        {
+            var format = document.getElementById("dateFormat").value;
+            var str = Linq.Tools.DateUtility.Format(new Date(), format);
+            document.getElementById("dateFormatResult").innerHTML = str;
+        }
+
+        function execDateParse()
+        {
+            var dateStr = document.getElementById("dateParseStrDate").value;
+            var format = document.getElementById("dateParseStrFormat").value;
+            var str = Linq.Tools.DateUtility.Parse(dateStr, format);
+            document.getElementById("dateParseResult").innerHTML = str;
+        }
+
+        window.onload = function()
+        {
+            E.From(document.getElementsByTagName("pre"))
+                .ForEach("$.onclick = expand");
+
+            document.getElementById("dateFormat").onkeyup = execDateFormat;
+            document.getElementById("dateParseStrDate").onkeyup = execDateParse;
+            document.getElementById("dateParseStrFormat").onkeyup = execDateParse;
+
+            execDateFormat();
+            execDateParse();
+        }
+    </script>
+
+    <style type="text/css">
+        pre
+        {
+            cursor: pointer;
+        }
+        table
+        {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        td
+        {
+            border: solid black;
+            border-width: 1px 0 1px 0;
+        }
+        h2
+        {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>
+        linq.tools.js Reference</h1>
+    <p>
+        <a href="http://neue.cc/">http://neue.cc/</a><br />
+        <a href="http://linqjs.codeplex.com/">http://linqjs.codeplex.com/</a>
+    </p>
+    
+    <h2>
+        DateTimeUtility Tester</h2>
+    <table>
+        <tr>
+            <td style="width: 50%; vertical-align: top">
+                Linq.Tools.DateUtility.Format(new Date(), <input type="text" id="dateFormat" value="yyyy/MM/dd HH:mm:ss DDDD" />)
+                <br />
+                FormatString is : yyyy | yy | y | MM | M | dd | d <br />
+                 HH | H | hh | h | mm | m | ss | s | DDDD | DDD | dddd | ddd
+            </td>
+            <td style="vertical-align: top">
+                <p id="dateFormatResult" style="padding-left: 20px">
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 50%; vertical-align: top">
+                Linq.Tools.DateUtility.Parse(<input type="text" id="dateParseStrDate" value="2003-04-11 13:42:55" />,
+                <input type="text" id="dateParseStrFormat" value="yyyy-MM-dd HH:mm:ss"/>)
+                 <br />
+                FormatString is : yyyy | MM | dd | HH | mm | ss
+            </td>
+            <td style="vertical-align: top">
+                <p id="dateParseResult" style="padding-left: 20px">
+                </p>
+            </td>
+        </tr>
+    </table>
+    
+    <h2 class="clear:both">
+        String.Format</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan="3">
+                    Template
+                </td>
+                <td rowspan="3">
+                    String
+                </td>
+                <td>
+                    String template, Object replacement
+                </td>
+                <td>
+                    <pre>Linq.Tools.Template("My name is {name}. I'm {age} years old.", {name:"John", age:20})</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    String template, Array replacement
+                </td>
+                <td>
+                    <pre>Linq.Tools.Template("My name is {0}. I'm {1} years old.", ["John", 20])</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    String template, params String args
+                </td>
+                <td>
+                    <pre>Linq.Tools.Template("My name is {0}. I'm {1} years old.", "John", 20)</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h2 class="clear:both">
+        StringBuilder</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    Create
+                </td>
+                <td>
+                    Linq.Tools.StringBuilder
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>var sb=Linq.Tools.StringBuilder.Create();
+sb.Append("foo").Append("bar");
+document.write(sb.ToString());
+</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Append
+                </td>
+                <td>
+                    Linq.Tools.StringBuilder
+                </td>
+                <td>
+                    String value
+                </td>
+                <td>
+                    <pre>var sb=Linq.Tools.StringBuilder.Create();
+sb.Append("foo").Append("bar");
+document.write(sb.ToString());
+</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    AppendLine
+                </td>
+                <td>
+                    Linq.Tools.StringBuilder
+                </td>
+                <td>
+                    String value
+                </td>
+                <td>
+                    <pre>var sb=Linq.Tools.StringBuilder.Create();
+sb.AppendLine("foo").AppendLine("bar");
+document.write(sb.ToString());
+</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    AppendFormat
+                </td>
+                <td>
+                    Linq.Tools.StringBuilder
+                </td>
+                <td>
+                    Template
+                </td>
+                <td>
+                    <pre>var sb=Linq.Tools.StringBuilder.Create();
+sb.AppendFormat("My name is {name}. I'm {age} years old.", {name:"John", age:20});
+sb.AppendFormat("Is this {0} or {1} ?{2}", ["Tomato", "Apple", "&lt;br>"]);
+sb.AppendFormat("Is this {0} or {1} ?{2}", "Orange", "Grape", "&lt;br>");
+document.write(sb.ToString());
+</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Reverse
+                </td>
+                <td>
+                    Linq.Tools.StringBuilder
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>var sb=Linq.Tools.StringBuilder.Create();
+sb.AppendFormat("abc").AppendFormat("foo").Reverse();
+document.write(sb.ToString());
+</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    ToString
+                </td>
+                <td>
+                    String
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>var sb=Linq.Tools.StringBuilder.Create();
+sb.Append("foo").Append("bar");
+var str = sb.ToString();
+document.write(str);
+</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h2 class="clear:both">
+        Stopwatch</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    Create
+                </td>
+                <td>
+                    Linq.Tools.Stopwatch
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>var sw = Linq.Tools.Stopwatch.Create();
+sw.Start();
+E.Range(1,10000).Select("$*$").Force();
+document.write(sw.Elapsed() + "ms");</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    StartNew
+                </td>
+                <td>
+                    Linq.Tools.Stopwatch
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>var sw = Linq.Tools.Stopwatch.StartNew();
+E.Range(1,10000).Select("$*$").Force();
+document.write(sw.Elapsed() + "ms");</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Bench
+                </td>
+                <td>
+                    Number
+                </td>
+                <td>
+                    int times, void action(T)
+                </td>
+                <td>
+                    <pre>var result = Linq.Tools.Stopwatch.Bench(100,function(){
+    E.Range(1,100).Where("$%2==0").Select("$*$").Force()});
+document.write(result + 'ms')</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Start
+                </td>
+                <td>
+                    void
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>var sw = Linq.Tools.Stopwatch.Create();
+sw.Start();
+E.Range(1,10000).Select("$*$").Force();
+document.write(sw.Elapsed() + "ms");</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Stop
+                </td>
+                <td>
+                    void
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>var sw = Linq.Tools.Stopwatch.StartNew();
+sw.Stop();
+document.write(sw.Elapsed() + "ms");</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Reset
+                </td>
+                <td>
+                    void
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>var sw = Linq.Tools.Stopwatch.StartNew();
+E.Range(1,10000).Select("$*$").Force();
+sw.Reset();
+document.write(sw.Elapsed() + "ms");</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    IsRunning
+                </td>
+                <td>
+                    void
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>var sw = Linq.Tools.Stopwatch.StartNew();
+document.write(sw.IsRunning());
+sw.Stop();
+document.write(sw.IsRunning());</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Elapsed
+                </td>
+                <td>
+                    Number
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>var sw = Linq.Tools.Stopwatch.Create();
+sw.Start();
+E.Range(1,10000).Select("$*$").Force();
+sw.Stop();
+document.write(sw.Elapsed() + "ms");</pre>
+                </td>
+        </tbody>
+    </table>
+    
+    <h2 class="clear:both">
+        HashSet</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan="3">
+                    Create
+                </td>
+                <td rowspan="3">
+                    Linq.Tools.HashSet
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>var hs=Linq.Tools.HashSet.Create();
+hs.Add("foo");
+document.write(hs.Contains("foo"));
+document.write(hs.Contains("bar"));
+</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    params T keys
+                </td>
+                <td>
+                    <pre>var hs=Linq.Tools.HashSet.Create("foo","bar");
+document.write(hs.Contains("foo"));
+</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Array keys
+                </td>
+                <td>
+                    <pre>var hs=Linq.Tools.HashSet.Create(["foo","bar"]);
+document.write(hs.Contains("foo"));
+</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Add
+                </td>
+                <td>
+                    void
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>var hs=Linq.Tools.HashSet.Create();
+hs.Add("foo");
+document.write(hs.Contains("foo"));
+</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    AsLinqable
+                </td>
+                <td>
+                    Linq.Object
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>var hs=Linq.Tools.HashSet.Create("foo","bar");
+var keys = hs.AsLinqable();
+keys.Select("'key='+$").WriteLine();
+</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Clear
+                </td>
+                <td>
+                    void
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>var hs=Linq.Tools.HashSet.Create("foo","bar");
+hs.Clear();
+document.write(hs.Contains("foo"));
+</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Contains
+                </td>
+                <td>
+                    void
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>var hs=Linq.Tools.HashSet.Create("foo","bar");
+document.write(hs.Contains("foo"));
+</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Count
+                </td>
+                <td>
+                    int
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>var hs=Linq.Tools.HashSet.Create("foo","bar");
+document.write(hs.Count());
+</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Remove
+                </td>
+                <td>
+                    void
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>var hs=Linq.Tools.HashSet.Create("foo","bar");
+hs.Remove("foo");
+document.write(hs.Count());
+</pre>
+                </td>
+            </tr>
+            </tbody>
+            </table>
+            
+    <h2 class="clear:both">
+        HttpUtility</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    HtmlEncode
+                </td>
+                <td>
+                    String
+                </td>
+                <td>
+                    String input
+                </td>
+                <td>
+                    <pre>var str = Linq.Tools.HttpUtility.HtmlEncode("&lt;tag&gt;foo&bar&lt;tag&gt;");
+alert(str);
+</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    HtmlDecode
+                </td>
+                <td>
+                    String
+                </td>
+                <td>
+                    String input
+                </td>
+                <td>
+                    <pre>var str = Linq.Tools.HttpUtility.HtmlDecode("&amp;lt;tag&amp;gt;foo&amp;amp;bar");
+alert(str);
+</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    ParseQueryString
+                </td>
+                <td>
+                    Object
+                </td>
+                <td>
+                    String query
+                </td>
+                <td>
+                    <pre>var q = Linq.Tools.HttpUtility.ParseQueryString("http://a.b/c.cgi?foo=tomato&bar=orange");
+E.From(q).Select("$.Key + '=' + $.Value").WriteLine();
+</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    ToQueryString
+                </td>
+                <td>
+                    String
+                </td>
+                <td>
+                    Object obj
+                </td>
+                <td>
+                    <pre>var str = Linq.Tools.HttpUtility.ToQueryString({foo:"tomato",bar:"banana"});
+document.write(str);
+</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h2 class="clear:both">
+        DateUtility</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    DaysInMonth
+                </td>
+                <td>
+                    Number
+                </td>
+                <td>
+                    int year, int month
+                </td>
+                <td>
+                    <pre>var str = Linq.Tools.DateUtility.DaysInMonth(2008,2);
+document.write(str);
+</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    IsLeapYear
+                </td>
+                <td>
+                    Bool
+                </td>
+                <td>
+                    int year
+                </td>
+                <td>
+                    <pre>var b1 = Linq.Tools.DateUtility.IsLeapYear(2009);
+var b2 = Linq.Tools.DateUtility.IsLeapYear(2008);
+document.write(b1 + ":" + b2);
+</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Format
+                </td>
+                <td>
+                    String
+                </td>
+                <td>
+                    Date date, String format
+                </td>
+                <td>
+                    <pre>var str = Linq.Tools.DateUtility.Format(new Date(),"yyyy/MM/dd HH:mm:ss");
+document.write(str);
+</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Parse
+                </td>
+                <td>
+                    Date
+                </td>
+                <td>
+                    String strDate, String format
+                </td>
+                <td>
+                    <pre>var date = Linq.Tools.DateUtility.Parse("2009/10/05 13:24:11","yyyy/MM/dd HH:mm:ss");
+document.write(date);
+</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
