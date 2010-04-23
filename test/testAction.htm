@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>linq.js test:Action</title>
+    <script type="text/javascript" src="../jsunit/app/jsUnitCore.js"></script>
+    <script type="text/javascript" src="../linq.js"></script>
+</head>
+<body>
+    <!-- This file is linq.js test for JsUnit -->
+    <script type="text/javascript">
+        var E = Enumerable;
+        var result;
+        var correct;
+
+        function testDo()
+        {
+            var array = []
+            result = E.Range(1, 10).Do(function (i) { array.push(i) }).ToArray();
+            correct = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            assertArrayEquals(correct, result);
+            assertArrayEquals(correct, array);
+        }
+
+        function testDo2()
+        {
+            var array = []
+            var array2 = []
+            result = E.Range(1, 10).Do(function (v, i) { array.push(v); array2.push(i); }).ToArray();
+            correct = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            assertArrayEquals(correct, result);
+            assertArrayEquals(correct, array);
+            assertArrayEquals([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], array2);
+        }
+
+        function testForEach1()
+        {
+            var result = [];
+            E.Range(1, 10).ForEach(function (i) { result.push(i) });
+            correct = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            assertArrayEquals(correct, result);
+        }
+
+        function testForEach2()
+        {
+            var result = [];
+            var result2 = [];
+            E.Range(1, 10).ForEach(function (v, i) { result.push(v); result2.push(i); });
+            correct = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            assertArrayEquals(correct, result);
+            assertArrayEquals([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], result2);
+        }
+
+        function testForEach3()
+        {
+            var result = [];
+            E.Range(1, 10).ForEach(function (i) { if (i == 5) return false; result.push(i); });
+            correct = [1, 2, 3, 4];
+            assertArrayEquals(correct, result);
+        }
+
+        function testForEach4()
+        {
+            var result = [];
+            var result2 = [];
+            E.Range(1, 10).ForEach(function (v, i) { if (i == 5) return false; result.push(v); result2.push(i); });
+            correct = [1, 2, 3, 4, 5];
+            assertArrayEquals(correct, result);
+            assertArrayEquals([0, 1, 2, 3, 4], result2);
+        }
+
+        function testForce()
+        {
+            var result = [];
+            E.Range(1, 10).Do(function (i) { result.push(i) }).Force();
+            correct = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            assertArrayEquals(correct, result);
+        }
+
+
+    </script>
+</body>
+</html>

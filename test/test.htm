@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>linq.js test</title>
+    <script type="text/javascript" src="../jsunit/app/jsUnitCore.js"></script>
+</head>
+<body>
+    <!-- This file is linq.js test for JsUnit -->
+    <script type="text/javascript">
+        function suite()
+        {
+            var newsuite = new top.jsUnitTestSuite();
+            newsuite.addTestPage("../test/testEnumerable.htm");
+            newsuite.addTestPage("../test/testProjection.htm");
+            newsuite.addTestPage("../test/testJoin.htm");
+            newsuite.addTestPage("../test/testSet.htm");
+            newsuite.addTestPage("../test/testOrdering.htm");
+            newsuite.addTestPage("../test/testGrouping.htm");
+            newsuite.addTestPage("../test/testAggregate.htm");
+            newsuite.addTestPage("../test/testPaging.htm");
+            newsuite.addTestPage("../test/testConvert.htm");
+            newsuite.addTestPage("../test/testAction.htm");
+            newsuite.addTestPage("../test/testErrorHandling.htm");
+            return newsuite;
+        }
+    </script>
+</body>
+</html>

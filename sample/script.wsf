@@ -1,0 +1,19 @@
+﻿<job id="Main">
+    <script language="JScript" src="../linq.js"></script>
+    <script language="JScript">
+    
+        function EnumerateLines(filePath)
+        {
+            return Enumerable.RepeatWithFinalize(
+                    function () { return WScript.CreateObject("Scripting.FileSystemObject").OpenTextFile(filePath) },
+                    function (ts) { ts.Close() })
+                .TakeWhile(function (ts) { return !ts.AtEndOfStream })
+                .Select(function (ts) { return ts.ReadLine() });
+        }
+
+        
+       var array = EnumerateLines("C:\\test.txt").ToArray();
+    
+    
+    </script>
+</job>
