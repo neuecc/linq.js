@@ -19,7 +19,7 @@ jQuery.extend({ Enumerable: (function ()
         /// <summary>Random choice from arguments.
         /// Ex: Choice(1,2,3) - 1,3,2,3,3,2,1...</summary>
         /// <param type="T" name="Params_Contents" parameterArray="true">Array or Params Contents</param>
-        /// <returns type="Enumerable"></returns>
+        /// <returns type="$.Enumerable"></returns>
     }
 
     Enumerable.Cycle = function (Params_Contents)
@@ -27,13 +27,13 @@ jQuery.extend({ Enumerable: (function ()
         /// <summary>Cycle Repeat from arguments.
         /// Ex: Cycle(1,2,3) - 1,2,3,1,2,3,1,2,3...</summary>
         /// <param type="T" name="Params_Contents" parameterArray="true">Array or Params Contents</param>
-        /// <returns type="Enumerable"></returns>
+        /// <returns type="$.Enumerable"></returns>
     }
 
     Enumerable.Empty = function ()
     {
         /// <summary>Returns an empty Enumerable.</summary>
-        /// <returns type="Enumerable"></returns>
+        /// <returns type="$.Enumerable"></returns>
     }
 
     Enumerable.From = function (obj)
@@ -49,14 +49,14 @@ jQuery.extend({ Enumerable: (function ()
         /// 7. JScript's IEnumerable = to Enumerable(using Enumerator).
         /// </summary>
         /// <param name="obj">object</param>
-        /// <returns type="Enumerable"></returns>
+        /// <returns type="$.Enumerable"></returns>
     }
 
     Enumerable.Return = function (element)
     {
         /// <summary>Make one sequence. This equals Repeat(element, 1)</summary>
         /// <param name="element">element</param>
-        /// <returns type="Enumerable"></returns>
+        /// <returns type="$.Enumerable"></returns>
     }
 
     Enumerable.Matches = function (input, pattern, flags)
@@ -66,7 +66,7 @@ jQuery.extend({ Enumerable: (function ()
         /// <param type="String" name="input">input string</param>
         /// <param type="RegExp/String" name="pattern">RegExp or Pattern string</param>
         /// <param type="Optional:String" name="flags" optional="true">If pattern is String then can use regexp flags "i" or "m" or "im"</param>
-        /// <returns type="Enumerable"></returns>
+        /// <returns type="$.Enumerable"></returns>
     }
 
     Enumerable.Range = function (start, count, step)
@@ -76,7 +76,7 @@ jQuery.extend({ Enumerable: (function ()
         /// <param type="Number" integer="true" name="start">The value of the first integer in the sequence.</param>
         /// <param type="Number" integer="true" name="count">The number of sequential integers to generate.</param>
         /// <param type="Optional:Number" integer="true" name="step" optional="true">Step of generate number.(Ex:Range(0,3,5) - 0,5,10)</param>
-        /// <returns type="Enumerable"></returns>
+        /// <returns type="$.Enumerable"></returns>
     }
 
     Enumerable.RangeDown = function (start, count, step)
@@ -86,7 +86,7 @@ jQuery.extend({ Enumerable: (function ()
         /// <param type="Number" integer="true" name="start">The value of the first integer in the sequence.</param>
         /// <param type="Number" integer="true" name="count">The number of sequential integers to generate.</param>
         /// <param type="Optional:Number" integer="true" name="step" optional="true">Step of generate number.(Ex:RangeDown(0,3,5) - 0,-5,-10)</param>
-        /// <returns type="Enumerable"></returns>
+        /// <returns type="$.Enumerable"></returns>
     }
 
     Enumerable.RangeTo = function (start, to, step)
@@ -96,7 +96,7 @@ jQuery.extend({ Enumerable: (function ()
         /// <param type="Number" integer="true" name="start">start integer</param>
         /// <param type="Number" integer="true" name="to">to integer</param>
         /// <param type="Optional:Number" integer="true" name="step" optional="true">Step of generate number.(Ex:RangeTo(0,7,3) - 0,3,6)</param>
-        /// <returns type="Enumerable"></returns>
+        /// <returns type="$.Enumerable"></returns>
     }
 
     Enumerable.Repeat = function (obj, count)
@@ -106,7 +106,7 @@ jQuery.extend({ Enumerable: (function ()
         /// Ex: Repeat("foo",3) - "foo","foo","foo"</summary>
         /// <param type="TResult" name="obj">The value to be repeated.</param>
         /// <param type="Optional:Number" integer="true" name="count" optional="true">The number of times to repeat the value in the generated sequence.</param>
-        /// <returns type="Enumerable"></returns>
+        /// <returns type="$.Enumerable"></returns>
     }
 
     Enumerable.RepeatWithFinalize = function (initializer, finalizer)
@@ -114,7 +114,7 @@ jQuery.extend({ Enumerable: (function ()
         /// <summary>Lazy Generates one value by initializer's result and do finalize when enumerate end</summary>
         /// <param type="Func&lt;T>" name="initializer">value factory.</param>
         /// <param type="Action&lt;T>" name="finalizer">execute when finalize.</param>
-        /// <returns type="Enumerable"></returns>
+        /// <returns type="$.Enumerable"></returns>
     }
 
     Enumerable.Generate = function (func, count)
@@ -124,7 +124,7 @@ jQuery.extend({ Enumerable: (function ()
         /// Ex: Generate("Math.random()", 5) - 0.131341,0.95425252,...</summary>
         /// <param type="Func&lt;T>" name="func">The value of execute func to be repeated.</param>
         /// <param type="Optional:Number" integer="true" name="count" optional="true">The number of times to repeat the value in the generated sequence.</param>
-        /// <returns type="Enumerable"></returns>
+        /// <returns type="$.Enumerable"></returns>
     }
 
     Enumerable.ToInfinity = function (start, step)
@@ -133,7 +133,7 @@ jQuery.extend({ Enumerable: (function ()
         /// Ex: ToInfinity() - 0,1,2,3...</summary>
         /// <param type="Optional:Number" integer="true" name="start" optional="true">start integer</param>
         /// <param type="Optional:Number" integer="true" name="step" optional="true">Step of generate number.(Ex:ToInfinity(10,3) - 10,13,16,19,...)</param>
-        /// <returns type="Enumerable"></returns>
+        /// <returns type="$.Enumerable"></returns>
     }
 
     Enumerable.ToNegativeInfinity = function (start, step)
@@ -142,7 +142,7 @@ jQuery.extend({ Enumerable: (function ()
         /// Ex: ToNegativeInfinity() - 0,-1,-2,-3...</summary>
         /// <param type="Optional:Number" integer="true" name="start" optional="true">start integer</param>
         /// <param type="Optional:Number" integer="true" name="step" optional="true">Step of generate number.(Ex:ToNegativeInfinity(10,3) - 10,7,4,1,...)</param>
-        /// <returns type="Enumerable"></returns>
+        /// <returns type="$.Enumerable"></returns>
     }
 
     Enumerable.Unfold = function (seed, func)
@@ -151,7 +151,7 @@ jQuery.extend({ Enumerable: (function ()
         /// Ex: Unfold(3,"$+10") - 3,13,23,...</summary>
         /// <param type="T" name="seed">The initial accumulator value.</param>
         /// <param type="Func&lt;T,T>" name="func">An accumulator function to be invoked on each element.</param>
-        /// <returns type="Enumerable"></returns>
+        /// <returns type="$.Enumerable"></returns>
     }
 
     Enumerable.prototype =
@@ -163,7 +163,7 @@ jQuery.extend({ Enumerable: (function ()
             /// <summary>Projects each element of sequence and flattens the resulting sequences into one sequence use breadth first search.</summary>
             /// <param name="func" type="Func&lt;T,T[]>">Select child sequence.</param>
             /// <param name="resultSelector" type="Optional:Func&lt;T>_or_Func&lt;T,int>" optional="true">Optional:the second parameter of the function represents the nestlevel of the source sequence.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         CascadeDepthFirst: function (func, resultSelector)
@@ -171,20 +171,20 @@ jQuery.extend({ Enumerable: (function ()
             /// <summary>Projects each element of sequence and flattens the resulting sequences into one sequence use depth first search.</summary>
             /// <param name="func" type="Func&lt;T,T[]>">Select child sequence.</param>
             /// <param name="resultSelector" type="Optional:Func&lt;T>_or_Func&lt;T,int>" optional="true">Optional:the second parameter of the function represents the nestlevel of the source sequence.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         Flatten: function ()
         {
             /// <summary>Flatten sequences into one sequence.</summary>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         Pairwise: function (selector)
         {
             /// <summary>Projects current and next element of a sequence into a new form.</summary>
             /// <param type="Func&lt;TSource,TSource,TResult>" name="selector">A transform function to apply to current and next element.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         Scan: function (func_or_seed, func, resultSelector)
@@ -193,14 +193,14 @@ jQuery.extend({ Enumerable: (function ()
             /// <param name="func_or_seed" type="Func&lt;T,T,T>_or_TAccumulate">Func is an accumulator function to be invoked on each element. Seed is the initial accumulator value.</param>
             /// <param name="func" type="Optional:Func&lt;TAccumulate,T,TAccumulate>" optional="true">An accumulator function to be invoked on each element.</param>
             /// <param name="resultSelector" type="Optional:Func&lt;TAccumulate,TResult>" optional="true">A function to transform the final accumulator value into the result value.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         Select: function (selector)
         {
             /// <summary>Projects each element of a sequence into a new form.</summary>
             /// <param name="selector" type="Func&lt;T,T>_or_Func&lt;T,int,T>">A transform function to apply to each source element; Optional:the second parameter of the function represents the index of the source element.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         SelectMany: function (collectionSelector, resultSelector)
@@ -208,21 +208,21 @@ jQuery.extend({ Enumerable: (function ()
             /// <summary>Projects each element of a sequence and flattens the resulting sequences into one sequence.</summary>
             /// <param name="collectionSelector" type="Func&lt;T,TCollection[]>_or_Func&lt;T,int,TCollection[]>">A transform function to apply to each source element; Optional:the second parameter of the function represents the index of the source element.</param>
             /// <param name="resultSelector" type="Optional:Func&lt;T,TCollection,TResult>" optional="true">Optional:A transform function to apply to each element of the intermediate sequence.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         Where: function (predicate)
         {
             /// <summary>Filters a sequence of values based on a predicate.</summary>
             /// <param name="predicate" type="Func&lt;T,bool>_or_Func&lt;T,int,bool>">A function to test each source element for a condition; Optional:the second parameter of the function represents the index of the source element.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         OfType: function (type)
         {
             /// <summary>Filters the elements based on a specified type.</summary>
             /// <param name="type" type="T">The type to filter the elements of the sequence on.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         Zip: function (second, selector)
@@ -230,7 +230,7 @@ jQuery.extend({ Enumerable: (function ()
             /// <summary>Merges two sequences by using the specified predicate function.</summary>
             /// <param name="second" type="T[]">The second sequence to merge.</param>
             /// <param name="selector" type="Func&lt;TFirst,TSecond,TResult>_or_Func&lt;TFirst,TSecond,int,TResult>">A function that specifies how to merge the elements from the two sequences. Optional:the third parameter of the function represents the index of the source element.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         /* Join Methods */
@@ -242,7 +242,7 @@ jQuery.extend({ Enumerable: (function ()
             /// <param name="outerKeySelector" type="Func&lt;TOuter,TKey>">A function to extract the join key from each element of the first sequence.</param>
             /// <param name="innerKeySelector" type="Func&lt;TInner,TKey>">A function to extract the join key from each element of the second sequence.</param>
             /// <param name="resultSelector" type="Func&lt;TOuter,TInner,TResult>">A function to create a result element from two matching elements.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         GroupJoin: function (inner, outerKeySelector, innerKeySelector, resultSelector)
@@ -252,7 +252,7 @@ jQuery.extend({ Enumerable: (function ()
             /// <param name="outerKeySelector" type="Func&lt;TOuter>">A function to extract the join key from each element of the first sequence.</param>
             /// <param name="innerKeySelector" type="Func&lt;TInner>">A function to extract the join key from each element of the second sequence.</param>
             /// <param name="resultSelector" type="Func&lt;TOuter,TInner[],TResult">A function to create a result element from an element from the first sequence and a collection of matching elements from the second sequence.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         /* Set Methods */
@@ -275,7 +275,7 @@ jQuery.extend({ Enumerable: (function ()
         {
             /// <summary>Concatenates two sequences.</summary>
             /// <param name="second" type="T[]">The sequence to concatenate to the first sequence.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         Insert: function (index, second)
@@ -283,14 +283,14 @@ jQuery.extend({ Enumerable: (function ()
             /// <summary>Merge two sequences.</summary>
             /// <param name="index" type="Number" integer="true">The index of insert start position.</param>
             /// <param name="second" type="T[]">The sequence to concatenate to the first sequence.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         Alternate: function (value)
         {
             /// <summary>Insert value to between sequence.</summary>
             /// <param name="value" type="T">The value of insert.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         // Overload:function(value)
@@ -307,14 +307,14 @@ jQuery.extend({ Enumerable: (function ()
         {
             /// <summary>Returns the elements of the specified sequence or the specified value in a singleton collection if the sequence is empty.</summary>
             /// <param name="defaultValue" type="T">The value to return if the sequence is empty.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         Distinct: function (compareSelector)
         {
             /// <summary>Returns distinct elements from a sequence.</summary>
             /// <param name="compareSelector" type="Optional:Func&lt;T,TKey>" optional="true">An equality comparer to compare values.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         Except: function (second, compareSelector)
@@ -322,7 +322,7 @@ jQuery.extend({ Enumerable: (function ()
             /// <summary>Produces the set difference of two sequences.</summary>
             /// <param name="second" type="T[]">An T[] whose Elements that also occur in the first sequence will cause those elements to be removed from the returned sequence.</param>
             /// <param name="compareSelector" type="Optional:Func&lt;T,TKey>" optional="true">An equality comparer to compare values.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         Intersect: function (second, compareSelector)
@@ -330,7 +330,7 @@ jQuery.extend({ Enumerable: (function ()
             /// <summary>Produces the set difference of two sequences.</summary>
             /// <param name="second" type="T[]">An T[] whose distinct elements that also appear in the first sequence will be returned.</param>
             /// <param name="compareSelector" type="Optional:Func&lt;T,TKey>" optional="true">An equality comparer to compare values.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         SequenceEqual: function (second, compareSelector)
@@ -338,7 +338,7 @@ jQuery.extend({ Enumerable: (function ()
             /// <summary>Determines whether two sequences are equal by comparing the elements.</summary>
             /// <param name="second" type="T[]">An T[] to compare to the first sequence.</param>
             /// <param name="compareSelector" type="Optional:Func&lt;T,TKey>" optional="true">An equality comparer to compare values.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         Union: function (second, compareSelector)
@@ -346,7 +346,7 @@ jQuery.extend({ Enumerable: (function ()
             /// <summary>Produces the union of two sequences.</summary>
             /// <param name="second" type="T[]">An T[] whose distinct elements form the second set for the union.</param>
             /// <param name="compareSelector" type="Optional:Func&lt;T,TKey>" optional="true">An equality comparer to compare values.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         /* Ordering Methods */
@@ -355,40 +355,40 @@ jQuery.extend({ Enumerable: (function ()
         {
             /// <summary>Sorts the elements of a sequence in ascending order according to a key.</summary>
             /// <param name="keySelector" type="Optional:Func&lt;T,TKey>">A function to extract a key from an element.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         OrderByDescending: function (keySelector)
         {
             /// <summary>Sorts the elements of a sequence in descending order according to a key.</summary>
             /// <param name="keySelector" type="Optional:Func&lt;T,TKey>">A function to extract a key from an element.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         ThenBy: function (keySelector)
         {
             /// <summary>Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.</summary>
             /// <param name="keySelector" type="Func&lt;T,TKey>">A function to extract a key from each element.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         ThenByDescending: function (keySelector)
         {
             /// <summary>Performs a subsequent ordering of the elements in a sequence in descending order, according to a key.</summary>
             /// <param name="keySelector" type="Func&lt;T,TKey>">A function to extract a key from each element.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         Reverse: function ()
         {
             /// <summary>Inverts the order of the elements in a sequence.</summary>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         Shuffle: function ()
         {
             /// <summary>Shuffle sequence.</summary>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         /* Grouping Methods */
@@ -399,7 +399,7 @@ jQuery.extend({ Enumerable: (function ()
             /// <param name="keySelector" type="Func&lt;T,TKey>">A function to extract the key for each element.</param>
             /// <param name="elementSelector" type="Optional:Func&lt;T,TElement>">A function to map each source element to an element in an Grouping&lt;TKey, TElement>.</param>
             /// <param name="resultSelector" type="Optional:Func&lt;TKey,TElement[],TResult>">A function to create a result value from each group.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         PartitionBy: function (keySelector, elementSelector, resultSelector)
@@ -408,14 +408,14 @@ jQuery.extend({ Enumerable: (function ()
             /// <param name="keySelector" type="Func&lt;T,TKey>">A function to extract the key for each element.</param>
             /// <param name="elementSelector" type="Optional:Func&lt;T,TElement>">A function to map each source element to an element in an Grouping&lt;TKey, TElement>.</param>
             /// <param name="resultSelector" type="Optional:Func&lt;TKey,TElement[],TResult>">A function to create a result value from each group.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         BufferWithCount: function (count)
         {
             /// <summary>Divide by count</summary>
             /// <param name="count" type="Number" integer="true">integer</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
 
@@ -545,35 +545,35 @@ jQuery.extend({ Enumerable: (function ()
         {
             /// <summary>Bypasses a specified number of elements in a sequence and then returns the remaining elements.</summary>
             /// <param name="count" type="Number" integer="true">The number of elements to skip before returning the remaining elements.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         SkipWhile: function (predicate)
         {
             /// <summary>Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.</summary>
             /// <param name="predicate" type="Func&lt;T,Boolean>_or_Func&lt;T,int,Boolean>">A function to test each source element for a condition; Optional:the second parameter of the function represents the index of the source element.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         Take: function (count)
         {
             /// <summary>Returns a specified number of contiguous elements from the start of a sequence.</summary>
             /// <param name="count" type="Number" integer="true">The number of elements to return.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         TakeWhile: function (predicate)
         {
             /// <summary>Returns elements from a sequence as long as a specified condition is true, and then skips the remaining elements.</summary>
             /// <param name="predicate" type="Func&lt;T,Boolean>_or_Func&lt;T,int,Boolean>">A function to test each source element for a condition; Optional:the second parameter of the function represents the index of the source element.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         TakeExceptLast: function (count)
         {
             /// <summary>Take a sequence except last count.</summary>
             /// <param name="count" type="Optional:Number" integer="true">The number of skip count.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         IndexOf: function (item)
@@ -631,7 +631,7 @@ jQuery.extend({ Enumerable: (function ()
         {
             /// <summary>Performs the specified action on each element of the sequence.</summary>
             /// <param name="action" type="Action&lt;T>_or_Action&lt;T,int>">Optional:the second parameter of the function represents the index of the source element.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         ForEach: function (action)
@@ -668,14 +668,14 @@ jQuery.extend({ Enumerable: (function ()
         {
             /// <summary>catch error and do handler.</summary>
             /// <param name="handler" type="Action&lt;Error>">execute if error occured.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         Finally: function (finallyAction)
         {
             /// <summary>do action if enumerate end or disposed or error occured.</summary>
             /// <param name="handler" type="Action">finally execute.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         },
 
         /* For Debug Methods */
@@ -685,7 +685,7 @@ jQuery.extend({ Enumerable: (function ()
             /// <summary>Trace object use console.log.</summary>
             /// <param name="message" type="Optional:String">Default is 'Trace:'.</param>
             /// <param name="selector" type="Optional:Func&lt;T,String>">A transform function to apply to each source element.</param>
-            /// <returns type="Enumerable"></returns>
+            /// <returns type="$.Enumerable"></returns>
         }
     }
 
