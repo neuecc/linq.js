@@ -1,5 +1,5 @@
 ﻿/*--------------------------------------------------------------------------
-* linq-vsdoc.js - LINQ for JavaScript
+* jquery.linq-vsdoc.js - LINQ for jQuery
 * ver 2.0.0.0 (Apr. 23th, 2010)
 *
 * created and maintained by neuecc <ils@neue.cc>
@@ -7,7 +7,7 @@
 * http://neue.cc/
 * http://linqjs.codeplex.com/
 *--------------------------------------------------------------------------*/
-Enumerable = (function ()
+jQuery.extend({ Enumerable: (function ()
 {
     var Enumerable = function (getEnumerator)
     {
@@ -714,3 +714,22 @@ Enumerable = (function ()
 
     return Enumerable;
 })()
+});
+
+// plugin setup
+(function ($)
+{
+    $.fn.toEnumerable = function ()
+    {
+        /// <summary>each contains elements. to Enumerable&lt;jQuery&gt;.</summary>
+        /// <returns type="jQuery.Enumerable"></returns>
+        return $.Enumerable.From(this).Select(function (e) { return $(e) });
+    }
+
+    $.Enumerable.prototype.TojQuery = function ()
+    {
+        /// <summary>Enumerable to jQuery.</summary>
+        /// <returns type="jQuery"></returns>
+        return $(this.ToArray());
+    }
+})(jQuery)

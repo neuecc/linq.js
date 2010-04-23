@@ -1,5 +1,5 @@
 ﻿/*--------------------------------------------------------------------------
-* linq.js - LINQ for JavaScript
+* jquery.linq.js - LINQ for jQuery
 * ver 2.0.0.0 (Apr. 23th, 2010)
 *
 * created and maintained by neuecc <ils@neue.cc>
@@ -8,7 +8,7 @@
 * http://linqjs.codeplex.com/
 *--------------------------------------------------------------------------*/
 
-Enumerable = (function ()
+jQuery.extend({ Enumerable: (function ()
 {
     var Enumerable = function (getEnumerator)
     {
@@ -2137,7 +2137,7 @@ Enumerable = (function ()
                 function () { Utils.Dispose(enumerator); })
         });
     }
-    
+
     var CreateThenByObject = function (source, keySelector, isDescending)
     {
         return new Enumerable(function (comparers)
@@ -2164,3 +2164,18 @@ Enumerable = (function ()
     // out to global
     return Enumerable;
 })()
+});
+
+// plugin setup
+(function ($)
+{
+    $.fn.toEnumerable = function ()
+    {
+        return $.Enumerable.From(this).Select(function (e) { return $(e) });
+    }
+
+    $.Enumerable.prototype.TojQuery = function ()
+    {
+        return $(this.ToArray());
+    }
+})(jQuery)
