@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<job id="Main">
+    <script language="JScript" src="linq.js"></script>
+    <script language="JScript" src="linq.tools.js"></script>
+    <script language="JScript" src="linq.wsh.js"></script>
+    <script language="JScript" src="main.js"></script>
+</job>
