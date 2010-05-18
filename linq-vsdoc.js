@@ -1,6 +1,6 @@
 ﻿/*--------------------------------------------------------------------------
 * linq-vsdoc.js - LINQ for JavaScript
-* ver 2.0.0.0 (Apr. 23th, 2010)
+* ver 2.1.0.0 (May. 18th, 2010)
 *
 * created and maintained by neuecc <ils@neue.cc>
 * licensed under Microsoft Public License(Ms-PL)
@@ -235,23 +235,25 @@ Enumerable = (function ()
 
         /* Join Methods */
 
-        Join: function (inner, outerKeySelector, innerKeySelector, resultSelector)
+        Join: function (inner, outerKeySelector, innerKeySelector, resultSelector, compareSelector)
         {
             /// <summary>Correlates the elements of two sequences based on matching keys.</summary>
             /// <param name="inner" type="T[]">The sequence to join to the first sequence.</param>
             /// <param name="outerKeySelector" type="Func&lt;TOuter,TKey>">A function to extract the join key from each element of the first sequence.</param>
             /// <param name="innerKeySelector" type="Func&lt;TInner,TKey>">A function to extract the join key from each element of the second sequence.</param>
             /// <param name="resultSelector" type="Func&lt;TOuter,TInner,TResult>">A function to create a result element from two matching elements.</param>
+            /// <param name="compareSelector" type="Optional:Func&lt;TKey,TCompare>" optional="true">An equality comparer to compare values.</param>
             /// <returns type="Enumerable"></returns>
         },
 
-        GroupJoin: function (inner, outerKeySelector, innerKeySelector, resultSelector)
+        GroupJoin: function (inner, outerKeySelector, innerKeySelector, resultSelector, compareSelector)
         {
             /// <summary>Correlates the elements of two sequences based on equality of keys and groups the results.</summary>
             /// <param name="inner" type="T[]">The sequence to join to the first sequence.</param>
             /// <param name="outerKeySelector" type="Func&lt;TOuter>">A function to extract the join key from each element of the first sequence.</param>
             /// <param name="innerKeySelector" type="Func&lt;TInner>">A function to extract the join key from each element of the second sequence.</param>
-            /// <param name="resultSelector" type="Func&lt;TOuter,TInner[],TResult">A function to create a result element from an element from the first sequence and a collection of matching elements from the second sequence.</param>
+            /// <param name="resultSelector" type="Func&lt;TOuter,Enumerable&lt;TInner>,TResult">A function to create a result element from an element from the first sequence and a collection of matching elements from the second sequence.</param>
+            /// <param name="compareSelector" type="Optional:Func&lt;TKey,TCompare>" optional="true">An equality comparer to compare values.</param>
             /// <returns type="Enumerable"></returns>
         },
 
@@ -355,28 +357,14 @@ Enumerable = (function ()
         {
             /// <summary>Sorts the elements of a sequence in ascending order according to a key.</summary>
             /// <param name="keySelector" type="Optional:Func&lt;T,TKey>">A function to extract a key from an element.</param>
-            /// <returns type="Enumerable"></returns>
+            return new OrderedEnumerable();
         },
 
         OrderByDescending: function (keySelector)
         {
             /// <summary>Sorts the elements of a sequence in descending order according to a key.</summary>
             /// <param name="keySelector" type="Optional:Func&lt;T,TKey>">A function to extract a key from an element.</param>
-            /// <returns type="Enumerable"></returns>
-        },
-
-        ThenBy: function (keySelector)
-        {
-            /// <summary>Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.</summary>
-            /// <param name="keySelector" type="Func&lt;T,TKey>">A function to extract a key from each element.</param>
-            /// <returns type="Enumerable"></returns>
-        },
-
-        ThenByDescending: function (keySelector)
-        {
-            /// <summary>Performs a subsequent ordering of the elements in a sequence in descending order, according to a key.</summary>
-            /// <param name="keySelector" type="Func&lt;T,TKey>">A function to extract a key from each element.</param>
-            /// <returns type="Enumerable"></returns>
+            return new OrderedEnumerable();
         },
 
         Reverse: function ()
@@ -393,21 +381,22 @@ Enumerable = (function ()
 
         /* Grouping Methods */
 
-        GroupBy: function (keySelector, elementSelector, resultSelector)
+        GroupBy: function (keySelector, elementSelector, resultSelector, compareSelector)
         {
             /// <summary>Groups the elements of a sequence according to a specified key selector function.</summary>
             /// <param name="keySelector" type="Func&lt;T,TKey>">A function to extract the key for each element.</param>
-            /// <param name="elementSelector" type="Optional:Func&lt;T,TElement>">A function to map each source element to an element in an Grouping&lt;TKey, TElement>.</param>
-            /// <param name="resultSelector" type="Optional:Func&lt;TKey,TElement[],TResult>">A function to create a result value from each group.</param>
+            /// <param name="resultSelector" type="Optional:Func&lt;TKey,Enumerable&lt;TElement>,TResult>">A function to create a result value from each group.</param>
+            /// <param name="compareSelector" type="Optional:Func&lt;TKey,TCompare>" optional="true">An equality comparer to compare values.</param>
             /// <returns type="Enumerable"></returns>
         },
 
-        PartitionBy: function (keySelector, elementSelector, resultSelector)
+        PartitionBy: function (keySelector, elementSelector, resultSelector, compareSelector)
         {
             /// <summary>Create Group by continuation key.</summary>
             /// <param name="keySelector" type="Func&lt;T,TKey>">A function to extract the key for each element.</param>
             /// <param name="elementSelector" type="Optional:Func&lt;T,TElement>">A function to map each source element to an element in an Grouping&lt;TKey, TElement>.</param>
-            /// <param name="resultSelector" type="Optional:Func&lt;TKey,TElement[],TResult>">A function to create a result value from each group.</param>
+            /// <param name="resultSelector" type="Optional:Func&lt;TKey,Enumerable&lt;TElement>,TResult>">A function to create a result value from each group.</param>
+            /// <param name="compareSelector" type="Optional:Func&lt;TKey,TCompare>" optional="true">An equality comparer to compare values.</param>
             /// <returns type="Enumerable"></returns>
         },
 
@@ -598,20 +587,30 @@ Enumerable = (function ()
             /// <returns type="Array"></returns>
         },
 
-        ToLookup: function (keySelector, elementSelector)
+        ToLookup: function (keySelector, elementSelector, compareSelector)
         {
-            /// <summary>Creates a Lookup([][]) from this sequence.</summary>
+            /// <summary>Creates a Lookup from this sequence.</summary>
             /// <param name="keySelector" type="Func&lt;T,TKey>">A function to extract a key from each element.</param>
             /// <param name="elementSelector" type="Optional:Func&lt;T,TElement>">A transform function to produce a result element value from each element.</param>
-            /// <returns type="Array"></returns>
+            /// <param name="compareSelector" type="Optional:Func&lt;TKey,TCompare>" optional="true">An equality comparer to compare values.</param>
+            return new Lookup();
         },
 
         ToObject: function (keySelector, elementSelector)
         {
             /// <summary>Creates a Object from this sequence.</summary>
-            /// <param name="keySelector" type="Func&lt;T,TKey>">A function to extract a key from each element.</param>
+            /// <param name="keySelector" type="Func&lt;T,String>">A function to extract a key from each element.</param>
             /// <param name="elementSelector" type="Func&lt;T,TElement>">A transform function to produce a result element value from each element.</param>
             /// <returns type="Object"></returns>
+        },
+
+        ToDictionary: function (keySelector, elementSelector, compareSelector)
+        {
+            /// <summary>Creates a Dictionary from this sequence.</summary>
+            /// <param name="keySelector" type="Func&lt;T,TKey>">A function to extract a key from each element.</param>
+            /// <param name="elementSelector" type="Func&lt;T,TElement>">A transform function to produce a result element value from each element.</param>
+            /// <param name="compareSelector" type="Optional:Func&lt;TKey,TCompare>" optional="true">An equality comparer to compare values.</param>
+            return new Dictionary();
         },
 
         // Overload:function()
@@ -662,6 +661,28 @@ Enumerable = (function ()
             /// <returns type="void"></returns>
         },
 
+        /* Functional Methods */
+
+        Let: function (func)
+        {
+            /// <summary>Bind the source to the parameter so that it can be used multiple times.</summary>
+            /// <param name="func" type="Func&lt;Enumerable&lt;T>,Enumerable&lt;TR>>">apply function.</param>
+            /// <returns type="Enumerable"></returns>
+        },
+
+        Share: function ()
+        {
+            /// <summary>Shares cursor of all enumerators to the sequence.</summary>
+            /// <returns type="Enumerable"></returns>
+        },
+
+        MemoizeAll: function ()
+        {
+            /// <summary>Creates an enumerable that enumerates the original enumerable only once and caches its results.</summary>
+            /// <returns type="Enumerable"></returns>
+        },
+
+
         /* Error Handling Methods */
 
         Catch: function (handler)
@@ -690,11 +711,13 @@ Enumerable = (function ()
     }
 
     // vsdoc-dummy
+
     Enumerable.prototype.GetEnumerator = function ()
     {
         /// <summary>Returns an enumerator that iterates through the collection.</summary>
         return new IEnumerator();
     }
+
     var IEnumerator = function () { }
     IEnumerator.prototype.Current = function ()
     {
@@ -710,6 +733,112 @@ Enumerable = (function ()
     {
         /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
         /// <returns type="Void"></returns>
+    }
+
+    var Dictionary = function () { }
+    Dictionary.prototype =
+    {
+        Add: function (key, value)
+        {
+            /// <summary>add new pair. if duplicate key then overwrite new value.</summary>
+            /// <returns type="Void"></returns>
+        },
+
+        Get: function (key)
+        {
+            /// <summary>get value. if not find key then return undefined.</summary>
+            /// <returns type="T"></returns>
+        },
+
+        Set: function (key, value)
+        {
+            /// <summary>set value. if complete set value then return true, not find key then return false.</summary>
+            /// <returns type="Boolean"></returns>
+        },
+
+        Contains: function (key)
+        {
+            /// <summary>check contains key.</summary>
+            /// <returns type="Boolean"></returns>
+        },
+
+        Clear: function ()
+        {
+            /// <summary>clear dictionary.</summary>
+            /// <returns type="Void"></returns>
+        },
+
+        Remove: function (key)
+        {
+            /// <summary>remove key and value.</summary>
+            /// <returns type="Void"></returns>
+        },
+
+        Count: function ()
+        {
+            /// <summary>contains value's count.</summary>
+            /// <returns type="Number"></returns>
+        },
+
+        ToEnumerable: function ()
+        {
+            /// <summary>Convert to Enumerable&lt;{Key:, Value:}&gt;.</summary>
+            /// <returns type="Enumerable"></returns>
+        }
+    }
+
+    var Lookup = function () { }
+    Lookup.prototype =
+    {
+        Count: function ()
+        {
+            /// <summary>contains value's count.</summary>
+            /// <returns type="Number"></returns>
+        },
+
+        Get: function (key)
+        {
+            /// <summary>get grouped enumerable.</summary>
+            /// <returns type="Enumerable"></returns>
+        },
+
+        Contains: function (key)
+        {
+            /// <summary>check contains key.</summary>
+            /// <returns type="Boolean"></returns>
+        },
+
+        ToEnumerable: function ()
+        {
+            /// <summary>Convert to Enumerable&lt;Grouping&gt;.</summary>
+            /// <returns type="Enumerable"></returns>
+        }
+    }
+
+
+    var Grouping = function () { }
+    Grouping.prototype = new Enumerable();
+    Grouping.prototype.Key = function ()
+    {
+        /// <summary>get grouping key.</summary>
+        /// <returns type="T"></returns>  
+    }
+
+    var OrderedEnumerable = function () { }
+    OrderedEnumerable.prototype = new Enumerable();
+
+    OrderedEnumerable.prototype.ThenBy = function (keySelector)
+    {
+        /// <summary>Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.</summary>
+        /// <param name="keySelector" type="Func&lt;T,TKey>">A function to extract a key from each element.</param>
+        return Enumerable.Empty().OrderBy();
+    }
+
+    OrderedEnumerable.prototype.ThenByDescending = function (keySelector)
+    {
+        /// <summary>Performs a subsequent ordering of the elements in a sequence in descending order, according to a key.</summary>
+        /// <param name="keySelector" type="Func&lt;T,TKey>">A function to extract a key from each element.</param>
+        return Enumerable.Empty().OrderBy();
     }
 
     return Enumerable;

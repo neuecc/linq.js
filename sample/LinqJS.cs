@@ -1,4 +1,5 @@
 ﻿// Ms-PL License
+// linq.js C# backport
 // http://linqjs.codeplex.com/
 
 using System.Collections.Generic;

@@ -23,16 +23,41 @@
         {
             var fileList = ["temp.xls", "temp2.xls", "temp.pdf", "temp.jpg", "temp2.pdf"];
             result = E.From(fileList).ToLookup("file=>file.match(/\\.(.+$)/)[1]");
-            correct = { xls: ["temp.xls", "temp2.xls"], pdf: ["temp.pdf", "temp2.pdf"], jpg: ["temp.jpg"] };
-            assertObjectEquals(correct, result);
+
+            assertArrayEquals(["temp.xls", "temp2.xls"], result.Get("xls").ToArray());
+            assertArrayEquals(["temp.pdf", "temp2.pdf"], result.Get("pdf").ToArray());
+            assertArrayEquals(["temp.jpg"], result.Get("jpg").ToArray());
+
+            assertEquals(3, result.Count());
+            assertTrue(result.Contains("xls"));
+            assertFalse(result.Contains("XLS"));
+            var array = result.ToEnumerable().ToArray();
+            assertEquals("xls", array[0].Key());
+            assertArrayEquals(["temp.xls", "temp2.xls"], array[0].ToArray());
         }
 
         function testToLookup2()
         {
             var fileList = ["temp.xls", "temp2.xls", "temp.pdf", "temp.jpg", "temp2.pdf"];
             result = E.From(fileList).ToLookup("file=>file.match(/\\.(.+$)/)[1]", "file=>file +'ele'");
-            correct = { xls: ["temp.xlsele", "temp2.xlsele"], pdf: ["temp.pdfele", "temp2.pdfele"], jpg: ["temp.jpgele"] };
-            assertObjectEquals(correct, result);
+
+            assertArrayEquals(["temp.xlsele", "temp2.xlsele"], result.Get("xls").ToArray());
+            assertArrayEquals(["temp.pdfele", "temp2.pdfele"], result.Get("pdf").ToArray());
+            assertArrayEquals(["temp.jpgele"], result.Get("jpg").ToArray());
+        }
+
+        function testToLookup3()
+        {
+            var fileList = ["temp.xls", "temp2.XLS", "temp.pdf", "temp.jpg", "temp2.pDf"];
+            result = E.From(fileList).ToLookup("file=>file.match(/\\.(.+$)/)[1]", "file=>file +'ele'",
+                function (s) { return s.toLowerCase() });
+
+            assertArrayEquals(["temp.xlsele", "temp2.XLSele"], result.Get("xLS").ToArray());
+            assertArrayEquals(["temp.pdfele", "temp2.pDfele"], result.Get("PDf").ToArray());
+            assertArrayEquals(["temp.jpgele"], result.Get("Jpg").ToArray());
+
+            assertTrue(result.Contains("xls"));
+            assertTrue(result.Contains("XLS"));
         }
 
         function testToObject()
@@ -40,6 +65,39 @@
             result = E.Range(1, 3).ToObject("i=>'foo'+i", "i=>i*4");
             correct = { foo1: 4, foo2: 8, foo3: 12 };
             assertObjectEquals(correct, result);
+        }
+
+
+        function testToDictionary()
+        {
+            result = E.Range(1, 3).ToDictionary("i=>'foo'+i", "i=>i*4");
+
+            assertEquals(4, result.Get("foo1"));
+            assertEquals(8, result.Get("foo2"));
+            assertEquals(12, result.Get("foo3"));
+        }
+
+        function testToDictionary2()
+        {
+            result = E.Range(1, 3).ToDictionary("i=>{Key:i,V:'foo'+i}", "i=>i*4", "$.Key");
+
+            assertEquals(4, result.Get({ Key: 1 }));
+            assertEquals(8, result.Get({ Key: 2 }));
+            assertEquals(12, result.Get({ Key: 3 }));
+        }
+
+        function testToLookup3()
+        {
+            var fileList = ["temp.xls", "temp2.XLS", "temp.pdf", "temp.jpg", "temp2.pDf"];
+            result = E.From(fileList).ToLookup("file=>file.match(/\\.(.+$)/)[1]", "file=>file +'ele'",
+                function (s) { return s.toLowerCase() });
+
+            assertArrayEquals(["temp.xlsele", "temp2.XLSele"], result.Get("xLS").ToArray());
+            assertArrayEquals(["temp.pdfele", "temp2.pDfele"], result.Get("PDf").ToArray());
+            assertArrayEquals(["temp.jpgele"], result.Get("Jpg").ToArray());
+
+            assertTrue(result.Contains("xls"));
+            assertTrue(result.Contains("XLS"));
         }
 
         function testToString()

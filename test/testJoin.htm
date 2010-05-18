@@ -24,6 +24,18 @@
             assertArrayEquals(correct, result.ToArray());
         }
 
+        function testJoin2()
+        {
+            var math = { yamada: 100, tanaka: 80, yoshida: 94 };
+            var english = { yamada: 73, yoshida: 26, tanaka: 99 };
+            result = E.From(math).Join(E.From(english), "outer=>outer", "inner=>inner",
+                "o,i=>{Name:o.key,Math:o.Value,English:i.Value}", "$.Key");
+            correct = [{ Name: "yamada", Math: 100, English: 73 },
+                       { Name: "tanaka", Math: 80, English: 99 },
+                       { Name: "yoshida", Math: 94, English: 26}];
+            assertArrayEquals(correct, result.ToArray());
+        }
+
         function testGroupJoin()
         {
             var array1 = [3, 3, 4, 5, 6];
@@ -41,6 +53,31 @@
                        { outer: 4, collectionLength: 1 },
                        { outer: 5, collectionLength: 1 },
                        { outer: 6, collectionLength: 2}];
+            assertArrayEquals(correct, result.ToArray());
+        }
+
+        function testGroupJoin2()
+        {
+            var array1 = [3, 3, 4, 5, 6];
+            var array2 = [2, 4, 5, 6, 6];
+            result = Enumerable.From(array1).GroupJoin(array2, " i => i", " i => i",
+                function (outer, collection)
+                {
+                    return {
+                        outer: outer,
+                        collectionLength: collection.Count()
+                    }
+                },
+                function (key)
+                {
+                    return key % 2 == 0;
+                }
+            );
+            correct = [{ outer: 3, collectionLength: 1 },
+                       { outer: 3, collectionLength: 1 },
+                       { outer: 4, collectionLength: 4 },
+                       { outer: 5, collectionLength: 1 },
+                       { outer: 6, collectionLength: 4}];
             assertArrayEquals(correct, result.ToArray());
         }
     </script>

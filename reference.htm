@@ -785,10 +785,10 @@ Enumerable.From([new ClassA("a"),1,2,new ClassA("b")])
         </thead>
         <tbody>
             <tr>
-                <td>
+                <td rowspan="2">
                     Join
                 </td>
-                <td>
+                <td rowspan="2">
                     Enumerable
                 </td>
                 <td>
@@ -798,24 +798,46 @@ Enumerable.From([new ClassA("a"),1,2,new ClassA("b")])
                     <pre>var array1 = [13,413,5,135,61,631,13,61,3];
 var array2 = [13,134,53,6,3,7,13,7,7,135,61,3,13];
 Enumerable.From(array1)
-.Join(Enumerable.From(array2),"","","outer,inner=>outer + ':' + inner")</pre>
+.Join(array2,"","","outer,inner=>outer + ':' + inner")</pre>
                 </td>
             </tr>
             <tr>
                 <td>
-                    GroupJoin
+                    T[] inner, T outerKeySelector(T), T innerKeySelector(T), T resultSelector(T, T), T compareSelector(T)
                 </td>
                 <td>
+                    <pre>var array1 = [10,405,50,135];
+var array2 = [1,4,7,8];
+Enumerable.From(array1)
+.Join(array2,"","","outer,inner=>outer + ':' + inner","$%2==0")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    GroupJoin
+                </td>
+                <td rowspan="2">
                     Enumerable
                 </td>
                 <td>
-                    T[] inner, T outerKeySelector(T), T innerKeySelector(T), T resultSelector(T, T[])
+                    T[] inner, T outerKeySelector(T), T innerKeySelector(T), T resultSelector(T, Enumerable)
                 </td>
                 <td>
                     <pre>var array1 = [13,413,5,135,61,631,13,61,3];
 var array2 = [13,134,53,6,3,7,13,7,7,135,61,3,13];
 Enumerable.From(array1)
 .GroupJoin(array2,"","","outer,lookup=>outer + ':' + lookup.ToString('-')")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    T[] inner, T outerKeySelector(T), T innerKeySelector(T), T resultSelector(T, Enumerable), T compareSelector(T)
+                </td>
+                <td>
+                    <pre>var array1 = [10,405,50,135];
+var array2 = [1,4,7,8];
+Enumerable.From(array1)
+.GroupJoin(array2,"","","outer,lookup=>outer + ':' + lookup.ToString('-')","$%2==0")</pre>
                 </td>
             </tr>
         </tbody>
@@ -1113,7 +1135,7 @@ seq1.Union(seq2,"$.test").Select("$.test")</pre>
                     OrderBy
                 </td>
                 <td rowspan="2">
-                    Enumerable
+                    OrderedEnumerable
                 </td>
                 <td>
                     ()
@@ -1139,7 +1161,7 @@ Enumerable.From(array).OrderBy("$.a").Select("$.a")</pre>
                     OrderByDescending
                 </td>
                 <td rowspan="2">
-                    Enumerable
+                    OrderedEnumerable
                 </td>
                 <td>
                     ()
@@ -1165,7 +1187,7 @@ Enumerable.From(array).OrderByDescending("$.a").Select("$.a")</pre>
                     ThenBy
                 </td>
                 <td>
-                    Enumerable
+                    OrderedEnumerable
                 </td>
                 <td>
                     T keySelector(T)
@@ -1188,7 +1210,7 @@ Enumerable.From(list).OrderBy("$.a").ThenBy("$.c").ThenBy("$.b")
                     ThenByDescending
                 </td>
                 <td>
-                    Enumerable
+                    OrderedEnumerable
                 </td>
                 <td>
                     T keySelector(T)
@@ -1257,18 +1279,18 @@ Enumerable.From(list).OrderBy("$.a").ThenByDescending("$.c").ThenByDescending("$
         </thead>
         <tbody>
             <tr>
-                <td rowspan="3">
+                <td rowspan="4">
                     GroupBy
                 </td>
-                <td rowspan="3">
-                    Enumerable
+                <td rowspan="2">
+                    Enumerable&lt;Grouping>
                 </td>
                 <td>
                     T keySelector(T)
                 </td>
                 <td>
                     <pre>Enumerable.Range(1,5).GroupBy("$%2==0")
-.Select("$.Key + ':' + $.Value.ToString('-')")</pre>
+.Select("$.Key() + ':' + $.ToString('-')")</pre>
                 </td>
             </tr>
             <tr>
@@ -1277,31 +1299,43 @@ Enumerable.From(list).OrderBy("$.a").ThenByDescending("$.c").ThenByDescending("$
                 </td>
                 <td>
                     <pre>Enumerable.Range(1,5).GroupBy("$%2==0","$*10")
-.Select("$.Key + ':' + $.Value.ToString('-')")</pre>
+.Select("$.Key() + ':' + $.ToString('-')")</pre>
                 </td>
             </tr>
             <tr>
+                <td rowspan="2">
+                    Enumerable
+                </td>
                 <td>
                     T keySelector(T), T elementSelector(T), T resultSelector(T, Enumerable)
                 </td>
                 <td>
                     <pre>Enumerable.Range(1,5)
-.GroupBy("$%2==0","","key,value=>key+':'+value.ToString('-')")</pre>
+.GroupBy("$%2==0","","key,e=>key+':'+e.ToString('-')")</pre>
                 </td>
             </tr>
             <tr>
-                <td rowspan="3">
+                <td>
+                    TK keySelector(T), TE elementSelector(T), TR resultSelector(T, Enumerable),TC compareSelector(TK)
+                </td>
+                <td>
+                    <pre>Enumerable.From([{d:new Date(2000,1,1),i:0},{d:new Date(2000,1,1),i:1}])
+.GroupBy("$.d","","key,e=>key+':'+e.Select('$.i').ToArray()","$.toString()")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="4">
                     PartitionBy
                 </td>
-                <td rowspan="3">
-                    Enumerable
+                <td rowspan="2">
+                    Enumerable&lt;Grouping>
                 </td>
                 <td>
                     T keySelector(T)
                 </td>
                 <td>
                     <pre>Enumerable.From([1,2,2,3,3,2,1,1]).PartitionBy("i=>i")
-.Select("$.Key + ':' + $.Value.ToString('-')")</pre>
+.Select("$.Key() + ':' + $.ToString('-')")</pre>
                 </td>
             </tr>
             <tr>
@@ -1310,16 +1344,28 @@ Enumerable.From(list).OrderBy("$.a").ThenByDescending("$.c").ThenByDescending("$
                 </td>
                 <td>
                     <pre>Enumerable.From([1,2,2,3,3,2,1,1]).PartitionBy("i=>i","i=>i*100")
-.Select("$.Key + ':' + $.Value.ToString('-')")</pre>
+.Select("$.Key() + ':' + $.ToString('-')")</pre>
                 </td>
             </tr>
             <tr>
+                <td rowspan="2">
+                    Enumerable
+                </td>
                 <td>
                     T keySelector(T), T elementSelector(T), T resultSelector(T, Enumerable)
                 </td>
                 <td>
                     <pre>Enumerable.From([1,2,2,3,3,2,1,1])
-.PartitionBy("i=>i","i=>i","key,value=>key+':'+value.ToString('-')")</pre>
+.PartitionBy("i=>i","i=>i","key,e=>key+':'+e.ToString('-')")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    TK keySelector(T), TE elementSelector(T), TR resultSelector(T, Enumerable), TC compareSelector(TK)
+                </td>
+                <td>
+                    <pre>Enumerable.From([{d:new Date(2000,1,1),i:0},{d:new Date(2000,1,1),i:1}])
+.PartitionBy("$.d","","key,e=>key+':'+e.Select('$.i').ToArray()","$.toString()")</pre>
                 </td>
             </tr>
             <tr>
@@ -1875,29 +1921,39 @@ Enumerable.From(list).OrderBy("$.a").ThenByDescending("$.c").ThenByDescending("$
                 </td>
             </tr>
             <tr>
-                <td rowspan="2">
+                <td rowspan="3">
                     ToLookup
                 </td>
-                <td rowspan="2">
-                    Object
+                <td rowspan="3">
+                    Lookup
                 </td>
                 <td>
-                    T keySelector(T)
+                    TKey keySelector(T)
                 </td>
                 <td>
-                    <pre>var result = Enumerable.From(["temp.xls", "temp.pdf", "temp.jpg", "temp2.pdf"])
+                    <pre>var lookup = Enumerable.From(["temp.xls", "temp.pdf", "temp.jpg", "temp2.pdf"])
 .ToLookup("$.match(/\\.(.+$)/)[1]");
-Enumerable.From(result).Select("$.Key + ' : ' + $.Value")</pre>
+lookup.ToEnumerable().Select("$.Key() + ' : ' + $.ToArray()")</pre>
                 </td>
             </tr>
             <tr>
                 <td>
-                    T keySelector(T), T elementSelector(T)
+                    TKey keySelector(T), TElement elementSelector(T)
                 </td>
                 <td>
-                    <pre>var result = Enumerable.From(["temp.xls", "temp.pdf", "temp.jpg", "temp2.pdf"])
+                    <pre>var lookup = Enumerable.From(["temp.xls", "temp.pdf", "temp.jpg", "temp2.pdf"])
 .ToLookup("$.match(/\\.(.+$)/)[1]","$.match(/(.+)\\.[^.]+$/)[1]");
-Enumerable.From(result).Select("$.Key + ' : ' + $.Value")</pre>
+lookup.ToEnumerable().Select("$.Key() + ' : ' + $.ToArray()")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    TKey keySelector(T), TElement elementSelector(T), TCompare compareSelector(TKey)
+                </td>
+                <td>
+                    <pre>var lookup = Enumerable.From(["temp.xls", "temp.pdf", "temp.jpg", "temp2.pdf"])
+.ToLookup("","","$.match(/\\.(.+$)/)[1]");
+lookup.ToEnumerable().Select("$.Key() + ' : ' + $.ToArray()")</pre>
                 </td>
             </tr>
             <tr>
@@ -1908,12 +1964,38 @@ Enumerable.From(result).Select("$.Key + ' : ' + $.Value")</pre>
                     Object
                 </td>
                 <td>
-                    T keySelector(T), T elementSelector(T)
+                    String keySelector(T), T elementSelector(T)
                 </td>
                 <td>
                     <pre>var obj = Enumerable.Range(1,10).Select("value,index=>{id:'id_' + index,value:value}")
 .ToObject("$.id","$.value");
 Enumerable.From(obj).Select("$.Key + ':' + $.Value")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="2">
+                    ToDictionary
+                </td>
+                <td rowspan="2">
+                    Dictionary
+                </td>
+                <td>
+                    TKey keySelector(T), TElement elementSelector(T)
+                </td>
+                <td>
+                    <pre>var dict = Enumerable.Range(1,10).Select("value,index=>{id:'id_' + index,value:value}")
+.ToDictionary("$.id","$.value");
+dict.ToEnumerable().Select("$.Key + ':' + $.Value")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    TKey keySelector(T), TElement elementSelector(T), TCompare compareSelector(TKey)
+                </td>
+                <td>
+                    <pre>var dict = Enumerable.Range(1,10).Select("value,index=>{id:'id_' + index,value:value}")
+.ToDictionary("$","$.value","$;id");
+dict.ToEnumerable().Select("$.Key.id + ':' + $.Value")</pre>
                 </td>
             </tr>
             <tr>
@@ -2115,6 +2197,77 @@ Enumerable.From(obj).Select("$.Key + ':' + $.Value")</pre>
         </tbody>
     </table>
     <h2>
+        Functional Methods</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    Let
+                </td>
+                <td>
+                    Enumerable
+                </td>
+                <td>
+                    Enumerable&lt;TR> func(Enumerable&lt;T>)
+                </td>
+                <td>
+                    <pre>Enumerable.Range(1,10).Let(function(x){return x.Zip(x,"x,y=>x + ':' + y")})</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Share
+                </td>
+                <td>
+                    Enumerable
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>var share = Enumerable.Range(1,10).Share();
+share.Take(4).WriteLine();
+document.write("--- &lt;br>");
+share.Skip(2)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    MemoizeAll
+                </td>
+                <td>
+                    Enumerable
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>var mem = Enumerable.Range(1,10)
+.Do("document.write('--->' + $ + '&lt;br>')").MemoizeAll();
+mem.Where("$%2==0").WriteLine();
+document.write("--- &lt;br>");
+mem.Where("$%2==0")</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>
         Error Handling Methods</h2>
     <table>
         <thead>
@@ -2298,6 +2451,276 @@ Enumerable.From(obj).Select("$.Key + ':' + $.Value")</pre>
         </tbody>
     </table>
     <h2>
+        Dictionary</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    Add
+                </td>
+                <td>
+                    void
+                </td>
+                <td>
+                    TKey key, TValue value
+                </td>
+                <td>
+                    <pre>Enumerable.Empty().ToDictionary().Add(1, 'aaa')</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Get
+                </td>
+                <td>
+                    TValue
+                </td>
+                <td>
+                    TKey key
+                </td>
+                <td>
+                    <pre>Enumerable.Empty().ToDictionary().Get(1)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Set
+                </td>
+                <td>
+                    Boolean
+                </td>
+                <td>
+                    TKey key, TValue value
+                </td>
+                <td>
+                    <pre>Enumerable.Empty().ToDictionary().Set(1, 'zzz')</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Contains
+                </td>
+                <td>
+                    Boolean
+                </td>
+                <td>
+                    TKey key
+                </td>
+                <td>
+                    <pre>Enumerable.Empty().ToDictionary().Contains(1)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Clear
+                </td>
+                <td>
+                    void
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>Enumerable.Empty().ToDictionary().Clear()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Remove
+                </td>
+                <td>
+                    void
+                </td>
+                <td>
+                    TKey key
+                </td>
+                <td>
+                    <pre>Enumerable.Empty().ToDictionary().Remove(1)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Count
+                </td>
+                <td>
+                    Number
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>Enumerable.Empty().ToDictionary().Count()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    ToEnumerable
+                </td>
+                <td>
+                    Enumerable
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>var dict = Enumerable.Empty().ToDictionary();
+dict.Add("foo", 10); dict.Add("bar", 200);
+dict.ToEnumerable().Select("$.Key + ':' + $.Value")</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>
+        Lookup</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    Get
+                </td>
+                <td>
+                    Enumerable&lt;TElement>
+                </td>
+                <td>
+                    TKey key
+                </td>
+                <td>
+                    <pre>Enumerable.From([{x:1,s:'a'},{x:1,s:'z'}])
+.ToLookup("$.x").Get(1).Select("$.x + ':' + $.s")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Contains
+                </td>
+                <td>
+                    Boolean
+                </td>
+                <td>
+                    TKey key
+                </td>
+                <td>
+                    <pre>Enumerable.From([{x:1,s:'a'},{x:1,s:'z'}])
+.ToLookup("$.x").Contains(1)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Count
+                </td>
+                <td>
+                    Number
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>Enumerable.Range(1,5).ToLookup().Count()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    ToEnumerable
+                </td>
+                <td>
+                    Enumerable&lt;Grouping>
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>Enumerable.From([{a:1,s:'foo'},{a:1,s:'bar'},{a:2,s:'zzzzz'}])
+.ToLookup("$.a").ToEnumerable()
+.Select("$.Key() + ':' + $.Select('$.s').ToString('-')")</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>
+        Grouping(inherit Eunmerable)</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Key
+                </td>
+                <td>
+                    TKey
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>Enumerable.From([{id:"foo",x:10},{id:"bar",x:20},{id:"foo",x:100}])
+.GroupBy("$.id").ToArray()[0] // grouping
+.Key()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    All Enumerable Methods
+                </td>
+                <td>
+                    -
+                </td>
+                <td>
+                    -
+                </td>
+                <td>
+                    <pre>var grouping = Enumerable.From([{id:"foo",x:10},{id:"foo",x:25},{id:"foo",x:100}])
+.GroupBy("$.id").ToArray()[0];
+grouping.Where("$.x % 10 == 0").Select("$.id + ':' + $.x")</pre>
+                </td>
+            </tr>
+        </thead>
+    </table>    
+    <h2>
         jQuery plugin</h2>
     <table>
         <thead>
@@ -2336,7 +2759,7 @@ Enumerable.From(obj).Select("$.Key + ':' + $.Value")</pre>
                     toEnumerable
                 </td>
                 <td>
-                    Enumerable
+                    Enumerable&lt;jQuery>
                 </td>
                 <td>
                     ()

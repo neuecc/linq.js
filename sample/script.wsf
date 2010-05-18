@@ -2,6 +2,7 @@
     <script language="JScript" src="../linq.js"></script>
     <script language="JScript">
     
+        // resource auto close example
         function EnumerateLines(filePath)
         {
             return Enumerable.RepeatWithFinalize(
@@ -11,8 +12,11 @@
                 .Select(function (ts) { return ts.ReadLine() });
         }
 
-        
-       var array = EnumerateLines("C:\\test.txt").ToArray();
+
+        EnumerateLines("C:\\test.txt").Take(4).ForEach(function (s)
+        {
+            WScript.Echo(s);
+        });
     
     
     </script>
