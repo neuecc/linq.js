@@ -1,11 +1,11 @@
 ﻿using System;
-using Mono.Cecil;
-using System.Linq;
-using System.Xml.Linq;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.IO;
+using System.Xml.Linq;
+using Mono.Cecil;
 
 static class RxVSDocGenerator
 {

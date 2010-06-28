@@ -81,6 +81,21 @@ RxJS binding
     <script type="text/javascript" src="jquery.linq.js"></script>
     <script type="text/javascript" src="linq.rx.js"></script>
 
+How to use CodeSnippets
+---
+    open Visual Studio 2010's Code Snippet Manager(Ctrl+K, Ctrl+B)
+    click import button and select snippets/*.snippet
+
+    func0 = function () { return /*cursor*/}
+    func1 = function (x) { return /*cursor*/}
+    func2 = function (x, y) { return /*cursor*/}
+    action0 = function () { /*cursor*/}
+    action1 = function (x) { /*cursor*/}
+    action2 = function (x, y) { /*cursor*/}
+    efrom = Enumerable.From()
+    erange = Enumerable.Range()
+    jqfrom = $.Enumerable.From()
+    jqrange = $.Enumerable.Range()
 
 // history
 
@@ -89,6 +104,7 @@ RxJS binding
         TakeFromLast
         ToJSON
     Add File
+        rewrite all tests from JSUnit to QUnit
         binding for RxJS(Reactive Extensions for JavaScript)
         add RxVSDocGenerator(rx-vsdoc.js generator for RxJS)
         add code snippets for Visual Studio
