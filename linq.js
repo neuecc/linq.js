@@ -1,6 +1,6 @@
 ﻿/*--------------------------------------------------------------------------
 * linq.js - LINQ for JavaScript
-* ver 2.1.0.0 (May. 18th, 2010)
+* ver 2.2.0.0 (Jun. 28th, 2010)
 *
 * created and maintained by neuecc <ils@neue.cc>
 * licensed under Microsoft Public License(Ms-PL)
@@ -95,25 +95,7 @@ Enumerable = (function ()
             // array or array like object
             if (typeof obj.length == Types.Number)
             {
-                return new Enumerable(function ()
-                {
-                    var index = 0;
-                    return new IEnumerator(
-                        Functions.Blank,
-                        function ()
-                        {
-                            while (index < obj.length)
-                            {
-                                if (!(obj[index] instanceof Function))
-                                {
-                                    return this.Yield(obj[index++]);
-                                }
-                                index++;
-                            }
-                            return false;
-                        },
-                        Functions.Blank);
-                });
+                return new ArrayEnumerable(obj);
             }
 
             // JScript's IEnumerable
@@ -1409,7 +1391,7 @@ Enumerable = (function ()
         Sum: function (selector)
         {
             if (selector == null) selector = Functions.Identity;
-            return this.Select(selector).Aggregate(function (a, b) { return a + b; });
+            return this.Select(selector).Aggregate(0, function (a, b) { return a + b; });
         },
 
         /* Paging Methods */
@@ -1682,7 +1664,7 @@ Enumerable = (function ()
 
             return new Enumerable(function ()
             {
-                if (count == 0) return source.GetEnumerator(); // do nothing
+                if (count <= 0) return source.GetEnumerator(); // do nothing
 
                 var enumerator;
                 var q = [];
@@ -1701,6 +1683,38 @@ Enumerable = (function ()
                             q.push(enumerator.Current());
                         }
                         return false;
+                    },
+                    function () { Utils.Dispose(enumerator); });
+            });
+        },
+
+        TakeFromLast: function (count)
+        {
+            if (count <= 0 || count == null) return Enumerable.Empty();
+            var source = this;
+
+            return new Enumerable(function ()
+            {
+                var sourceEnumerator;
+                var enumerator;
+                var q = [];
+
+                return new IEnumerator(
+                    function () { sourceEnumerator = source.GetEnumerator(); },
+                    function ()
+                    {
+                        while (sourceEnumerator.MoveNext())
+                        {
+                            if (q.length == count) q.shift()
+                            q.push(sourceEnumerator.Current());
+                        }
+                        if (enumerator == null)
+                        {
+                            enumerator = Enumerable.From(q).GetEnumerator();
+                        }
+                        return (enumerator.MoveNext())
+                            ? this.Yield(enumerator.Current())
+                            : false;
                     },
                     function () { Utils.Dispose(enumerator); });
             });
@@ -1790,6 +1804,14 @@ Enumerable = (function ()
                 dict.Add(keySelector(x), elementSelector(x));
             });
             return dict;
+        },
+
+        // Overload:function()
+        // Overload:function(replacer)
+        // Overload:function(replacer, space)
+        ToJSON: function (replacer, space)
+        {
+            return JSON.stringify(this.ToArray(), replacer, space);
         },
 
         // Overload:function()
@@ -1965,7 +1987,7 @@ Enumerable = (function ()
                     function ()
                     {
                         index++;
-                        if (cache[index] === undefined)
+                        if (cache.length <= index)
                         {
                             return (enumerator.MoveNext())
                                 ? this.Yield(cache[index] = enumerator.Current())
@@ -2088,7 +2110,7 @@ Enumerable = (function ()
                 }
                 else if (expression.indexOf("=>") == -1)
                 {
-                    return new Function("$", "return " + expression);
+                    return new Function("$,$$,$$$,$$$$", "return " + expression);
                 }
                 else
                 {
@@ -2186,6 +2208,264 @@ Enumerable = (function ()
         }
     }
 
+    // for OrderBy/ThenBy
+
+    var OrderedEnumerable = function (source, keySelector, descending, parent)
+    {
+        this.source = source;
+        this.keySelector = Utils.CreateLambda(keySelector);
+        this.descending = descending;
+        this.parent = parent;
+    }
+    OrderedEnumerable.prototype = new Enumerable();
+
+    OrderedEnumerable.prototype.CreateOrderedEnumerable = function (keySelector, descending)
+    {
+        return new OrderedEnumerable(this.source, keySelector, descending, this);
+    }
+
+    OrderedEnumerable.prototype.ThenBy = function (keySelector)
+    {
+        return this.CreateOrderedEnumerable(keySelector, false);
+    }
+
+    OrderedEnumerable.prototype.ThenByDescending = function (keySelector)
+    {
+        return this.CreateOrderedEnumerable(keySelector, true);
+    }
+
+    OrderedEnumerable.prototype.GetEnumerator = function ()
+    {
+        var self = this;
+        var buffer;
+        var indexes;
+        var index = 0;
+
+        return new IEnumerator(
+            function ()
+            {
+                buffer = self.source.ToArray();
+                indexes = Enumerable.Range(0, buffer.length).ToArray();
+                sortContext = SortContext.Create(self, null);
+                sortContext.GenerateKeys(buffer);
+
+                indexes.sort(function (a, b) { return sortContext.Compare(a, b); });
+            },
+            function ()
+            {
+                return (index < indexes.length)
+                    ? this.Yield(buffer[indexes[index++]])
+                    : false;
+            },
+            Functions.Blank
+        )
+    }
+
+    var SortContext = function (keySelector, descending, child)
+    {
+        this.keySelector = keySelector;
+        this.descending = descending;
+        this.child = child;
+        this.keys = null;
+    }
+
+    SortContext.Create = function (orderedEnumerable, currentContext)
+    {
+        var context = new SortContext(orderedEnumerable.keySelector, orderedEnumerable.descending, currentContext);
+        if (orderedEnumerable.parent != null) return SortContext.Create(orderedEnumerable.parent, context);
+        return context;
+    }
+
+    SortContext.prototype.GenerateKeys = function (source)
+    {
+        this.keys = Enumerable.From(source).Select(this.keySelector).ToArray();
+        if (this.child != null) this.child.GenerateKeys(source);
+    }
+
+    SortContext.prototype.Compare = function (index1, index2)
+    {
+        var comparison = Utils.Compare(this.keys[index1], this.keys[index2]);
+
+        if (comparison == 0)
+        {
+            if (this.child != null) return this.child.Compare(index1, index2)
+            comparison = Utils.Compare(index1, index2);
+        }
+
+        return (this.descending) ? -comparison : comparison;
+    }
+
+    // optimize array or arraylike object
+
+    var ArrayEnumerable = function (source)
+    {
+        this.source = source;
+    }
+    ArrayEnumerable.prototype = new Enumerable();
+
+    ArrayEnumerable.prototype.Any = function (predicate)
+    {
+        return (predicate == null)
+            ? (this.source.length > 0)
+            : Enumerable.prototype.Any.apply(this, arguments);
+    }
+
+    ArrayEnumerable.prototype.Count = function (predicate)
+    {
+        return (predicate == null)
+            ? this.source.length
+            : Enumerable.prototype.Count.apply(this, arguments);
+    }
+
+    ArrayEnumerable.prototype.ElementAt = function (index)
+    {
+        return (0 <= index && index < this.source.length)
+            ? this.source[index]
+            : Enumerable.prototype.ElementAt.apply(this, arguments);
+    }
+
+    ArrayEnumerable.prototype.ElementAtOrDefault = function (index, defaultValue)
+    {
+        return (0 <= index && index < this.source.length)
+            ? this.source[index]
+            : defaultValue;
+    }
+
+    ArrayEnumerable.prototype.First = function (predicate)
+    {
+        return (predicate == null && this.source.length > 0)
+            ? this.source[0]
+            : Enumerable.prototype.First.apply(this, arguments);
+    }
+
+    ArrayEnumerable.prototype.FirstOrDefault = function (defaultValue, predicate)
+    {
+        if (predicate != null)
+        {
+            return Enumerable.prototype.FirstOrDefault.apply(this, arguments);
+        }
+
+        return this.source.length > 0 ? this.source[0] : defaultValue;
+    }
+
+    ArrayEnumerable.prototype.Last = function (predicate)
+    {
+        return (predicate == null && this.source.length > 0)
+            ? this.source[this.source.length - 1]
+            : Enumerable.prototype.Last.apply(this, arguments);
+    }
+
+    ArrayEnumerable.prototype.LastOrDefault = function (defaultValue, predicate)
+    {
+        if (predicate != null)
+        {
+            return Enumerable.prototype.LastOrDefault.apply(this, arguments);
+        }
+
+        return this.source.length > 0 ? this.source[this.source.length - 1] : defaultValue;
+    }
+
+    ArrayEnumerable.prototype.Skip = function (count)
+    {
+        var source = this.source;
+
+        return new Enumerable(function ()
+        {
+            var index;
+
+            return new IEnumerator(
+                function () { index = (count < 0) ? 0 : count },
+                function ()
+                {
+                    while (index < source.length)
+                    {
+                        return this.Yield(source[index++]);
+                        index++;
+                    }
+                    return false;
+                },
+                Functions.Blank);
+        });
+    };
+
+    ArrayEnumerable.prototype.TakeExceptLast = function (count)
+    {
+        if (count == null) count = 1;
+        return this.Take(this.source.length - count);
+    }
+
+    ArrayEnumerable.prototype.TakeFromLast = function (count)
+    {
+        return this.Skip(this.source.length - count);
+    }
+
+    ArrayEnumerable.prototype.Reverse = function ()
+    {
+        var source = this.source;
+
+        return new Enumerable(function ()
+        {
+            var index;
+
+            return new IEnumerator(
+                function ()
+                {
+                    index = source.length;
+                },
+                function ()
+                {
+                    return (index > 0)
+                        ? this.Yield(source[--index])
+                        : false;
+                },
+                Functions.Blank)
+        });
+    }
+
+    ArrayEnumerable.prototype.SequenceEqual = function (second, compareSelector)
+    {
+        if ((second instanceof ArrayEnumerable || second instanceof Array)
+            && compareSelector == null
+            && Enumerable.From(second).Count() != this.Count())
+        {
+            return false;
+        }
+
+        return Enumerable.prototype.SequenceEqual.apply(this, arguments);
+    }
+
+    ArrayEnumerable.prototype.ToString = function (separator, selector)
+    {
+        if (selector != null || !(this.source instanceof Array))
+        {
+            return Enumerable.prototype.ToString.apply(this, arguments);
+        }
+
+        if (separator == null) separator = "";
+        return this.source.join(separator);
+    }
+
+    ArrayEnumerable.prototype.GetEnumerator = function ()
+    {
+        var source = this.source;
+        var index = 0;
+
+        return new IEnumerator(
+            Functions.Blank,
+            function ()
+            {
+                while (index < source.length)
+                {
+                    return this.Yield(source[index++]);
+                    index++;
+                }
+                return false;
+            },
+            Functions.Blank);
+    }
+
+    // Collections
+
     var Dictionary = (function ()
     {
         // static utility methods
@@ -2203,7 +2483,6 @@ Enumerable = (function ()
                 ? obj.toString()
                 : Object.prototype.toString.call(obj);
         }
-
 
         // LinkedList for Dictionary
         var HashEntry = function (key, value)
@@ -2442,110 +2721,9 @@ Enumerable = (function ()
             return key;
         }
 
-        this.GetEnumerator = function ()
-        {
-            var index = -1;
-            return new IEnumerator(
-                Functions.Blank,
-                function ()
-                {
-                    return (++index < elements.length)
-                        ? this.Yield(elements[index])
-                        : false;
-                },
-                Functions.Blank
-            )
-        }
+        ArrayEnumerable.call(this, elements);
     }
-    Grouping.prototype = new Enumerable();
-
-
-    // for OrderBy/ThenBy
-
-    var OrderedEnumerable = function (source, keySelector, descending, parent)
-    {
-        this.source = source;
-        this.keySelector = Utils.CreateLambda(keySelector);
-        this.descending = descending;
-        this.parent = parent;
-    }
-    OrderedEnumerable.prototype = new Enumerable();
-
-    OrderedEnumerable.prototype.CreateOrderedEnumerable = function (keySelector, descending)
-    {
-        return new OrderedEnumerable(this.source, keySelector, descending, this);
-    }
-
-    OrderedEnumerable.prototype.ThenBy = function (keySelector)
-    {
-        return this.CreateOrderedEnumerable(keySelector, false);
-    }
-
-    OrderedEnumerable.prototype.ThenByDescending = function (keySelector)
-    {
-        return this.CreateOrderedEnumerable(keySelector, true);
-    }
-
-    OrderedEnumerable.prototype.GetEnumerator = function ()
-    {
-        var self = this;
-        var buffer;
-        var indexes;
-        var index = 0;
-
-        return new IEnumerator(
-            function ()
-            {
-                buffer = self.source.ToArray();
-                indexes = Enumerable.Range(0, buffer.length).ToArray();
-                sortContext = SortContext.Create(self, null);
-                sortContext.GenerateKeys(buffer);
-
-                indexes.sort(function (a, b) { return sortContext.Compare(a, b); });
-            },
-            function ()
-            {
-                return (index < indexes.length)
-                    ? this.Yield(buffer[indexes[index++]])
-                    : false;
-            },
-            Functions.Blank
-        )
-    }
-
-    var SortContext = function (keySelector, descending, child)
-    {
-        this.keySelector = keySelector;
-        this.descending = descending;
-        this.child = child;
-        this.keys = null;
-    }
-
-    SortContext.Create = function (orderedEnumerable, currentContext)
-    {
-        var context = new SortContext(orderedEnumerable.keySelector, orderedEnumerable.descending, currentContext);
-        if (orderedEnumerable.parent != null) return SortContext.Create(orderedEnumerable.parent, context);
-        return context;
-    }
-
-    SortContext.prototype.GenerateKeys = function (source)
-    {
-        this.keys = Enumerable.From(source).Select(this.keySelector).ToArray();
-        if (this.child != null) this.child.GenerateKeys(source);
-    }
-
-    SortContext.prototype.Compare = function (index1, index2)
-    {
-        var comparison = Utils.Compare(this.keys[index1], this.keys[index2]);
-
-        if (comparison == 0)
-        {
-            if (this.child != null) return this.child.Compare(index1, index2)
-            comparison = Utils.Compare(index1, index2);
-        }
-
-        return (this.descending) ? -comparison : comparison;
-    }
+    Grouping.prototype = new ArrayEnumerable();
 
     // out to global
     return Enumerable;

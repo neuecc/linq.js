@@ -1,6 +1,6 @@
 ﻿/*--------------------------------------------------------------------------
 * jquery.linq-vsdoc.js - LINQ for jQuery
-* ver 2.1.0.0 (May. 18th, 2010)
+* ver 2.2.0.0 (Jun. 28th, 2010)
 *
 * created and maintained by neuecc <ils@neue.cc>
 * licensed under Microsoft Public License(Ms-PL)
@@ -385,6 +385,7 @@ jQuery.extend({ Enumerable: (function ()
         {
             /// <summary>Groups the elements of a sequence according to a specified key selector function.</summary>
             /// <param name="keySelector" type="Func&lt;T,TKey>">A function to extract the key for each element.</param>
+            /// <param name="elementSelector" type="Optional:Func&lt;T,TElement>">A function to map each source element to an element in an Grouping&lt;TKey, TElement>.</param>
             /// <param name="resultSelector" type="Optional:Func&lt;TKey,Enumerable&lt;TElement>,TResult>">A function to create a result value from each group.</param>
             /// <param name="compareSelector" type="Optional:Func&lt;TKey,TCompare>" optional="true">An equality comparer to compare values.</param>
             /// <returns type="jQuery.Enumerable"></returns>
@@ -565,6 +566,13 @@ jQuery.extend({ Enumerable: (function ()
             /// <returns type="jQuery.Enumerable"></returns>
         },
 
+        TakeFromLast: function (count)
+        {
+            /// <summary>Take a sequence from last count.</summary>
+            /// <param name="count" type="Number" integer="true">The number of take count.</param>
+            /// <returns type="jQuery.Enumerable"></returns>
+        },
+
         IndexOf: function (item)
         {
             /// <summary>Returns the zero-based index of the flrst occurrence of a value.</summary>
@@ -611,6 +619,17 @@ jQuery.extend({ Enumerable: (function ()
             /// <param name="elementSelector" type="Func&lt;T,TElement>">A transform function to produce a result element value from each element.</param>
             /// <param name="compareSelector" type="Optional:Func&lt;TKey,TCompare>" optional="true">An equality comparer to compare values.</param>
             return new Dictionary();
+        },
+
+        // Overload:function()
+        // Overload:function(replacer)
+        // Overload:function(replacer, space)
+        ToJSON: function (replacer, space)
+        {
+            /// <summary>Creates a JSON String from sequence, performed only native JSON support browser or included json2.js.</summary>
+            /// <param name="replacer" type="Optional:Func">a replacer.</param>
+            /// <param name="space" type="Optional:Number">indent spaces.</param>
+            /// <returns type="String"></returns>
         },
 
         // Overload:function()

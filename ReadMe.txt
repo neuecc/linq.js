@@ -1,6 +1,6 @@
 /*--------------------------------------------------------------------------
 * linq.js - LINQ for JavaScript
-* ver 2.1.0.0 (May. 18th, 2010)
+* ver 2.2.0.0 (Jun. 28th, 2010)
 *
 * created and maintained by neuecc <ils@neue.cc>
 * licensed under Microsoft Public License(Ms-PL)
@@ -10,8 +10,10 @@
 
 Features
 * implement all .NET 4.0 methods and many extra methods (inspiration from Rx, Achiral, Haskell, Ruby, etc...)
+* complete lazy evaluation
 * Full IntelliSense support for VisualStudio
 * two versions - linq.js(Normal) and jquery.linq.js(jQuery plugin)
+* support Windows Script Host
 
 Tutorial
 
@@ -64,9 +66,42 @@ for Windows Script Host
         </script>
     </job>
 
+RxJS binding
+---
+    more tutorial see linq.js CodePlex's Documentation
+    
+    <script type="text/javascript" src="rx.js"></script>
+    <script type="text/javascript" src="linq.js"></script>
+    <script type="text/javascript" src="linq.rx.js"></script>
+
+    or
+    
+    <script type="text/javascript" src="rx.js"></script>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="jquery.linq.js"></script>
+    <script type="text/javascript" src="linq.rx.js"></script>
 
 
 // history
+
+2010-06-28 ver 2.2.0.0
+    Add Method
+        TakeFromLast
+        ToJSON
+    Add File
+        binding for RxJS(Reactive Extensions for JavaScript)
+        add RxVSDocGenerator(rx-vsdoc.js generator for RxJS)
+        add code snippets for Visual Studio
+    Change
+        wrap array (Enumerable.From(array)) optimized performance
+        Grouping optimized performance
+        Enumerable.From(array)'s array allow function element
+        if TakeExceptLast's count under 0 then return all sequence
+        add default iterator variable's second, third, fourth($$, $$$, $$$$)
+    Bug Fix
+        MemoizeAll can't work when sequence contains undefined
+        Sum can't work when sequence is empty(fixed return 0)
+        vsdoc's Grouping elementSelector is short of summary
 
 2010-05-18 ver 2.1.0.0
     Add Class

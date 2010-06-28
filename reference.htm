@@ -803,7 +803,8 @@ Enumerable.From(array1)
             </tr>
             <tr>
                 <td>
-                    T[] inner, T outerKeySelector(T), T innerKeySelector(T), T resultSelector(T, T), T compareSelector(T)
+                    T[] inner, T outerKeySelector(T), T innerKeySelector(T), T resultSelector(T, T),
+                    T compareSelector(T)
                 </td>
                 <td>
                     <pre>var array1 = [10,405,50,135];
@@ -831,7 +832,8 @@ Enumerable.From(array1)
             </tr>
             <tr>
                 <td>
-                    T[] inner, T outerKeySelector(T), T innerKeySelector(T), T resultSelector(T, Enumerable), T compareSelector(T)
+                    T[] inner, T outerKeySelector(T), T innerKeySelector(T), T resultSelector(T, Enumerable),
+                    T compareSelector(T)
                 </td>
                 <td>
                     <pre>var array1 = [10,405,50,135];
@@ -1373,7 +1375,7 @@ Enumerable.From(list).OrderBy("$.a").ThenByDescending("$.c").ThenByDescending("$
                     BufferWithCount
                 </td>
                 <td>
-                    Enumerable
+                    Enumerable&lt;Array>
                 </td>
                 <td>
                     int count
@@ -1856,6 +1858,20 @@ Enumerable.From(list).OrderBy("$.a").ThenByDescending("$.c").ThenByDescending("$
             </tr>
             <tr>
                 <td>
+                    TakeFromLast
+                </td>
+                <td>
+                    Enumerable
+                </td>
+                <td>
+                    Number count
+                </td>
+                <td>
+                    <pre>Enumerable.Range(1,10).TakeFromLast(3)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     IndexOf
                 </td>
                 <td>
@@ -1996,6 +2012,38 @@ dict.ToEnumerable().Select("$.Key + ':' + $.Value")</pre>
                     <pre>var dict = Enumerable.Range(1,10).Select("value,index=>{id:'id_' + index,value:value}")
 .ToDictionary("$","$.value","$;id");
 dict.ToEnumerable().Select("$.Key.id + ':' + $.Value")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="3">
+                    ToJSON
+                </td>
+                <td rowspan="3">
+                    String
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>// ToJSON only work Native JSON support browser or include json2.js
+Enumerable.From([{Foo:1, Bar:'z'},{Foo:5, Bar:null}]).ToJSON()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    TResult replacer(TKey, TValue)
+                </td>
+                <td>
+                    <pre>Enumerable.From(["a","b","c"])
+.ToJSON(function(k,v){return (typeof v === 'object') ? v : v.toString().toUpperCase()})</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    TResult replacer(TKey, TValue), Number space
+                </td>
+                <td>
+                    <pre>Enumerable.Range(1, 5).ToJSON(null, 4)</pre>
                 </td>
             </tr>
             <tr>
@@ -2227,7 +2275,7 @@ dict.ToEnumerable().Select("$.Key.id + ':' + $.Value")</pre>
                     Enumerable&lt;TR> func(Enumerable&lt;T>)
                 </td>
                 <td>
-                    <pre>Enumerable.Range(1,10).Let(function(x){return x.Zip(x,"x,y=>x + ':' + y")})</pre>
+                    <pre>Enumerable.Range(1,10).Let(function(x){return x.Zip(x.Skip(1),"x,y=>x + ':' + y")})</pre>
                 </td>
             </tr>
             <tr>
@@ -2350,7 +2398,8 @@ mem.Where("$%2==0")</pre>
                     ()
                 </td>
                 <td>
-                    <pre>Enumerable.Range(1,10).Trace().Force()</pre>
+                    <pre>// Trace is output to console.log
+Enumerable.Range(1,10).Trace().Force()</pre>
                 </td>
             </tr>
             <tr>
@@ -2719,7 +2768,7 @@ grouping.Where("$.x % 10 == 0").Select("$.id + ':' + $.x")</pre>
                 </td>
             </tr>
         </thead>
-    </table>    
+    </table>
     <h2>
         jQuery plugin</h2>
     <table>
@@ -2766,6 +2815,56 @@ grouping.Where("$.x % 10 == 0").Select("$.id + ':' + $.x")</pre>
                 </td>
                 <td>
                     <pre>// $("div").toEnumerable()</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>
+        RxJS Binding</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    ToObservable
+                </td>
+                <td>
+                    Rx.Observable
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>// Enumerable.Range(1,10).ToObservable()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    ToEnumerable
+                </td>
+                <td>
+                    Enumerable
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>// Rx.Observable.Range(1,10).ToEnumerable()</pre>
                 </td>
             </tr>
         </tbody>
