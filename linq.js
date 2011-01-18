@@ -1,6 +1,6 @@
 ﻿/*--------------------------------------------------------------------------
 * linq.js - LINQ for JavaScript
-* ver 2.2.0.0 (Jun. 28th, 2010)
+* ver 2.2.0.1 (Jan. 18th, 2011)
 *
 * created and maintained by neuecc <ils@neue.cc>
 * licensed under Microsoft Public License(Ms-PL)
@@ -732,7 +732,6 @@ Enumerable = (function ()
                                 var innerElement = innerElements[innerCount++];
                                 if (innerElement !== undefined)
                                 {
-                                    isInnerOut = false;
                                     return this.Yield(resultSelector(outerEnumerator.Current(), innerElement));
                                 }
 
@@ -2244,9 +2243,14 @@ Enumerable = (function ()
         return new IEnumerator(
             function ()
             {
-                buffer = self.source.ToArray();
-                indexes = Enumerable.Range(0, buffer.length).ToArray();
-                sortContext = SortContext.Create(self, null);
+                buffer = [];
+                indexes = [];
+                self.source.ForEach(function (item, index)
+                {
+                    buffer.push(item);
+                    indexes.push(index);
+                });
+                var sortContext = SortContext.Create(self, null);
                 sortContext.GenerateKeys(buffer);
 
                 indexes.sort(function (a, b) { return sortContext.Compare(a, b); });
@@ -2278,7 +2282,12 @@ Enumerable = (function ()
 
     SortContext.prototype.GenerateKeys = function (source)
     {
-        this.keys = Enumerable.From(source).Select(this.keySelector).ToArray();
+        var len = source.length;
+        var keySelector = this.keySelector;
+        var keys = new Array(len);
+        for (var i = 0; i < len; i++) keys[i] = keySelector(source[i]);
+        this.keys = keys;
+
         if (this.child != null) this.child.GenerateKeys(source);
     }
 
@@ -2377,12 +2386,9 @@ Enumerable = (function ()
                 function () { index = (count < 0) ? 0 : count },
                 function ()
                 {
-                    while (index < source.length)
-                    {
-                        return this.Yield(source[index++]);
-                        index++;
-                    }
-                    return false;
+                    return (index < source.length)
+                        ? this.Yield(source[index++])
+                        : false;
                 },
                 Functions.Blank);
         });
@@ -2454,12 +2460,9 @@ Enumerable = (function ()
             Functions.Blank,
             function ()
             {
-                while (index < source.length)
-                {
-                    return this.Yield(source[index++]);
-                    index++;
-                }
-                return false;
+                return (index < source.length)
+                    ? this.Yield(source[index++])
+                    : false;
             },
             Functions.Blank);
     }

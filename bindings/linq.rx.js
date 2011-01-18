@@ -3,27 +3,44 @@
 
 (function (Enumerable)
 {
-    Enumerable.prototype.ToObservable = function ()
+    Enumerable.prototype.ToObservable = function (scheduler)
     {
         /// <summary>Converts an enumerable sequence to an observable sequence.</summary>
+        /// <param type="Optional:Rx.Scheduler" name="scheduler">Rx.Scheduler. Default is CurrentThread.</param>
         var source = this;
+        if (scheduler == null) scheduler = Rx.Scheduler.CurrentThread;
+
         return Rx.Observable.CreateWithDisposable(function (observer)
         {
-            var errorOccured = false;
-            try
-            {
-                source.ForEach(function (x) { observer.OnNext(x) });
-            }
-            catch (e)
-            {
-                errorOccured = true;
-                observer.OnError(e);
-            }
-            if (!errorOccured) observer.OnCompleted();
+            var disposable = new Rx.BooleanDisposable();
+            var enumerator = source.GetEnumerator();
 
-            return Rx.Disposable.Empty;
+            scheduler.ScheduleRecursive(function (self)
+            {
+                try
+                {
+                    if (!disposable.GetIsDisposed() && enumerator.MoveNext())
+                    {
+                        observer.OnNext(enumerator.Current());
+                        self();
+                    }
+                    else
+                    {
+                        enumerator.Dispose();
+                        observer.OnCompleted();
+                    }
+                }
+                catch (e)
+                {
+                    enumerator.Dispose();
+                    observer.OnError(e);
+                }
+            });
+
+            return disposable;
         });
     }
+
 
     Rx.Observable.prototype.ToEnumerable = function ()
     {

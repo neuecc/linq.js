@@ -1,6 +1,6 @@
 /*--------------------------------------------------------------------------
 * linq.js - LINQ for JavaScript
-* ver 2.2.0.0 (Jun. 28th, 2010)
+* ver 2.2.0.1 (Jan. 18th, 2011)
 *
 * created and maintained by neuecc <ils@neue.cc>
 * licensed under Microsoft Public License(Ms-PL)
@@ -98,6 +98,14 @@ How to use CodeSnippets
     jqrange = $.Enumerable.Range()
 
 // history
+
+2011-01-18 ver 2.2.0.1
+    Change
+        ToObservable(linq.rx.js) receive scheduler
+        OrderBy optimized performance
+        minifier/jQuery genereted by F# Script
+    Bug Fix
+        remove two not declared var
 
 2010-06-28 ver 2.2.0.0
     Add Method

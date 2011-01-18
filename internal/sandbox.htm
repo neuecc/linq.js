@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>test page</title>
+    <script src="../linq.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        var dict = Enumerable.Empty().ToDictionary();
+        dict.Add("a", 1);
+        dict.Add("b", 2);
+        dict.Add("c", 3);
+
+        var ar = dict.ToEnumerable().OrderBy("$.Key").ToArray();
+
+        dict.Clear();
+        dict.Add(obj1, 1);
+        dict.Add(obj1_, 2);
+        dict.Add(obj2, 3);
+        dict.Add(obj2_, 4);
+
+        ar = dict.ToEnumerable().OrderBy("$.Key.a").ToArray();
+
+
+        dict = Enumerable.Empty().ToDictionary("", "", aComparer);
+        dict.Add(obj1, 1);
+        dict.Add(obj1_, 2);
+        dict.Add(obj2, 3);
+        dict.Add(obj2_, 4);
+        ar = dict.ToEnumerable().OrderBy("$.Key.a").ToArray();
+
+
+
+        var z = 100;
+    </script>
+
+
+</head>
+<body>
+</body>
+</html>

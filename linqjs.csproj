@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FB7C5B3A-FC57-4ED0-A5F2-F22BDA40529C}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>linqjs</RootNamespace>
+    <AssemblyName>linqjs</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bindings\linq.rx.js" />
+    <Content Include="bindings\RxVSDocGenerator\Mono.Cecil.dll" />
+    <Content Include="bindings\RxVSDocGenerator\ReadMe_RxVSDocGenerator.txt" />
+    <Content Include="bindings\RxVSDocGenerator\RxVSDocGenerator.exe" />
+    <Content Include="internal\lib\AjaxMin.dll" />
+    <Content Include="internal\lib\jquery-1.4.1-vsdoc.js" />
+    <Content Include="internal\lib\jquery-1.4.1.js" />
+    <Content Include="internal\lib\jquery-1.4.1.min.js" />
+    <Content Include="internal\nuget-package\NuGet.exe" />
+    <Content Include="internal\sandbox.htm" />
+    <Content Include="jquery.linq-vsdoc.js" />
+    <Content Include="jquery.linq.js" />
+    <Content Include="jquery.linq.min.js" />
+    <Content Include="linq-vsdoc.js" />
+    <Content Include="linq.js" />
+    <Content Include="linq.min.js" />
+    <Content Include="ReadMe.txt" />
+    <Content Include="reference.htm" />
+    <Content Include="sample\script.wsf" />
+    <Content Include="sample\tutorial.htm" />
+    <Content Include="test\action.js" />
+    <Content Include="test\aggregate.js" />
+    <Content Include="test\arrayEnumerable.js" />
+    <Content Include="test\convert.js" />
+    <Content Include="test\dictionary.js" />
+    <Content Include="test\enumerable.js" />
+    <Content Include="test\errorHandling.js" />
+    <Content Include="test\functional.js" />
+    <Content Include="test\grouping.js" />
+    <Content Include="test\join.js" />
+    <Content Include="test\ordering.js" />
+    <Content Include="test\paging.js" />
+    <Content Include="test\projection.js" />
+    <Content Include="test\qunit.css" />
+    <Content Include="test\qunit.js" />
+    <Content Include="test\set.js" />
+    <Content Include="test\testrunner.htm" />
+    <Content Include="test\testrunner.min.htm" />
+    <Content Include="test\testrunner.jquery.htm" />
+    <Content Include="test\testrunner.jquery.min.htm" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bindings\RxVSDocGenerator\RxVSDocGenerator.cs" />
+    <Compile Include="sample\LinqJS.cs" />
+    <Content Include="web.config" />
+    <Content Include="web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
+    </Content>
+    <Content Include="web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="internal\minifier.fsx" />
+    <None Include="internal\nuget-package\linq.js-jquery.nuspec" />
+    <None Include="internal\nuget-package\linq.js.nuspec">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="internal\nuget-package\package.bat" />
+    <None Include="snippets\Action0.snippet" />
+    <None Include="snippets\Action1.snippet" />
+    <None Include="snippets\Action2.snippet" />
+    <None Include="snippets\EnumerableFrom.snippet" />
+    <None Include="snippets\EnumerableRange.snippet" />
+    <None Include="snippets\Func0.snippet" />
+    <None Include="snippets\Func1.snippet" />
+    <None Include="snippets\Func2.snippet" />
+    <None Include="snippets\jQueryEnumerableFrom.snippet" />
+    <None Include="snippets\jQueryEnumerableRange.snippet" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>34426</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
