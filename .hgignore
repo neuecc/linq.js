@@ -3,3 +3,4 @@ glob:obj/*
 glob:*.nupkg
 glob:*.suo
 glob:*.user
+glob:*.config
