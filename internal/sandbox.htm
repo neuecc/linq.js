@@ -2,39 +2,21 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>test page</title>
-    <script src="../linq.js" type="text/javascript"></script>
+    
+    <script src="lib/jquery-1.4.1.js" type="text/javascript"></script>
+    <script src="lib/rx.js" type="text/javascript"></script>
+    <script src="../jquery.linq.js" type="text/javascript"></script>
+    <script src="../bindings/linq.rx.js" type="text/javascript"></script>
+    
     <script type="text/javascript">
 
-        var dict = Enumerable.Empty().ToDictionary();
-        dict.Add("a", 1);
-        dict.Add("b", 2);
-        dict.Add("c", 3);
 
-        var ar = dict.ToEnumerable().OrderBy("$.Key").ToArray();
-
-        dict.Clear();
-        dict.Add(obj1, 1);
-        dict.Add(obj1_, 2);
-        dict.Add(obj2, 3);
-        dict.Add(obj2_, 4);
-
-        ar = dict.ToEnumerable().OrderBy("$.Key.a").ToArray();
-
-
-        dict = Enumerable.Empty().ToDictionary("", "", aComparer);
-        dict.Add(obj1, 1);
-        dict.Add(obj1_, 2);
-        dict.Add(obj2, 3);
-        dict.Add(obj2_, 4);
-        ar = dict.ToEnumerable().OrderBy("$.Key.a").ToArray();
-
-
-
-        var z = 100;
+        $.Enumerable.Range(1, 1000).ToObservable().Subscribe(function (x) { document.writeln(x) });
     </script>
 
 
 </head>
 <body>
+a
 </body>
 </html>

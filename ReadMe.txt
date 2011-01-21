@@ -1,6 +1,6 @@
 /*--------------------------------------------------------------------------
 * linq.js - LINQ for JavaScript
-* ver 2.2.0.1 (Jan. 18th, 2011)
+* ver 2.2.0.2 (Jan. 21th, 2011)
 *
 * created and maintained by neuecc <ils@neue.cc>
 * licensed under Microsoft Public License(Ms-PL)
@@ -14,6 +14,8 @@ Features
 * Full IntelliSense support for VisualStudio
 * two versions - linq.js(Normal) and jquery.linq.js(jQuery plugin)
 * support Windows Script Host
+* binding for Reactive Extensions for JavaScript(RxJS)
+* NuGet install support(linq.js, linq.js-jQuery, linq.js-Bindings)
 
 Tutorial
 
@@ -25,7 +27,7 @@ linq.js
         Enumerable.Range(1,10)....
     </script>
 
-jQuery.linq.js
+jQuery.linq.js (jQuery plugin)
 ---
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="jquery.linq.js"></script>
@@ -37,6 +39,33 @@ jQuery.linq.js
     jQuery plugin version is added two methods.
     * Enumerable.prototype.TojQuery (Enumerable to jQuery object)
     * jQuery.prototype.toEnumerable (jQuery object to Eunmerable)
+
+bindings/linq.jquery.js
+---
+    <script type="text/javascript" src="linq.js"></script>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="linq.jquery.js"></script>
+    <script type="text/javascript">
+        Enumerable.Range(1,10).TojQuery()...
+    </script>
+    
+    jQuery Bindings added two methods(TojQuery and toEnumerable)
+    There are same as plugin version.
+
+binding/linq.rx.js
+---
+    more tutorial see linq.js CodePlex's Documentation
+    
+    <script type="text/javascript" src="rx.js"></script>
+    <script type="text/javascript" src="linq.js"></script>
+    <script type="text/javascript" src="linq.rx.js"></script>
+
+    or
+    
+    <script type="text/javascript" src="rx.js"></script>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="jquery.linq.js"></script>
+    <script type="text/javascript" src="linq.rx.js"></script>
 
 -vsdoc.js
 ---
@@ -66,21 +95,6 @@ for Windows Script Host
         </script>
     </job>
 
-RxJS binding
----
-    more tutorial see linq.js CodePlex's Documentation
-    
-    <script type="text/javascript" src="rx.js"></script>
-    <script type="text/javascript" src="linq.js"></script>
-    <script type="text/javascript" src="linq.rx.js"></script>
-
-    or
-    
-    <script type="text/javascript" src="rx.js"></script>
-    <script type="text/javascript" src="jquery.js"></script>
-    <script type="text/javascript" src="jquery.linq.js"></script>
-    <script type="text/javascript" src="linq.rx.js"></script>
-
 How to use CodeSnippets
 ---
     open Visual Studio 2010's Code Snippet Manager(Ctrl+K, Ctrl+B)
@@ -98,6 +112,12 @@ How to use CodeSnippets
     jqrange = $.Enumerable.Range()
 
 // history
+
+2011-01-21 ver 2.2.0.2
+    Add
+        bindings/linq.jquery.js
+    Info
+         NuGet Package Added to NuGet Gallery
 
 2011-01-18 ver 2.2.0.1
     Change

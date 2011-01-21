@@ -1,6 +1,6 @@
 ﻿/*--------------------------------------------------------------------------
 * linq.js - LINQ for JavaScript
-* ver 2.2.0.1 (Jan. 18th, 2011)
+* ver 2.2.0.2 (Jan. 21th, 2011)
 *
 * created and maintained by neuecc <ils@neue.cc>
 * licensed under Microsoft Public License(Ms-PL)

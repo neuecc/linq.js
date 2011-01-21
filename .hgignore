@@ -4,3 +4,4 @@ glob:*.nupkg
 glob:*.suo
 glob:*.user
 glob:*.config
+glob:internal/archive.zip

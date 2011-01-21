@@ -1,6 +1,6 @@
 ﻿/*--------------------------------------------------------------------------
 * linq.js - LINQ for JavaScript
-* ver 2.2.0.1 (Jan. 18th, 2011)
+* ver 2.2.0.2 (Jan. 21th, 2011)
 *
 * created and maintained by neuecc <ils@neue.cc>
 * licensed under Microsoft Public License(Ms-PL)
@@ -2730,15 +2730,22 @@ jQuery.extend({ Enumerable: (function (){
     return Enumerable;
 })()});
 
-(function ($)
+// binding for jQuery
+// toEnumerable / TojQuery
+
+(function ($, Enumerable)
 {
     $.fn.toEnumerable = function ()
     {
-        return $.Enumerable.From(this).Select(function (e) { return $(e) });
+        /// <summary>each contains elements. to Enumerable&lt;jQuery&gt;.</summary>
+        /// <returns type="Enumerable"></returns>
+        return Enumerable.From(this).Select(function (e) { return $(e) });
     }
 
-    $.Enumerable.prototype.TojQuery = function ()
+    Enumerable.prototype.TojQuery = function ()
     {
+        /// <summary>Enumerable to jQuery.</summary>
+        /// <returns type="jQuery"></returns>
         return $(this.ToArray());
     }
-})(jQuery)
+})(jQuery, this.Enumerable || this.jQuery.Enumerable)

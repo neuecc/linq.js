@@ -9,20 +9,7 @@ open Microsoft.Ajax.Utilities
 let root = Path.GetDirectoryName(__SOURCE_DIRECTORY__)
 let nl = Environment.NewLine
 let jq_extend = "jQuery.extend({ Enumerable: (function ()"
-let jq_plugin = @"});
-
-(function ($)
-{
-    $.fn.toEnumerable = function ()
-    {
-        return $.Enumerable.From(this).Select(function (e) { return $(e) });
-    }
-
-    $.Enumerable.prototype.TojQuery = function ()
-    {
-        return $(this.ToArray());
-    }
-})(jQuery)"
+let jq_plugin = "});" + nl + nl + File.ReadAllText(Path.Combine(root, "bindings/linq.jquery.js"))
 
 // read
 let linqjs =  Path.Combine(root, "linq.js") |> File.ReadAllLines

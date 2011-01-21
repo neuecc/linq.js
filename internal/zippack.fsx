@@ -17,11 +17,9 @@ let top =
 
 let sub = 
     let allowDirs = Set(["bindings"; "sample"; "snippets"; "test" ])
-    let ignoreFiles = Set(["testrunner.jquery.htm"; "testrunner.jquery.min.htm"; "testrunner.min.htm"]) 
     rootDir.EnumerateDirectories()
     |> Seq.filter (fun x -> allowDirs.Contains x.Name)
     |> Seq.collect (fun x -> x.EnumerateFiles("*", SearchOption.AllDirectories))
-    |> Seq.filter (fun x -> not (ignoreFiles.Contains x.Name ))
 
 // compress
 do
