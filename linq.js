@@ -1,6 +1,6 @@
 ﻿/*--------------------------------------------------------------------------
 * linq.js - LINQ for JavaScript
-* ver 2.2.0.2 (Jan. 21th, 2011)
+* ver 2.2.0.2++ // dev version
 *
 * created and maintained by neuecc <ils@neue.cc>
 * licensed under Microsoft Public License(Ms-PL)
@@ -8,12 +8,105 @@
 * http://linqjs.codeplex.com/
 *--------------------------------------------------------------------------*/
 
+// currentry development.
+// add Enumerable.ZipWith and Merge.
+// two methods are not tested.
+
 Enumerable = (function ()
 {
     var Enumerable = function (getEnumerator)
     {
         this.GetEnumerator = getEnumerator;
     }
+
+    // test.
+
+    Enumerable.ZipWith = function ()
+    {
+        var args = arguments;
+        var selector = Utils.CreateLambda(arguments[arguments.length - 1]);
+
+        return new Enumerable(function ()
+        {
+            var enumerators;
+            var index = 0;
+
+            return new IEnumerator(
+            function ()
+            {
+                var array = Enumerable.From(args)
+                    .TakeExceptLast()
+                    .Select(Enumerable.From)
+                    .Select(function (x) { return x.GetEnumerator() })
+                    .ToArray();
+                enumerators = Enumerable.From(array);
+            },
+            function ()
+            {
+                if (enumerators.All(function (x) { return x.MoveNext() }))
+                {
+                    var array = enumerators
+                        .Select(function (x) { return x.Current() })
+                        .Concat(index++)
+                        .ToArray();
+                    return this.Yield(selector.apply(null, array));
+                }
+                else return false;
+            },
+            function ()
+            {
+                enumerators.ForEach(Utils.Dispose);
+            });
+        });
+    };
+
+    Enumerable.Merge = function ()
+    {
+        var args = arguments;
+
+        return new Enumerable(function ()
+        {
+            var enumerators;
+            var index = -1;
+
+            return new IEnumerator(
+            function ()
+            {
+                enumerators = Enumerable.From(args)
+                    .Select(Enumerable.From)
+                    .Select(function (x) { return x.GetEnumerator() })
+                    .ToArray();
+            },
+            function ()
+            {
+                while (enumerators.length > 0)
+                {
+                    index = (index >= enumerators.length - 1) ? 0 : index + 1;
+                    var enumerator = enumerators[index];
+
+                    if (enumerator.MoveNext())
+                    {
+                        return this.Yield(enumerator.Current());
+                    }
+                    else
+                    {
+                        enumerator.Dispose();
+                        enumerators.splice(index--, 1);
+                    }
+                }
+                return false;
+            },
+            function ()
+            {
+                for (var i = 0; i < enumerators.length; i++)
+                {
+                    Utils.Dispose(enumerators[i]);
+                }
+            });
+        });
+    };
+
+
 
     // Generator
 
