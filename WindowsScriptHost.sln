@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C88F13EF-AE1F-478C-8ADC-D761DD055243}"
+	ProjectSection(SolutionItems) = preProject
+		IWshRuntimeLibrary_class.js = IWshRuntimeLibrary_class.js
+		IWshRuntimeLibrary_enum.js = IWshRuntimeLibrary_enum.js
+		linq-vsdoc.js = linq-vsdoc.js
+		linq.js = linq.js
+		linq.tools-vsdoc.js = linq.tools-vsdoc.js
+		linq.tools.js = linq.tools.js
+		linq.wsh-vsdoc.js = linq.wsh-vsdoc.js
+		linq.wsh.js = linq.wsh.js
+		main.js = main.js
+		script.wsf = script.wsf
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
