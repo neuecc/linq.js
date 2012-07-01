@@ -1,4 +1,6 @@
 ﻿/// <reference path="testrunner.htm"/>
+/// <reference path="~/linq.js" />
+/// <reference path="qunit.js"/>
 
 module("Dictionary");
 

@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "linqjs", "linqjs.csproj", "{FB7C5B3A-FC57-4ED0-A5F2-F22BDA40529C}"
 EndProject
 Global

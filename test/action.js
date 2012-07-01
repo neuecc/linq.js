@@ -1,10 +1,11 @@
-﻿/// <reference path="testrunner.htm"/>
+﻿/// <reference path="~/linq.js" />
+/// <reference path="qunit.js"/>
 
 module("Action");
 
 test("Do", function ()
 {
-    var array = []
+    var array = [];
     actual = Enumerable.Range(1, 10).Do(function (i) { array.push(i) }).ToArray();
     deepEqual(actual, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 

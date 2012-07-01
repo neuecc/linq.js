@@ -14,18 +14,18 @@ Enumerable = (function ()
         this.GetEnumerator = getEnumerator;
     }
 
-    Enumerable.Choice = function (Params_Contents)
+    Enumerable.choice = function (Params_Contents)
     {
         /// <summary>Random choice from arguments.
-        /// Ex: Choice(1,2,3) - 1,3,2,3,3,2,1...</summary>
+        /// Ex: choice(1,2,3) - 1,3,2,3,3,2,1...</summary>
         /// <param type="T" name="Params_Contents" parameterArray="true">Array or Params Contents</param>
         /// <returns type="Enumerable"></returns>
     }
 
-    Enumerable.Cycle = function (Params_Contents)
+    Enumerable.cycle = function (Params_Contents)
     {
-        /// <summary>Cycle Repeat from arguments.
-        /// Ex: Cycle(1,2,3) - 1,2,3,1,2,3,1,2,3...</summary>
+        /// <summary>cycle Repeat from arguments.
+        /// Ex: cycle(1,2,3) - 1,2,3,1,2,3,1,2,3...</summary>
         /// <param type="T" name="Params_Contents" parameterArray="true">Array or Params Contents</param>
         /// <returns type="Enumerable"></returns>
     }

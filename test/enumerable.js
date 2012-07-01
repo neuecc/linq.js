@@ -1,23 +1,25 @@
 ﻿/// <reference path="testrunner.htm"/>
+/// <reference path="~/linq.js" />
+/// <reference path="qunit.js"/>
 
 module("Enumerable");
 
-test("Choice", function ()
+test("choice", function ()
 {
-    actual = Enumerable.Choice(1, 10, 31, 42).Take(10).ToArray();
+    actual = Enumerable.choice(1, 10, 31, 42).Take(10).ToArray();
     notEqual(actual, [1, 10, 31, 42, 1, 10, 31, 42, 1, 10], "random test. if failed retry");
     equal(actual.length, 10);
 
-    actual = Enumerable.Choice([1, 10, 31, 42]).Take(10).ToArray();
+    actual = Enumerable.choice([1, 10, 31, 42]).Take(10).ToArray();
     notEqual(actual, [1, 10, 31, 42, 1, 10, 31, 42, 1, 10], "random test. if failed retry");
     equal(actual.length, 10);
 });
 
-test("Cycle", function ()
+test("cycle", function ()
 {
-    actual = Enumerable.Cycle(1, 10, 31, 42).Take(10).ToArray();
+    actual = Enumerable.cycle(1, 10, 31, 42).Take(10).ToArray();
     deepEqual(actual, [1, 10, 31, 42, 1, 10, 31, 42, 1, 10]);
-    actual = Enumerable.Cycle([1, 2, 3, 4, 5]).Take(10).ToArray();
+    actual = Enumerable.cycle([1, 2, 3, 4, 5]).Take(10).ToArray();
     deepEqual(actual, [1, 2, 3, 4, 5, 1, 2, 3, 4, 5]);
 });
 
