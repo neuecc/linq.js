@@ -14,7 +14,7 @@ var obj2_ = { a: 2 }
 
 test("AddGetCountRemoveClear", function ()
 {
-    var dict = Enumerable.Empty().ToDictionary();
+    var dict = Enumerable.empty().ToDictionary();
     dict.Add("a", 1);
     dict.Add("b", 2);
     dict.Add("c", 3);
@@ -49,7 +49,7 @@ test("AddGetCountRemoveClear", function ()
     equal(undefined, dict.Get(obj2));
     equal(0, dict.Count());
 
-    dict = Enumerable.Empty().ToDictionary("", "", aComparer);
+    dict = Enumerable.empty().ToDictionary("", "", aComparer);
 
     dict.Add(obj1, 1);
     dict.Add(obj1_, 2);
@@ -75,7 +75,7 @@ test("AddGetCountRemoveClear", function ()
 
 test("SetContains", function ()
 {
-    var dict = Enumerable.Empty().ToDictionary();
+    var dict = Enumerable.empty().ToDictionary();
     dict.Add("a", 1);
     dict.Add("b", 2);
     dict.Add(obj1, 1);
@@ -95,7 +95,7 @@ test("SetContains", function ()
     ok(!dict.Contains("c"));
     ok(!dict.Contains(obj2));
 
-    dict = Enumerable.Empty().ToDictionary("", "", aComparer);
+    dict = Enumerable.empty().ToDictionary("", "", aComparer);
     dict.Add(obj1, 1);
     dict.Add(obj1_, 2);
     dict.Add(obj2, 3);
@@ -115,7 +115,7 @@ test("SetContains", function ()
 
 test("ToEnumerable", function ()
 {
-    var dict = Enumerable.Empty().ToDictionary();
+    var dict = Enumerable.empty().ToDictionary();
     dict.Add("a", 1);
     dict.Add("b", 2);
     dict.Add("c", 3);
@@ -144,7 +144,7 @@ test("ToEnumerable", function ()
     equal(obj2_, ar[3].Key);
     equal(4, ar[3].Value);
 
-    dict = Enumerable.Empty().ToDictionary("", "", aComparer);
+    dict = Enumerable.empty().ToDictionary("", "", aComparer);
     dict.Add(obj1, 1);
     dict.Add(obj1_, 2);
     dict.Add(obj2, 3);

@@ -8,7 +8,7 @@ test("Join", function ()
 {
     var math = { yamada: 100, tanaka: 80, yoshida: 94 };
     var english = { yamada: 73, yoshida: 26, tanaka: 99 };
-    actual = Enumerable.From(math)
+    actual = Enumerable.from(math)
         .Join(english, "outer=>outer.Key", "inner=>inner.Key",
             "o,i=>{Name:o.Key,Math:o.Value,English:i.Value}")
         .ToArray();
@@ -17,7 +17,7 @@ test("Join", function ()
                 { Name: "yoshida", Math: 94, English: 26}];
     deepEqual(actual, expected);
 
-    actual = Enumerable.From(math)
+    actual = Enumerable.from(math)
         .Join(english, "outer=>outer", "inner=>inner",
             "o,i=>{Name:o.Key,Math:o.Value,English:i.Value}", "$.Key")
         .ToArray();
@@ -31,7 +31,7 @@ test("GroupJoin", function ()
 {
     var array1 = [3, 3, 4, 5, 6];
     var array2 = [2, 4, 5, 6, 6];
-    actual = Enumerable.From(array1)
+    actual = Enumerable.from(array1)
         .GroupJoin(array2, " i => i", " i => i",
             function (outer, collection)
             {
@@ -48,7 +48,7 @@ test("GroupJoin", function ()
         { outer: 6, collection: [6, 6]}];
     deepEqual(actual, expected);
 
-    actual = Enumerable.From(array1)
+    actual = Enumerable.from(array1)
         .GroupJoin(array2, " i => i", " i => i",
             function (outer, collection)
             {

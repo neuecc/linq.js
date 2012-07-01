@@ -4,8 +4,8 @@
 
 module("ArrayEnumerable");
 
-var arraySequence = Enumerable.From([1, 10, 100, 1000, 10000]);
-var emptySequence = Enumerable.From([]);
+var arraySequence = Enumerable.from([1, 10, 100, 1000, 10000]);
+var emptySequence = Enumerable.from([]);
 
 test("Any", function ()
 {

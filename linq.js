@@ -1,6 +1,6 @@
 ﻿/*--------------------------------------------------------------------------
 * linq.js - LINQ for JavaScript
-* ver 2.2.0.2 (Jan. 21th, 2011)
+* ver S2.2.0.2 (Jan. 21th, 2011)
 *
 * created and maintained by neuecc <ils@neue.cc>
 * licensed under Microsoft Public License(Ms-PL)
@@ -41,7 +41,7 @@ Enumerable = (function () {
                 Functions.Blank);
         });
     };
-    Enumerable.Empty = function () {
+    Enumerable.empty = function () {
         return new Enumerable(function () {
             return new IEnumerator(
                 Functions.Blank,
@@ -49,15 +49,15 @@ Enumerable = (function () {
                 Functions.Blank);
         });
     };
-    Enumerable.From = function (obj) {
+    Enumerable.from = function (obj) {
         if (obj == null) {
-            return Enumerable.Empty();
+            return Enumerable.empty();
         }
         if (obj instanceof Enumerable) {
             return obj;
         }
         if (typeof obj == Types.Number || typeof obj == Types.Boolean) {
-            return Enumerable.Repeat(obj, 1);
+            return Enumerable.repeat(obj, 1);
         }
         if (typeof obj == Types.String) {
             return new Enumerable(function () {
@@ -115,11 +115,11 @@ Enumerable = (function () {
                 Functions.Blank);
         });
     },
-    Enumerable.Return = function (element) {
-        return Enumerable.Repeat(element, 1);
+    Enumerable.make = function (element) {
+        return Enumerable.repeat(element, 1);
     }; // Overload:function(input, pattern)
     // Overload:function(input, pattern, flags)
-    Enumerable.Matches = function (input, pattern, flags) {
+    Enumerable.matches = function (input, pattern, flags) {
         if (flags == null) flags = "";
         if (pattern instanceof RegExp) {
             flags += (pattern.ignoreCase) ? "i" : "";
@@ -140,25 +140,25 @@ Enumerable = (function () {
         });
     }; // Overload:function(start, count)
     // Overload:function(start, count, step)
-    Enumerable.Range = function (start, count, step) {
+    Enumerable.range = function (start, count, step) {
         if (step == null) step = 1;
         return Enumerable.ToInfinity(start, step).Take(count);
     }; // Overload:function(start, count)
     // Overload:function(start, count, step)
-    Enumerable.RangeDown = function (start, count, step) {
+    Enumerable.rangeDown = function (start, count, step) {
         if (step == null) step = 1;
         return Enumerable.ToNegativeInfinity(start, step).Take(count);
     }; // Overload:function(start, to)
     // Overload:function(start, to, step)
-    Enumerable.RangeTo = function (start, to, step) {
+    Enumerable.rangeTo = function (start, to, step) {
         if (step == null) step = 1;
         return (start < to)
             ? Enumerable.ToInfinity(start, step).TakeWhile(function (i) { return i <= to; })
             : Enumerable.ToNegativeInfinity(start, step).TakeWhile(function (i) { return i >= to; });
     }; // Overload:function(obj)
     // Overload:function(obj, num)
-    Enumerable.Repeat = function (obj, num) {
-        if (num != null) return Enumerable.Repeat(obj).Take(num);
+    Enumerable.repeat = function (obj, num) {
+        if (num != null) return Enumerable.repeat(obj).Take(num);
 
         return new Enumerable(function () {
             return new IEnumerator(
@@ -167,7 +167,7 @@ Enumerable = (function () {
                 Functions.Blank);
         });
     };
-    Enumerable.RepeatWithFinalize = function (initializer, finalizer) {
+    Enumerable.repeatWithFinalize = function (initializer, finalizer) {
         initializer = Utils.CreateLambda(initializer);
         finalizer = Utils.CreateLambda(finalizer);
 
@@ -271,7 +271,7 @@ Enumerable = (function () {
                                     return this.Yield(resultSelector(enumerator.Current(), nestLevel));
                                 }
 
-                                var next = Enumerable.From(buffer).SelectMany(function (x) { return func(x); });
+                                var next = Enumerable.from(buffer).SelectMany(function (x) { return func(x); });
                                 if (!next.Any()) {
                                     return false;
                                 } else {
@@ -305,7 +305,7 @@ Enumerable = (function () {
                                 if (enumerator.MoveNext()) {
                                     var value = resultSelector(enumerator.Current(), enumeratorStack.length);
                                     enumeratorStack.push(enumerator);
-                                    enumerator = Enumerable.From(func(enumerator.Current())).GetEnumerator();
+                                    enumerator = Enumerable.from(func(enumerator.Current())).GetEnumerator();
                                     return this.Yield(value);
                                 }
 
@@ -318,7 +318,7 @@ Enumerable = (function () {
                             try {
                                 Utils.Dispose(enumerator);
                             } finally {
-                                Enumerable.From(enumeratorStack).ForEach(function (s) { s.Dispose(); });
+                                Enumerable.from(enumeratorStack).ForEach(function (s) { s.Dispose(); });
                             }
                         });
                 });
@@ -346,7 +346,7 @@ Enumerable = (function () {
                                 if (enumerator.MoveNext()) {
                                     if (enumerator.Current() instanceof Array) {
                                         Utils.Dispose(middleEnumerator);
-                                        middleEnumerator = Enumerable.From(enumerator.Current())
+                                        middleEnumerator = Enumerable.from(enumerator.Current())
                                             .SelectMany(Functions.Identity)
                                             .Flatten()
                                             .GetEnumerator();
@@ -479,7 +479,7 @@ Enumerable = (function () {
                             do {
                                 if (middleEnumerator == null) {
                                     var middleSeq = collectionSelector(enumerator.Current(), index++);
-                                    middleEnumerator = Enumerable.From(middleSeq).GetEnumerator();
+                                    middleEnumerator = Enumerable.from(middleSeq).GetEnumerator();
                                 }
                                 if (middleEnumerator.MoveNext()) {
                                     return this.Yield(resultSelector(enumerator.Current(), middleEnumerator.Current()));
@@ -561,7 +561,7 @@ Enumerable = (function () {
                     return new IEnumerator(
                         function () {
                             firstEnumerator = source.GetEnumerator();
-                            secondEnumerator = Enumerable.From(second).GetEnumerator();
+                            secondEnumerator = Enumerable.from(second).GetEnumerator();
                         },
                         function () {
                             if (firstEnumerator.MoveNext() && secondEnumerator.MoveNext()) {
@@ -599,7 +599,7 @@ Enumerable = (function () {
                     return new IEnumerator(
                         function () {
                             outerEnumerator = source.GetEnumerator();
-                            lookup = Enumerable.From(inner).ToLookup(innerKeySelector, Functions.Identity, compareSelector);
+                            lookup = Enumerable.from(inner).ToLookup(innerKeySelector, Functions.Identity, compareSelector);
                         },
                         function () {
                             while (true) {
@@ -641,7 +641,7 @@ Enumerable = (function () {
                     return new IEnumerator(
                         function () {
                             enumerator = source.GetEnumerator();
-                            lookup = Enumerable.From(inner).ToLookup(innerKeySelector, Functions.Identity, compareSelector);
+                            lookup = Enumerable.from(inner).ToLookup(innerKeySelector, Functions.Identity, compareSelector);
                         },
                         function () {
                             if (enumerator.MoveNext()) {
@@ -700,7 +700,7 @@ Enumerable = (function () {
                         function () {
                             if (secondEnumerator == null) {
                                 if (firstEnumerator.MoveNext()) return this.Yield(firstEnumerator.Current());
-                                secondEnumerator = Enumerable.From(second).GetEnumerator();
+                                secondEnumerator = Enumerable.from(second).GetEnumerator();
                             }
                             if (secondEnumerator.MoveNext()) return this.Yield(secondEnumerator.Current());
                             return false;
@@ -727,7 +727,7 @@ Enumerable = (function () {
                     return new IEnumerator(
                         function () {
                             firstEnumerator = source.GetEnumerator();
-                            secondEnumerator = Enumerable.From(second).GetEnumerator();
+                            secondEnumerator = Enumerable.from(second).GetEnumerator();
                         },
                         function () {
                             if (count == index && secondEnumerator.MoveNext()) {
@@ -754,9 +754,9 @@ Enumerable = (function () {
             },
 
             Alternate: function (value) {
-                value = Enumerable.Return(value);
+                value = Enumerable.make(value);
                 return this.SelectMany(function (elem) {
-                    return Enumerable.Return(elem).Concat(value);
+                    return Enumerable.make(elem).Concat(value);
                 }).TakeExceptLast();
             },
 
@@ -801,7 +801,7 @@ Enumerable = (function () {
             // Overload:function()
             // Overload:function(compareSelector)
             Distinct: function (compareSelector) {
-                return this.Except(Enumerable.Empty(), compareSelector);
+                return this.Except(Enumerable.empty(), compareSelector);
             },
 
             // Overload:function(second)
@@ -818,7 +818,7 @@ Enumerable = (function () {
                         function () {
                             enumerator = source.GetEnumerator();
                             keys = new Dictionary(compareSelector);
-                            Enumerable.From(second).ForEach(function (key) { keys.Add(key); });
+                            Enumerable.from(second).ForEach(function (key) { keys.Add(key); });
                         },
                         function () {
                             while (enumerator.MoveNext()) {
@@ -850,7 +850,7 @@ Enumerable = (function () {
                             enumerator = source.GetEnumerator();
 
                             keys = new Dictionary(compareSelector);
-                            Enumerable.From(second).ForEach(function (key) { keys.Add(key); });
+                            Enumerable.from(second).ForEach(function (key) { keys.Add(key); });
                             outs = new Dictionary(compareSelector);
                         },
                         function () {
@@ -874,7 +874,7 @@ Enumerable = (function () {
 
                 var firstEnumerator = this.GetEnumerator();
                 try {
-                    var secondEnumerator = Enumerable.From(second).GetEnumerator();
+                    var secondEnumerator = Enumerable.from(second).GetEnumerator();
                     try {
                         while (firstEnumerator.MoveNext()) {
                             if (!secondEnumerator.MoveNext()
@@ -917,7 +917,7 @@ Enumerable = (function () {
                                         return this.Yield(current);
                                     }
                                 }
-                                secondEnumerator = Enumerable.From(second).GetEnumerator();
+                                secondEnumerator = Enumerable.from(second).GetEnumerator();
                             }
                             while (secondEnumerator.MoveNext()) {
                                 current = secondEnumerator.Current();
@@ -1066,7 +1066,7 @@ Enumerable = (function () {
 
                             if (group.length > 0) {
                                 var result = (hasResultSelector)
-                                    ? resultSelector(key, Enumerable.From(group))
+                                    ? resultSelector(key, Enumerable.from(group))
                                     : resultSelector(key, group);
                                 if (hasNext) {
                                     key = keySelector(enumerator.Current());
@@ -1425,7 +1425,7 @@ Enumerable = (function () {
             },
 
             TakeFromLast: function (count) {
-                if (count <= 0 || count == null) return Enumerable.Empty();
+                if (count <= 0 || count == null) return Enumerable.empty();
                 var source = this;
 
                 return new Enumerable(function () {
@@ -1441,7 +1441,7 @@ Enumerable = (function () {
                                 q.push(sourceEnumerator.Current());
                             }
                             if (enumerator == null) {
-                                enumerator = Enumerable.From(q).GetEnumerator();
+                                enumerator = Enumerable.from(q).GetEnumerator();
                             }
                             return (enumerator.MoveNext())
                                 ? this.Yield(enumerator.Current())
@@ -1634,7 +1634,7 @@ Enumerable = (function () {
 
                     return new IEnumerator(
                         function () {
-                            enumerator = Enumerable.From(func(source)).GetEnumerator();
+                            enumerator = Enumerable.from(func(source)).GetEnumerator();
                         },
                         function () {
                             return (enumerator.MoveNext())
@@ -2033,7 +2033,7 @@ Enumerable = (function () {
     ArrayEnumerable.prototype.SequenceEqual = function (second, compareSelector) {
         if ((second instanceof ArrayEnumerable || second instanceof Array)
             && compareSelector == null
-            && Enumerable.From(second).Count() != this.Count()) {
+            && Enumerable.from(second).Count() != this.Count()) {
             return false;
         }
 
@@ -2242,7 +2242,7 @@ Enumerable = (function () {
             return dictionary.Count();
         };
         this.Get = function (key) {
-            return Enumerable.From(dictionary.Get(key));
+            return Enumerable.from(dictionary.Get(key));
         };
         this.Contains = function (key) {
             return dictionary.Contains(key);

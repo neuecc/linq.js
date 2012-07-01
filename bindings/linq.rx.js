@@ -46,7 +46,7 @@
     {
         /// <summary>Converts an observable sequence to an enumerable sequence. Notice:cold observable only</summary>
         var obs = this;
-        return Enumerable.Empty()
+        return Enumerable.empty()
             .Let(function ()
             {
                 var array = [];

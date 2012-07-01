@@ -5,3 +5,5 @@ glob:*.suo
 glob:*.user
 glob:*.config
 glob:internal/archive.zip
+glob:_ReSharper.*
+glob:_UpgradeReport_Files/*

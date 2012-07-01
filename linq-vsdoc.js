@@ -24,25 +24,25 @@ Enumerable = (function ()
 
     Enumerable.cycle = function (Params_Contents)
     {
-        /// <summary>cycle Repeat from arguments.
+        /// <summary>cycle repeat from arguments.
         /// Ex: cycle(1,2,3) - 1,2,3,1,2,3,1,2,3...</summary>
         /// <param type="T" name="Params_Contents" parameterArray="true">Array or Params Contents</param>
         /// <returns type="Enumerable"></returns>
     }
 
-    Enumerable.Empty = function ()
+    Enumerable.empty = function ()
     {
         /// <summary>Returns an empty Enumerable.</summary>
         /// <returns type="Enumerable"></returns>
     }
 
-    Enumerable.From = function (obj)
+    Enumerable.from = function (obj)
     {
         /// <summary>
         /// Make Enumerable from obj.
-        /// 1. null = Enumerable.Empty().
+        /// 1. null = Enumerable.empty().
         /// 2. Enumerable = Enumerable.
-        /// 3. Number/Boolean = Enumerable.Repeat(obj, 1).
+        /// 3. Number/Boolean = Enumerable.repeat(obj, 1).
         /// 4. String = to CharArray.(Ex:"abc" => "a","b","c").
         /// 5. Object/Function = to KeyValuePair(except function) Ex:"{a:0}" => (.Key=a, .Value=0).
         /// 6. Array or ArrayLikeObject(has length) = to Enumerable.
@@ -52,64 +52,64 @@ Enumerable = (function ()
         /// <returns type="Enumerable"></returns>
     }
 
-    Enumerable.Return = function (element)
+    Enumerable.make = function (element)
     {
-        /// <summary>Make one sequence. This equals Repeat(element, 1)</summary>
+        /// <summary>Make one sequence. This equals repeat(element, 1)</summary>
         /// <param name="element">element</param>
         /// <returns type="Enumerable"></returns>
     }
 
-    Enumerable.Matches = function (input, pattern, flags)
+    Enumerable.matches = function (input, pattern, flags)
     {
         /// <summary>Global regex match and send regexp object.
-        /// Ex: Matches((.)z,"0z1z2z") - $[1] => 0,1,2</summary>
+        /// Ex: matches((.)z,"0z1z2z") - $[1] => 0,1,2</summary>
         /// <param type="String" name="input">input string</param>
         /// <param type="RegExp/String" name="pattern">RegExp or Pattern string</param>
         /// <param type="Optional:String" name="flags" optional="true">If pattern is String then can use regexp flags "i" or "m" or "im"</param>
         /// <returns type="Enumerable"></returns>
     }
 
-    Enumerable.Range = function (start, count, step)
+    Enumerable.range = function (start, count, step)
     {
         /// <summary>Generates a sequence of integral numbers within a specified range.
-        /// Ex: Range(1,5) - 1,2,3,4,5</summary>
+        /// Ex: range(1,5) - 1,2,3,4,5</summary>
         /// <param type="Number" integer="true" name="start">The value of the first integer in the sequence.</param>
         /// <param type="Number" integer="true" name="count">The number of sequential integers to generate.</param>
-        /// <param type="Optional:Number" integer="true" name="step" optional="true">Step of generate number.(Ex:Range(0,3,5) - 0,5,10)</param>
+        /// <param type="Optional:Number" integer="true" name="step" optional="true">Step of generate number.(Ex:range(0,3,5) - 0,5,10)</param>
         /// <returns type="Enumerable"></returns>
     }
 
-    Enumerable.RangeDown = function (start, count, step)
+    Enumerable.rangeDown = function (start, count, step)
     {
         /// <summary>Generates a sequence of integral numbers within a specified range.
-        /// Ex: RangeDown(5,5) - 5,4,3,2,1</summary>
+        /// Ex: rangeDown(5,5) - 5,4,3,2,1</summary>
         /// <param type="Number" integer="true" name="start">The value of the first integer in the sequence.</param>
         /// <param type="Number" integer="true" name="count">The number of sequential integers to generate.</param>
-        /// <param type="Optional:Number" integer="true" name="step" optional="true">Step of generate number.(Ex:RangeDown(0,3,5) - 0,-5,-10)</param>
+        /// <param type="Optional:Number" integer="true" name="step" optional="true">Step of generate number.(Ex:rangeDown(0,3,5) - 0,-5,-10)</param>
         /// <returns type="Enumerable"></returns>
     }
 
-    Enumerable.RangeTo = function (start, to, step)
+    Enumerable.rangeTo = function (start, to, step)
     {
         /// <summary>Generates a sequence of integral numbers.
-        /// Ex: RangeTo(10,12) - 10,11,12 RangeTo(0,-2) - 0, -1, -2</summary>
+        /// Ex: rangeTo(10,12) - 10,11,12 rangeTo(0,-2) - 0, -1, -2</summary>
         /// <param type="Number" integer="true" name="start">start integer</param>
         /// <param type="Number" integer="true" name="to">to integer</param>
-        /// <param type="Optional:Number" integer="true" name="step" optional="true">Step of generate number.(Ex:RangeTo(0,7,3) - 0,3,6)</param>
+        /// <param type="Optional:Number" integer="true" name="step" optional="true">Step of generate number.(Ex:rangeTo(0,7,3) - 0,3,6)</param>
         /// <returns type="Enumerable"></returns>
     }
 
-    Enumerable.Repeat = function (obj, count)
+    Enumerable.repeat = function (obj, count)
     {
         /// <summary>Generates a sequence that contains one repeated value.
         /// If omit count then generate to infinity.
-        /// Ex: Repeat("foo",3) - "foo","foo","foo"</summary>
+        /// Ex: repeat("foo",3) - "foo","foo","foo"</summary>
         /// <param type="TResult" name="obj">The value to be repeated.</param>
         /// <param type="Optional:Number" integer="true" name="count" optional="true">The number of times to repeat the value in the generated sequence.</param>
         /// <returns type="Enumerable"></returns>
     }
 
-    Enumerable.RepeatWithFinalize = function (initializer, finalizer)
+    Enumerable.repeatWithFinalize = function (initializer, finalizer)
     {
         /// <summary>Lazy Generates one value by initializer's result and do finalize when enumerate end</summary>
         /// <param type="Func&lt;T>" name="initializer">value factory.</param>
@@ -850,14 +850,14 @@ Enumerable = (function ()
     {
         /// <summary>Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.</summary>
         /// <param name="keySelector" type="Func&lt;T,TKey>">A function to extract a key from each element.</param>
-        return Enumerable.Empty().OrderBy();
+        return Enumerable.empty().OrderBy();
     }
 
     OrderedEnumerable.prototype.ThenByDescending = function (keySelector)
     {
         /// <summary>Performs a subsequent ordering of the elements in a sequence in descending order, according to a key.</summary>
         /// <param name="keySelector" type="Func&lt;T,TKey>">A function to extract a key from each element.</param>
-        return Enumerable.Empty().OrderBy();
+        return Enumerable.empty().OrderBy();
     }
 
     return Enumerable;

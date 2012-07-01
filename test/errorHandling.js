@@ -7,7 +7,7 @@ module("ErrorHandling");
 test("Catch", function ()
 {
     var msg;
-    actual = Enumerable.Range(1, 10)
+    actual = Enumerable.range(1, 10)
         .Select(function (i)
         {
             if (i == 5) throw new Error("aiueo");
@@ -25,7 +25,7 @@ test("Catch", function ()
 test("Finally", function ()
 {
     var msg;
-    actual = Enumerable.Range(1, 10)
+    actual = Enumerable.range(1, 10)
         .Select(function (i)
         {
             if (i == 5) throw new Error("aiueo");

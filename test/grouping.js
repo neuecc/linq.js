@@ -8,7 +8,7 @@ var fileList = ["temp.xls", "temp2.xls", "temp.pdf", "temp.jpg", "temp2.pdf", "t
 
 test("GroupBy", function ()
 {
-    actual = Enumerable.From(fileList)
+    actual = Enumerable.from(fileList)
         .GroupBy("file=>file.match(/\\.(.+$)/)[1]")
         .Select("{Key:$.Key(),Value:$.ToArray()}")
         .ToArray();
@@ -17,7 +17,7 @@ test("GroupBy", function ()
                 { Key: "jpg", Value: ["temp.jpg"]}];
     deepEqual(actual, expected);
 
-    actual = Enumerable.From(fileList)
+    actual = Enumerable.from(fileList)
         .GroupBy("file=>file.match(/\\.(.+$)/)[1]", "file=>file.match(/(^.+)\\..+$/)[1]")
         .Select("{Key:$.Key(),Value:$.ToArray()}")
         .ToArray();
@@ -26,7 +26,7 @@ test("GroupBy", function ()
                 { Key: "jpg", Value: ["temp"]}];
     deepEqual(actual, expected);
 
-    actual = Enumerable.From(fileList).GroupBy("file=>file.match(/\\.(.+$)/)[1]",
+    actual = Enumerable.from(fileList).GroupBy("file=>file.match(/\\.(.+$)/)[1]",
         "file=>file",
         "ext,group => {extension:ext,count:group.Count(),files:group.ToArray()}")
         .ToArray();
@@ -40,7 +40,7 @@ test("GroupBy", function ()
         { Date: new Date(2010, 5, 5), Id: 2 },
         { Date: new Date(2000, 1, 1), Id: 3 }
     ]
-    var actual = Enumerable.From(objects)
+    var actual = Enumerable.from(objects)
         .GroupBy("$.Date", "$.Id",
             function (key, group) { return key.getFullYear() + "-" + group.ToString(',') },
             function (key) { return key.toString() })
@@ -51,7 +51,7 @@ test("GroupBy", function ()
 
 test("PartitionBy", function ()
 {
-    actual = Enumerable.From(fileList)
+    actual = Enumerable.from(fileList)
         .PartitionBy("file=>file.match(/\\.(.+$)/)[1]")
         .Select("{Key:$.Key(),Value:$.ToArray()}")
         .ToArray();
@@ -63,7 +63,7 @@ test("PartitionBy", function ()
                 ];
     deepEqual(actual, expected);
 
-    actual = Enumerable.From(fileList)
+    actual = Enumerable.from(fileList)
         .PartitionBy("file=>file.match(/\\.(.+$)/)[1]", "file=>file.match(/(^.+)\\..+$/)[1]")
         .Select("{Key:$.Key(),Value:$.ToArray()}")
         .ToArray();
@@ -75,7 +75,7 @@ test("PartitionBy", function ()
                 ];
     deepEqual(actual, expected);
 
-    actual = Enumerable.From(fileList)
+    actual = Enumerable.from(fileList)
         .PartitionBy("file=>file.match(/\\.(.+$)/)[1]",
             "file=>file",
             "ext,group=>{extension:ext,count:group.Count(),files:group.ToArray()}")
@@ -96,7 +96,7 @@ test("PartitionBy", function ()
         { Date: new Date(2010, 5, 5), Id: 5 },
         { Date: new Date(2010, 5, 5), Id: 6 }
     ]
-    var actual = Enumerable.From(objects)
+    var actual = Enumerable.from(objects)
         .PartitionBy("$.Date", "$.Id",
             function (key, group) { return key.getFullYear() + "-" + group.ToString(',') },
             function (key) { return key.toString() })
@@ -108,7 +108,7 @@ test("PartitionBy", function ()
 
 test("BufferWithCount", function ()
 {
-    actual = Enumerable.Range(1, 10).BufferWithCount("3").ToArray();
+    actual = Enumerable.range(1, 10).BufferWithCount("3").ToArray();
     expected = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [10]];
     deepEqual(actual, expected);
 });

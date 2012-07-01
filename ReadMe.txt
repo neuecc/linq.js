@@ -8,6 +8,18 @@
 * http://linqjs.codeplex.com/
 *--------------------------------------------------------------------------*/
 
+v2 Beta Notice
+
+all methods rename UpperCamelCase to lowerCamelCase
+following methods change name
+Return -> make
+
+
+
+
+//
+
+
 Features
 * implement all .NET 4.0 methods and many extra methods (inspiration from Rx, Achiral, Haskell, Ruby, etc...)
 * complete lazy evaluation

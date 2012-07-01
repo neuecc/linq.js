@@ -15,7 +15,7 @@
 
         window.onload = function ()
         {
-            Enumerable.From(document.getElementsByTagName("pre"))
+            Enumerable.from(document.getElementsByTagName("pre"))
                 .ForEach(function (ele)
                 {
                     eval(ele.innerText || ele.textContent);
@@ -32,32 +32,32 @@
         First step of Lambda Expression</h2>
     <pre>
     // Anonymous function
-    Enumerable.Range(1, 3).Select(function(value, index) { return index + ':' + value }).WriteLine();
+    Enumerable.range(1, 3).Select(function(value, index) { return index + ':' + value }).WriteLine();
     // String like Lambda Expression (arguments => expression)
-    Enumerable.Range(1, 3).Select("value,index=>index+':'+value").WriteLine();
+    Enumerable.range(1, 3).Select("value,index=>index+':'+value").WriteLine();
     
     // If the number of arguments is one , can use default iterator variable '$'
-    Enumerable.Range(1, 3).Select("i=>i*2").WriteLine();
-    Enumerable.Range(1, 3).Select("$*2").WriteLine(); // same
+    Enumerable.range(1, 3).Select("i=>i*2").WriteLine();
+    Enumerable.range(1, 3).Select("$*2").WriteLine(); // same
     
     // "" is shortcut of "x => x" (identity function)
-    Enumerable.Range(4, 7).Join(Enumerable.Range(8, 5), "", "", "outer,inner=>outer*inner").WriteLine();
+    Enumerable.range(4, 7).Join(Enumerable.range(8, 5), "", "", "outer,inner=>outer*inner").WriteLine();
     </pre>
     <h2>
         Scope of lambda expression</h2>
     <pre>
     var number = 3;
     // Can't Find number | lambda expression can use only global variable
-    // Enumerable.Range(1,10).Where("$ == number").WriteLine();
+    // Enumerable.range(1,10).Where("$ == number").WriteLine();
 
     // use anonymous founction, can capture variable
-    Enumerable.Range(1,10).Where(function(i){return i == number}).WriteLine();
+    Enumerable.range(1,10).Where(function(i){return i == number}).WriteLine();
     </pre>
     <h2>
-        From(Object) -> convert to KeyValuePair</h2>
+        from(Object) -> convert to KeyValuePair</h2>
     <pre>
     var object = {foo:"a", "bar":100, "foobar":true};
-    Enumerable.From(object).ForEach(function(obj)
+    Enumerable.from(object).ForEach(function(obj)
     {
         document.write(obj.Key + ":" + obj.Value + "&lt;br />");
     })
@@ -65,7 +65,7 @@
     <h2>
         ForEach (continue and break)</h2>
     <pre>
-    Enumerable.Repeat("foo", 10).ForEach(function(value, index)
+    Enumerable.repeat("foo", 10).ForEach(function(value, index)
     {
         if (index % 2 == 0) return; // continue
         if (index > 6) return false; // break
@@ -87,7 +87,7 @@
     ]
 
     // ref compare, can not grouping
-    Enumerable.From(objects)
+    Enumerable.from(objects)
         .GroupBy("$.Date", "$.Id",
             function (key, group) { return { date: key, ids: group.ToString(',')} })
         .WriteLine("$.date + ':' + $.ids");
@@ -95,7 +95,7 @@
     document.write("------" + "&lt;br />");
 
     // use fourth argument(compareSelector)
-    Enumerable.From(objects)
+    Enumerable.from(objects)
         .GroupBy("$.Date", "$.Id",
             function (key, group) { return { date: key, ids: group.ToString(',')} },
             function (key) { return key.toString() })
@@ -104,10 +104,10 @@
     <h2>
         Regular Expression Matches</h2>
     <pre>
-    // Enumerable.Matches return Enumerable&lt;MatchObject>
+    // Enumerable.matches return Enumerable&lt;MatchObject>
 
     var input = "abcdefgABzDefabgdg";
-    Enumerable.Matches(input, "ab(.)d", "i").ForEach(function(match)
+    Enumerable.matches(input, "ab(.)d", "i").ForEach(function(match)
     {
         for (var prop in match)
         {
@@ -137,9 +137,9 @@
     var instanceB = new cls("b", 2000);
 
     // create blank dictionary
-    var dict = Enumerable.Empty().ToDictionary();
+    var dict = Enumerable.empty().ToDictionary();
     // create blank dictionary(use compareSelector)
-    var dict = Enumerable.Empty().ToDictionary("","",function (x) { return x.a + x.b });
+    var dict = Enumerable.empty().ToDictionary("","",function (x) { return x.a + x.b });
 
     dict.Add(instanceA, "zzz");
     dict.Add(instanceB, "huga");
@@ -156,7 +156,7 @@
         sample - Nondeterministic Programs</h2>
     // from Structure and Interpretation of Computer Programs 4.3.2
     <pre>
-    var apart = Enumerable.Range(1, 5);
+    var apart = Enumerable.range(1, 5);
     var answers = apart
         .SelectMany(function(baker){ return apart
         .SelectMany(function(cooper){ return apart
@@ -164,7 +164,7 @@
         .SelectMany(function(miller){ return apart
         .Select(function(smith){ return {
             baker: baker, cooper: cooper, fletcher: fletcher, miller: miller, smith: smith}})})})})})
-        .Where("Enumerable.From($).Distinct('$.Value').Count() == 5")
+        .Where("Enumerable.from($).Distinct('$.Value').Count() == 5")
         .Where("$.baker != 5")
         .Where("$.cooper != 1")
         .Where("$.fletcher != 1 && $.fletcher != 5")

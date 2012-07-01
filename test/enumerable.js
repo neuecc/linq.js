@@ -23,24 +23,24 @@ test("cycle", function ()
     deepEqual(actual, [1, 2, 3, 4, 5, 1, 2, 3, 4, 5]);
 });
 
-test("Empty", function ()
+test("empty", function ()
 {
-    actual = Enumerable.Empty().ToArray();
+    actual = Enumerable.empty().ToArray();
     deepEqual(actual, []);
 });
 
-test("From", function ()
+test("from", function ()
 {
-    actual = Enumerable.From("temp").ToArray();
+    actual = Enumerable.from("temp").ToArray();
     deepEqual(actual, ["t", "e", "m", "p"]);
 
-    actual = Enumerable.From(3).ToArray();
+    actual = Enumerable.from(3).ToArray();
     deepEqual(actual, [3]);
 
-    actual = Enumerable.From([1, 2, 3, 4, 5]).ToArray();
+    actual = Enumerable.from([1, 2, 3, 4, 5]).ToArray();
     deepEqual(actual, [1, 2, 3, 4, 5]);
 
-    actual = Enumerable.From({ foo: "bar", func: function () { } }).ToArray();
+    actual = Enumerable.from({ foo: "bar", func: function () { } }).ToArray();
     deepEqual(actual, [{ Key: "foo", Value: "bar"}]);
 
     var div = document.createElement("html");
@@ -49,68 +49,68 @@ test("From", function ()
     div.appendChild(document.createElement("div"));
     div.appendChild(document.createElement("div"));
     div.appendChild(last);
-    var seq = Enumerable.From(div.getElementsByTagName("div"));
+    var seq = Enumerable.from(div.getElementsByTagName("div"));
     equal(seq.Count(), 3);
     equal(seq.ElementAt(2), last);
     equal(seq.ElementAt(2).firstChild.nodeValue, "test");
 });
 
-test("Return", function ()
+test("make", function ()
 {
-    actual = Enumerable.Return("hoge").ToArray();
+    actual = Enumerable.make("hoge").ToArray();
     deepEqual(actual, ["hoge"]);
 });
 
-test("Matches", function ()
+test("matches", function ()
 {
-    actual = Enumerable.Matches("xbcyBCzbc", /(.)bc/i).Select("$.index+$[1]").ToArray();
+    actual = Enumerable.matches("xbcyBCzbc", /(.)bc/i).Select("$.index+$[1]").ToArray();
     deepEqual(actual, ["0x", "3y", "6z"]);
-    actual = Enumerable.Matches("xbcyBCzbc", "(.)bc").Select("$.index+$[1]").ToArray(); ;
+    actual = Enumerable.matches("xbcyBCzbc", "(.)bc").Select("$.index+$[1]").ToArray(); ;
     deepEqual(actual, ["0x", "6z"]);
-    actual = Enumerable.Matches("xbcyBCzbc", "(.)bc", "i").Select("$.index+$[1]").ToArray(); ;
+    actual = Enumerable.matches("xbcyBCzbc", "(.)bc", "i").Select("$.index+$[1]").ToArray(); ;
     deepEqual(actual, ["0x", "3y", "6z"]);
 });
 
-test("Range", function ()
+test("range", function ()
 {
-    actual = Enumerable.Range(1, 10).ToArray();
+    actual = Enumerable.range(1, 10).ToArray();
     deepEqual(actual, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-    actual = Enumerable.Range(1, 5, 3).ToArray();
+    actual = Enumerable.range(1, 5, 3).ToArray();
     deepEqual(actual, [1, 4, 7, 10, 13]);
 });
 
-test("RangeDown", function ()
+test("rangeDown", function ()
 {
-    actual = Enumerable.RangeDown(1, 10).ToArray();
+    actual = Enumerable.rangeDown(1, 10).ToArray();
     deepEqual(actual, [1, 0, -1, -2, -3, -4, -5, -6, -7, -8]);
-    actual = Enumerable.RangeDown(1, 5, 3).ToArray();
+    actual = Enumerable.rangeDown(1, 5, 3).ToArray();
     deepEqual(actual, [1, -2, -5, -8, -11]);
 });
 
-test("RangeTo", function ()
+test("rangeTo", function ()
 {
-    actual = Enumerable.RangeTo(5, 10).ToArray();
+    actual = Enumerable.rangeTo(5, 10).ToArray();
     deepEqual(actual, [5, 6, 7, 8, 9, 10]);
-    actual = Enumerable.RangeTo(1, 10, 3).ToArray();
+    actual = Enumerable.rangeTo(1, 10, 3).ToArray();
     deepEqual(actual, [1, 4, 7, 10]);
-    actual = Enumerable.RangeTo(-2, -8).ToArray();
+    actual = Enumerable.rangeTo(-2, -8).ToArray();
     deepEqual(actual, [-2, -3, -4, -5, -6, -7, -8]);
-    actual = Enumerable.RangeTo(-2, -8, 2).ToArray();
+    actual = Enumerable.rangeTo(-2, -8, 2).ToArray();
     deepEqual(actual, [-2, -4, -6, -8]);
 });
 
-test("Repeat", function ()
+test("repeat", function ()
 {
-    actual = Enumerable.Repeat("temp").Take(3).ToArray();
+    actual = Enumerable.repeat("temp").Take(3).ToArray();
     deepEqual(actual, ["temp", "temp", "temp"]);
-    actual = Enumerable.Repeat("temp", 5).ToArray();
+    actual = Enumerable.repeat("temp", 5).ToArray();
     deepEqual(actual, ["temp", "temp", "temp", "temp", "temp"]);
 });
 
-test("RepeatWithFinalize", function ()
+test("repeatWithFinalize", function ()
 {
     var fin;
-    actual = Enumerable.RepeatWithFinalize(
+    actual = Enumerable.repeatWithFinalize(
                     function () { return "temp"; },
                     function () { fin = "final"; })
                 .Take(3).ToArray();

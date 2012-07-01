@@ -23,7 +23,7 @@ var strlist = [
 
 test("OrderBy", function ()
 {
-    actual = Enumerable.From([1, 51, 7, 823, 85, 31, 51, 99])
+    actual = Enumerable.from([1, 51, 7, 823, 85, 31, 51, 99])
         .OrderBy("i=>i")
         .ToArray();
     deepEqual(actual, [1, 7, 31, 51, 51, 85, 99, 823]);
@@ -31,7 +31,7 @@ test("OrderBy", function ()
 
 test("OrderByDescending", function ()
 {
-    actual = Enumerable.From([1, 51, 7, 823, 85, 31, 51, 99])
+    actual = Enumerable.from([1, 51, 7, 823, 85, 31, 51, 99])
         .OrderByDescending("i=>i")
         .ToArray();
     deepEqual(actual, [823, 99, 85, 51, 51, 31, 7, 1]);
@@ -39,7 +39,7 @@ test("OrderByDescending", function ()
 
 test("ThenBy", function ()
 {
-    actual = Enumerable.From(list)
+    actual = Enumerable.from(list)
         .OrderBy("l=>l.a")
         .ThenBy("l=>l.b")
         .ThenBy("l=>l.c")
@@ -54,7 +54,7 @@ test("ThenBy", function ()
     ];
     deepEqual(actual, expected);
 
-    actual = Enumerable.From(strlist)
+    actual = Enumerable.from(strlist)
         .OrderBy("l=>l.a")
         .ThenBy("l=>l.b")
         .ThenBy("l=>l.c")
@@ -71,7 +71,7 @@ test("ThenBy", function ()
 
 test("ThenByDescending", function ()
 {
-    actual = Enumerable.From(list)
+    actual = Enumerable.from(list)
         .OrderByDescending("l=>l.a")
         .ThenByDescending("l=>l.b")
         .ThenByDescending("l=>l.c")
@@ -86,7 +86,7 @@ test("ThenByDescending", function ()
     ];
     deepEqual(actual, expected);
 
-    actual = Enumerable.From(strlist)
+    actual = Enumerable.from(strlist)
         .OrderByDescending("l=>l.a")
         .ThenByDescending("l=>l.b")
         .ThenByDescending("l=>l.c")
@@ -103,7 +103,7 @@ test("ThenByDescending", function ()
 
 test("Reverse", function ()
 {
-    actual = Enumerable.From([1, 51, 7, 823, 85, 31, 51, 99])
+    actual = Enumerable.from([1, 51, 7, 823, 85, 31, 51, 99])
         .Reverse()
         .ToArray();
     deepEqual(actual, [99, 51, 31, 85, 823, 7, 51, 1]);
@@ -112,6 +112,6 @@ test("Reverse", function ()
 test("Shuffle", function ()
 {
     var array = [1, 51, 7, 823, 85, 31, 51, 99];
-    var shuffled = Enumerable.From(array).Shuffle().ToArray();
+    var shuffled = Enumerable.from(array).Shuffle().ToArray();
     notDeepEqual(shuffled, array, "random test. if failed retry");
 });

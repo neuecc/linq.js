@@ -6,7 +6,7 @@ module("Functional");
 
 test("Let", function ()
 {
-    var sum = Enumerable.Range(1, 10)
+    var sum = Enumerable.range(1, 10)
         .Let(function (e)
         {
             return e.Zip(e, function (a, b) { return { a: a, b: b} });
@@ -18,7 +18,7 @@ test("Let", function ()
 
 test("Share", function ()
 {
-    var share = Enumerable.Range(1, 10).Share();
+    var share = Enumerable.range(1, 10).Share();
     var ar1 = share.Take(4).ToArray();
     var ar2 = share.ToArray();
     var ar3 = share.ToArray();
@@ -30,7 +30,7 @@ test("Share", function ()
 test("MemoizeAll", function ()
 {
     var count = 0;
-    var mem = Enumerable.Range(1, 5)
+    var mem = Enumerable.range(1, 5)
         .Select(function (x) { count++; return x; })
         .MemoizeAll();
     var ar1 = mem.ToArray();
@@ -39,7 +39,7 @@ test("MemoizeAll", function ()
     deepEqual(ar2, [1, 2, 3, 4, 5]);
     equal(5, count);
 
-    mem = Enumerable.From([1, 2, undefined, 3, 4])
+    mem = Enumerable.from([1, 2, undefined, 3, 4])
         .MemoizeAll();
 
     ar1 = mem.ToArray();
