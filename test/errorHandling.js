@@ -4,42 +4,42 @@
 
 module("ErrorHandling");
 
-test("Catch", function ()
+test("tryCatch", function ()
 {
     var msg;
     actual = Enumerable.range(1, 10)
-        .Select(function (i)
+        .select(function (i)
         {
             if (i == 5) throw new Error("aiueo");
             return i;
         })
-        .Catch(function (e)
+        .tryCatch(function (e)
         {
             msg = e.message;
         })
-        .ToArray();
+        .toArray();
     deepEqual(actual, [1, 2, 3, 4]);
     equal(msg,"aiueo");
 });
 
-test("Finally", function ()
+test("tryFinally", function ()
 {
     var msg;
     actual = Enumerable.range(1, 10)
-        .Select(function (i)
+        .select(function (i)
         {
             if (i == 5) throw new Error("aiueo");
             return i;
         })
-        .Catch(function (e)
+        .tryCatch(function (e)
         {
             msg = e.message;
         })
-        .Finally(function (f)
+        .tryFinally(function (f)
         {
             msg += "f";
         })
-        .ToArray();
+        .toArray();
     deepEqual(actual, [1, 2, 3, 4]);
     equal(msg, "aiueof");
 });

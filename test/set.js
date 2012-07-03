@@ -4,116 +4,116 @@
 
 module("Set");
 
-test("All", function ()
+test("all", function ()
 {
     var seq = Enumerable.range(1, 10);
-    ok(!seq.All("i=>i%2==0"));
-    ok(seq.All("i=>i<=10"));
+    ok(!seq.all("i=>i%2==0"));
+    ok(seq.all("i=>i<=10"));
 });
 
-test("Any", function ()
+test("any", function ()
 {
     var seq = Enumerable.range(1, 10);
     var empty = Enumerable.empty();
-    ok(seq.Any());
-    ok(!empty.Any());
-    ok(seq.Any("$==5"));
-    ok(!seq.Any("$==100"));
+    ok(seq.any());
+    ok(!empty.any());
+    ok(seq.any("$==5"));
+    ok(!seq.any("$==100"));
 });
 
-test("Concat", function ()
+test("concat", function ()
 {
-    actual = Enumerable.range(1, 3).Concat([20, 21, 22]).ToArray();
+    actual = Enumerable.range(1, 3).concat([20, 21, 22]).toArray();
     deepEqual(actual, [1, 2, 3, 20, 21, 22]);
 });
 
-test("Insert", function ()
+test("insert", function ()
 {
-    actual = Enumerable.range(1, 5).Insert(3, [20, 21, 22]).ToArray();
+    actual = Enumerable.range(1, 5).insert(3, [20, 21, 22]).toArray();
     deepEqual(actual, [1, 2, 3, 20, 21, 22, 4, 5]);
 });
 
-test("Alternate", function ()
+test("alternate", function ()
 {
-    actual = Enumerable.range(1, 5).Alternate(2).ToArray();
+    actual = Enumerable.range(1, 5).alternate(2).toArray();
     deepEqual(actual, [1, 2, 2, 2, 3, 2, 4, 2, 5]);
-    deepEqual(Enumerable.empty().Alternate(2).ToArray(), []);
-    deepEqual(Enumerable.make(1).Alternate(2).ToArray(), [1]);
+    deepEqual(Enumerable.empty().alternate(2).toArray(), []);
+    deepEqual(Enumerable.make(1).alternate(2).toArray(), [1]);
 });
 
-test("Contains", function ()
+test("contains", function ()
 {
     var seq = Enumerable.range(1, 10);
-    ok(seq.Contains(5));
-    ok(!seq.Contains(13));
+    ok(seq.contains(5));
+    ok(!seq.contains(13));
 
-    seq = Enumerable.range(1, 10).Select("{test:$%2}");
-    ok(seq.Contains(1, "$.test"));
-    ok(!seq.Contains(3, "$.test"));
+    seq = Enumerable.range(1, 10).select("{test:$%2}");
+    ok(seq.contains(1, "$.test"));
+    ok(!seq.contains(3, "$.test"));
 });
 
-test("DefaultIfEmpty", function ()
+test("defaultIfEmpty", function ()
 {
-    actual = Enumerable.range(1, 10).DefaultIfEmpty(199).ToArray();
+    actual = Enumerable.range(1, 10).defaultIfEmpty(199).toArray();
     deepEqual(actual, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-    actual = Enumerable.empty().DefaultIfEmpty(199).ToArray();
+    actual = Enumerable.empty().defaultIfEmpty(199).toArray();
     deepEqual(actual, [199]);
 });
 
-test("Distinct", function ()
+test("distinct", function ()
 {
-    actual = Enumerable.from([1, 3, 5, 6, 6, 3, 4, 3, 2, 9]).Distinct().ToArray();
+    actual = Enumerable.from([1, 3, 5, 6, 6, 3, 4, 3, 2, 9]).distinct().toArray();
     deepEqual(actual, [1, 3, 5, 6, 4, 2, 9]);
-    actual = Enumerable.range(1, 10).Select("{test:$%2}").Distinct("$.test").ToArray();
+    actual = Enumerable.range(1, 10).select("{test:$%2}").distinct("$.test").toArray();
     deepEqual(actual, [{ test: 1 }, { test: 0}]);
 });
 
-test("Except", function ()
+test("except", function ()
 {
     actual = Enumerable.from([1, 3, 5, 6, 6, 3, 4, 3, 2, 9])
-        .Except([4, 6, 2, 7, 8, 10, 11])
-        .ToArray();
+        .except([4, 6, 2, 7, 8, 10, 11])
+        .toArray();
     deepEqual(actual, [1, 3, 5, 9]);
-    actual = Enumerable.range(1, 10).Select("{test:$%3}")
-        .Except(Enumerable.range(1, 10).Select("{test:$%2}"), "$.test")
-        .ToArray();
+    actual = Enumerable.range(1, 10).select("{test:$%3}")
+        .except(Enumerable.range(1, 10).select("{test:$%2}"), "$.test")
+        .toArray();
     deepEqual(actual, [{ test: 2}]);
 });
 
-test("Intersect", function ()
+test("intersect", function ()
 {
     actual = Enumerable.from([1, 3, 5, 6, 6, 3, 4, 3, 2, 9])
-        .Intersect([4, 6, 2, 7, 8, 10, 11])
-        .ToArray();
+        .intersect([4, 6, 2, 7, 8, 10, 11])
+        .toArray();
     deepEqual(actual, [6, 4, 2]);
-    actual = Enumerable.range(1, 10).Select("{test:$%3}")
-        .Intersect(Enumerable.range(1, 10).Select("{test:$%2}"), "$.test")
-        .ToArray();
+    actual = Enumerable.range(1, 10).select("{test:$%3}")
+        .intersect(Enumerable.range(1, 10).select("{test:$%2}"), "$.test")
+        .toArray();
     deepEqual(actual, [{ test: 1 }, { test: 0}]);
 });
 
-test("SequenceEqual", function ()
+test("sequenceEqual", function ()
 {
-    ok(!Enumerable.from([1, 3, 5, 6, 6, 3, 4, 3, 2, 9]).SequenceEqual([1, 3, 5]));
-    ok(Enumerable.range(1, 10).SequenceEqual(Enumerable.range(1, 10)));
+    ok(!Enumerable.from([1, 3, 5, 6, 6, 3, 4, 3, 2, 9]).sequenceEqual([1, 3, 5]));
+    ok(Enumerable.range(1, 10).sequenceEqual(Enumerable.range(1, 10)));
 
-    ok(!Enumerable.range(1, 10).Select("{test:$%3}")
-        .SequenceEqual(Enumerable.range(1, 10).Select("{test:$%2}"), "$.test"));
+    ok(!Enumerable.range(1, 10).select("{test:$%3}")
+        .sequenceEqual(Enumerable.range(1, 10).select("{test:$%2}"), "$.test"));
 
     ok(Enumerable.range(1, 10)
-        .Select("{test:$%3}")
-        .Distinct("$.test")
-        .SequenceEqual([{ test: 1 }, { test: 2 }, { test: 0}], "$.test"));
+        .select("{test:$%3}")
+        .distinct("$.test")
+        .sequenceEqual([{ test: 1 }, { test: 2 }, { test: 0}], "$.test"));
 });
 
-test("Union", function ()
+test("union", function ()
 {
     actual = Enumerable.from([1, 3, 5, 6, 6, 3, 4, 3, 2, 9])
-        .Union([4, 6, 2, 7, 8, 10, 11])
-        .ToArray();
+        .union([4, 6, 2, 7, 8, 10, 11])
+        .toArray();
     deepEqual(actual, [1, 3, 5, 6, 4, 2, 9, 7, 8, 10, 11]);
-    actual = Enumerable.range(1, 3).Select("{test:$}")
-        .Union(Enumerable.range(2, 3).Select("{test:$}"), "$.test")
-        .ToArray();
+    actual = Enumerable.range(1, 3).select("{test:$}")
+        .union(Enumerable.range(2, 3).select("{test:$}"), "$.test")
+        .toArray();
     deepEqual(actual, [{ test: 1 }, { test: 2 }, { test: 3 }, { test: 4}]);
 });

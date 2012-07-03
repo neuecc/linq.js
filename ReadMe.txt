@@ -8,11 +8,43 @@
 * http://linqjs.codeplex.com/
 *--------------------------------------------------------------------------*/
 
-v2 Beta Notice
+v3 Beta::Notice
 
 all methods rename UpperCamelCase to lowerCamelCase
-following methods change name
+
+following methods are changed name
 Return -> make
+CascadeBreadthFirst -> traverseBreadthFirst
+CascadeDepthFirst -> traverseDepthFirst
+BufferWithCount -> buffer
+ToString -> toJoinedString
+Do -> doAction
+Let -> exchange
+MemoizeAll -> memoize
+Catch -> tryCatch
+Finally -> tryFinally
+
+following methods are changed behavior
+writeLine : document.write(value + "<br />") -> document.writeln(value)
+
+add utility methods
+Enumerable.Utils.createLambda
+Enumerable.Utils.createEnumerable
+Enumerable.Utils.createEnumerator
+Enumerable.Utils.extendTo
+
+
+
+// TODO:Enumerable.Utils. vsdoc and reference
+
+// TODO:WriteLine add separator???
+
+// TODO:Trace! && Log!
+
+// TODO:Change License, MIT??
+
+--
+
 
 
 

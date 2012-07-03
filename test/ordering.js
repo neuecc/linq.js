@@ -21,29 +21,29 @@ var strlist = [
     { a: "n", b: "d", c: "o" }
 ];
 
-test("OrderBy", function ()
+test("orderBy", function ()
 {
     actual = Enumerable.from([1, 51, 7, 823, 85, 31, 51, 99])
-        .OrderBy("i=>i")
-        .ToArray();
+        .orderBy("i=>i")
+        .toArray();
     deepEqual(actual, [1, 7, 31, 51, 51, 85, 99, 823]);
 });
 
-test("OrderByDescending", function ()
+test("orderByDescending", function ()
 {
     actual = Enumerable.from([1, 51, 7, 823, 85, 31, 51, 99])
-        .OrderByDescending("i=>i")
-        .ToArray();
+        .orderByDescending("i=>i")
+        .toArray();
     deepEqual(actual, [823, 99, 85, 51, 51, 31, 7, 1]);
 });
 
-test("ThenBy", function ()
+test("thenBy", function ()
 {
     actual = Enumerable.from(list)
-        .OrderBy("l=>l.a")
-        .ThenBy("l=>l.b")
-        .ThenBy("l=>l.c")
-        .ToArray();
+        .orderBy("l=>l.a")
+        .thenBy("l=>l.b")
+        .thenBy("l=>l.c")
+        .toArray();
     expected = [
         { a: 2, b: 3, c: 7 },
         { a: 2, b: 4, c: 1 },
@@ -55,10 +55,10 @@ test("ThenBy", function ()
     deepEqual(actual, expected);
 
     actual = Enumerable.from(strlist)
-        .OrderBy("l=>l.a")
-        .ThenBy("l=>l.b")
-        .ThenBy("l=>l.c")
-        .ToArray();
+        .orderBy("l=>l.a")
+        .thenBy("l=>l.b")
+        .thenBy("l=>l.c")
+        .toArray();
     expected = [
         { a: "a", b: "c", c: "k" },
         { a: "a", b: "z", c: "b" },
@@ -69,13 +69,13 @@ test("ThenBy", function ()
     deepEqual(actual, expected);
 });
 
-test("ThenByDescending", function ()
+test("thenByDescending", function ()
 {
     actual = Enumerable.from(list)
-        .OrderByDescending("l=>l.a")
-        .ThenByDescending("l=>l.b")
-        .ThenByDescending("l=>l.c")
-        .ToArray();
+        .orderByDescending("l=>l.a")
+        .thenByDescending("l=>l.b")
+        .thenByDescending("l=>l.c")
+        .toArray();
     expected = [
         { a: 7, b: 3, c: 2 },
         { a: 6, b: 6, c: 3 },
@@ -87,10 +87,10 @@ test("ThenByDescending", function ()
     deepEqual(actual, expected);
 
     actual = Enumerable.from(strlist)
-        .OrderByDescending("l=>l.a")
-        .ThenByDescending("l=>l.b")
-        .ThenByDescending("l=>l.c")
-        .ToArray();
+        .orderByDescending("l=>l.a")
+        .thenByDescending("l=>l.b")
+        .thenByDescending("l=>l.c")
+        .toArray();
     expected = [
         { a: "z", b: "e", c: "e" },
         { a: "n", b: "d", c: "q" },
@@ -101,17 +101,17 @@ test("ThenByDescending", function ()
     deepEqual(actual, expected);
 });
 
-test("Reverse", function ()
+test("reverse", function ()
 {
     actual = Enumerable.from([1, 51, 7, 823, 85, 31, 51, 99])
-        .Reverse()
-        .ToArray();
+        .reverse()
+        .toArray();
     deepEqual(actual, [99, 51, 31, 85, 823, 7, 51, 1]);
 });
 
-test("Shuffle", function ()
+test("shuffle", function ()
 {
     var array = [1, 51, 7, 823, 85, 31, 51, 99];
-    var shuffled = Enumerable.from(array).Shuffle().ToArray();
+    var shuffled = Enumerable.from(array).shuffle().toArray();
     notDeepEqual(shuffled, array, "random test. if failed retry");
 });

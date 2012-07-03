@@ -19,7 +19,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>4.0</OldToolsVersion>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -67,6 +67,7 @@
     <Content Include="bindings\RxVSDocGenerator\ReadMe_RxVSDocGenerator.txt" />
     <Content Include="bindings\RxVSDocGenerator\RxVSDocGenerator.exe" />
     <Content Include="bindings\linq.jquery.js" />
+    <Content Include="bindings\linq.qunit.js" />
     <Content Include="internal\lib\AjaxMin.dll" />
     <Content Include="internal\lib\compiler.jar" />
     <Content Include="internal\lib\Ionic.Zip.dll" />
@@ -93,7 +94,6 @@
     <Content Include="test\functional.js" />
     <Content Include="test\grouping.js" />
     <Content Include="test\join.js" />
-    <Content Include="test\jquery-1.4.1.min.js" />
     <Content Include="test\ordering.js" />
     <Content Include="test\paging.js" />
     <Content Include="test\projection.js" />
@@ -101,13 +101,11 @@
     <Content Include="test\qunit.js" />
     <Content Include="test\set.js" />
     <Content Include="test\testrunner.htm" />
-    <Content Include="test\testrunner.min.htm" />
-    <Content Include="test\testrunner.jquery.htm" />
-    <Content Include="test\testrunner.jquery.min.htm" />
   </ItemGroup>
   <ItemGroup>
     <None Include="bindings\RxVSDocGenerator\RxVSDocGenerator.cs" />
     <Compile Include="sample\LinqJS.cs" />
+    <Content Include="test\whereSelectEnumerable.js" />
     <Content Include="web.config" />
     <Content Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
@@ -151,12 +149,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>34426</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>
-          </IISUrl>
+          <IISUrl>http://localhost:34426/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

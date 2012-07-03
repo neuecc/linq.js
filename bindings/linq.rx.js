@@ -1,5 +1,5 @@
 ﻿// binding for RxJS
-// ToObservable / ToEnumerable
+// ToObservable / toEnumerable
 
 (function (Enumerable)
 {
@@ -13,7 +13,7 @@
         return Rx.Observable.CreateWithDisposable(function (observer)
         {
             var disposable = new Rx.BooleanDisposable();
-            var enumerator = source.GetEnumerator();
+            var enumerator = source.getEnumerator();
 
             scheduler.ScheduleRecursive(function (self)
             {
@@ -21,18 +21,18 @@
                 {
                     if (!disposable.GetIsDisposed() && enumerator.MoveNext())
                     {
-                        observer.OnNext(enumerator.Current());
+                        observer.OnNext(enumerator.current());
                         self();
                     }
                     else
                     {
-                        enumerator.Dispose();
+                        enumerator.dispose();
                         observer.OnCompleted();
                     }
                 }
                 catch (e)
                 {
-                    enumerator.Dispose();
+                    enumerator.dispose();
                     observer.OnError(e);
                 }
             });
@@ -42,15 +42,15 @@
     }
 
 
-    Rx.Observable.prototype.ToEnumerable = function ()
+    Rx.Observable.prototype.toEnumerable = function ()
     {
         /// <summary>Converts an observable sequence to an enumerable sequence. Notice:cold observable only</summary>
         var obs = this;
         return Enumerable.empty()
-            .Let(function ()
+            .exchange(function ()
             {
                 var array = [];
-                obs.Subscribe(function (x) { array.push(x) }).Dispose();
+                obs.Subscribe(function (x) { array.push(x) }).dispose();
                 return array;
             });
     }

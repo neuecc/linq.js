@@ -252,7 +252,7 @@ namespace System.Linq
         }
 
         //Obsolete .NET 4]
-        //public static IEnumerable<R> Zip<T1, T2, R>(this IEnumerable<T1> source, IEnumerable<T2> source2, Func<T1, T2, R> selector)
+        //public static IEnumerable<R> zip<T1, T2, R>(this IEnumerable<T1> source, IEnumerable<T2> source2, Func<T1, T2, R> selector)
         //{
         //    using (var e1 = source.GetEnumerator())
         //    using (var e2 = source2.GetEnumerator())

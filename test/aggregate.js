@@ -4,75 +4,75 @@
 
 module("Aggregate");
 
-test("Aggregate", function ()
+test("aggregate", function ()
 {
-    actual = Enumerable.range(1, 10).Aggregate("a,b=>a+b");
+    actual = Enumerable.range(1, 10).aggregate("a,b=>a+b");
     equal(actual, 55);
 
-    actual = Enumerable.range(1, 10).Aggregate(10, "a,b=>a+b");
+    actual = Enumerable.range(1, 10).aggregate(10, "a,b=>a+b");
     equal(actual, 65);
 
-    actual = Enumerable.range(1, 10).Aggregate(10, "a,b=>a+b", "val=>val*10");
+    actual = Enumerable.range(1, 10).aggregate(10, "a,b=>a+b", "val=>val*10");
     equal(actual, 650);
 });
 
-test("Average", function ()
+test("average", function ()
 {
-    actual = Enumerable.range(1, 10).Average();
+    actual = Enumerable.range(1, 10).average();
     equal(actual, 5.5);
 
-    actual = Enumerable.range(1, 10).Select("v,i=>{v:v,i:i}").Average("t=>t.i");
+    actual = Enumerable.range(1, 10).select("v,i=>{v:v,i:i}").average("t=>t.i");
     equal(actual, 4.5);
 });
 
-test("Count", function ()
+test("count", function ()
 {
-    actual = Enumerable.range(1, 10).Count();
+    actual = Enumerable.range(1, 10).count();
     equal(actual, 10);
-    actual = Enumerable.empty().Count();
+    actual = Enumerable.empty().count();
     equal(actual, 0);
 
-    actual = Enumerable.range(1, 10).Count("i=>i<5");
+    actual = Enumerable.range(1, 10).count("i=>i<5");
     equal(actual, 4);
 });
 
 test("Max", function ()
 {
-    actual = Enumerable.range(1, 10).Max();
+    actual = Enumerable.range(1, 10).max();
     equal(actual, 10);
 
-    actual = Enumerable.range(1, 10).Select("v,i=>{v:v,i:i}").Max("t=>t.i");
+    actual = Enumerable.range(1, 10).select("v,i=>{v:v,i:i}").max("t=>t.i");
     equal(actual, 9);
 });
 
-test("Min", function ()
+test("min", function ()
 {
-    actual = Enumerable.range(1, 10).Min();
+    actual = Enumerable.range(1, 10).min();
     equal(actual, 1);
 
-    actual = Enumerable.range(1, 10).Select("v,i=>{v:v,i:i}").Min("t=>t.i");
+    actual = Enumerable.range(1, 10).select("v,i=>{v:v,i:i}").min("t=>t.i");
     equal(actual, 0);
 });
 
-test("MaxBy", function ()
+test("maxBy", function ()
 {
-    actual = Enumerable.range(1, 10).Select("v,i=>{v:v,i:i}").MaxBy("t=>t.i");
+    actual = Enumerable.range(1, 10).select("v,i=>{v:v,i:i}").maxBy("t=>t.i");
     deepEqual(actual, { v: 10, i: 9 });
 });
 
-test("MinBy", function ()
+test("minBy", function ()
 {
-    actual = Enumerable.range(1, 10).Select("v,i=>{v:v,i:i}").MinBy("t=>t.i");
+    actual = Enumerable.range(1, 10).select("v,i=>{v:v,i:i}").minBy("t=>t.i");
     deepEqual(actual, { v: 1, i: 0 });
 });
 
-test("Sum", function ()
+test("sum", function ()
 {
-    actual = Enumerable.range(1, 10).Sum();
+    actual = Enumerable.range(1, 10).sum();
     equal(actual, 55);
-    actual = Enumerable.empty().Sum();
+    actual = Enumerable.empty().sum();
     equal(actual, 0);
 
-    actual = Enumerable.range(1, 10).Select("v,i=>{v:v,i:i}").Sum("t=>t.i");
+    actual = Enumerable.range(1, 10).select("v,i=>{v:v,i:i}").sum("t=>t.i");
     equal(actual, 45);
 });

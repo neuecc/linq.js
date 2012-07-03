@@ -268,7 +268,7 @@ jQuery.fn = jQuery.prototype = {
 			( num < 0 ? this.slice(num)[ 0 ] : this[ num ] );
 	},
 
-	// Take an array of elements and push it onto the stack
+	// take an array of elements and push it onto the stack
 	// (returning the new matched element set)
 	pushStack: function( elems, name, selector ) {
 		///	<summary>
@@ -299,7 +299,7 @@ jQuery.fn = jQuery.prototype = {
 		return ret;
 	},
 
-	// Force the current matched set of elements to become
+	// force the current matched set of elements to become
 	// the specified array of elements (destroying the stack in the process)
 	// You should use pushStack() in order to do this, but maintain the stack
 	setArray: function( elems ) {
@@ -3544,7 +3544,7 @@ var Sizzle = function(selector, context, results, seed) {
 			}
 		}
 	} else {
-		// Take a shortcut and set the context if the root selector is an ID
+		// take a shortcut and set the context if the root selector is an ID
 		// (but not if it'll be faster if the inner selector is an ID)
 		if ( !seed && parts.length > 1 && context.nodeType === 9 && !contextXML &&
 				Expr.match.ID.test(parts[0]) && !Expr.match.ID.test(parts[parts.length - 1]) ) {
@@ -5913,7 +5913,7 @@ jQuery.extend({
 		if ( !jQuery.support.opacity && name === "opacity" ) {
 			if ( set ) {
 				// IE has trouble with opacity if it does not have layout
-				// Force it by setting the zoom level
+				// force it by setting the zoom level
 				style.zoom = 1;
 
 				// Set the alpha filter to set the opacity
