@@ -132,8 +132,6 @@
     <None Include="snippets\Func0.snippet" />
     <None Include="snippets\Func1.snippet" />
     <None Include="snippets\Func2.snippet" />
-    <None Include="snippets\jQueryEnumerableFrom.snippet" />
-    <None Include="snippets\jQueryEnumerableRange.snippet" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
