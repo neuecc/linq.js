@@ -5,17 +5,21 @@
     <script type="text/javascript" src="../linq.js"></script>
     <script type="text/javascript">
 
+
         Enumerable.Utils.extendTo(Array);
         try {
-            var seq = Enumerable.range(5, 10); // 5-14
-            var seq2 = Enumerable.range(5, 5); // 5-9
 
-            seq.select("$$*2").writeLine();
 
-            document.writeln("|");
 
-            
 
+
+            var note = [1, 2, 3];
+
+            var json = JSON.stringify(note);
+            alert(json);
+
+
+            //var __ = a.toArray();
         } catch (e) {
 
             alert(e);

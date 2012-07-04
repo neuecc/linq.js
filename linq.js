@@ -1,14 +1,13 @@
 ﻿/*--------------------------------------------------------------------------
 * linq.js - LINQ for JavaScript
-* ver S2.2.0.2 (Jan. 21th, 2011)
+* ver 3.0.0 (---. --th, 2012)
 *
 * created and maintained by neuecc <ils@neue.cc>
 * licensed under Microsoft Public License(Ms-PL)
-* http://neue.cc/
 * http://linqjs.codeplex.com/
 *--------------------------------------------------------------------------*/
 
-Enumerable = (function () {
+(function (root, undefined) {
     // ReadOnly Function
     var Functions = {
         Identity: function (x) { return x; },
@@ -204,7 +203,8 @@ Enumerable = (function () {
             if (typeProto[methodName] == func) continue;
 
             // already defined(example Array#reverse/join/forEach...)
-            if (typeProto[methodName] != null) {
+            // toJSON is called by JSON.stringify, if override occur stackoverflow
+            if (typeProto[methodName] != null || methodName == "toJSON") {
                 methodName = methodName + "ByLinq";
                 if (typeProto[methodName] == func) continue; // recheck
             }
@@ -2323,6 +2323,7 @@ Enumerable = (function () {
         var callHasOwnProperty = function (target, key) {
             return Object.prototype.hasOwnProperty.call(target, key);
         };
+
         var computeHashCode = function (obj) {
             if (obj === null) return "null";
             if (obj === undefined) return "undefined";
@@ -2330,48 +2331,53 @@ Enumerable = (function () {
             return (typeof obj.toString === Types.Function)
                 ? obj.toString()
                 : Object.prototype.toString.call(obj);
-        }; // LinkedList for Dictionary
+        };
+
+        // LinkedList for Dictionary
         var HashEntry = function (key, value) {
             this.key = key;
             this.value = value;
             this.prev = null;
             this.next = null;
         };
+
         var EntryList = function () {
             this.first = null;
             this.last = null;
         };
         EntryList.prototype =
-            {
-                addLast: function (entry) {
-                    if (this.last != null) {
-                        this.last.next = entry;
-                        entry.prev = this.last;
-                        this.last = entry;
-                    } else this.first = this.last = entry;
-                },
+        {
+            addLast: function (entry) {
+                if (this.last != null) {
+                    this.last.next = entry;
+                    entry.prev = this.last;
+                    this.last = entry;
+                } else this.first = this.last = entry;
+            },
 
-                replace: function (entry, newEntry) {
-                    if (entry.prev != null) {
-                        entry.prev.next = newEntry;
-                        newEntry.prev = entry.prev;
-                    } else this.first = newEntry;
+            replace: function (entry, newEntry) {
+                if (entry.prev != null) {
+                    entry.prev.next = newEntry;
+                    newEntry.prev = entry.prev;
+                } else this.first = newEntry;
 
-                    if (entry.next != null) {
-                        entry.next.prev = newEntry;
-                        newEntry.next = entry.next;
-                    } else this.last = newEntry;
+                if (entry.next != null) {
+                    entry.next.prev = newEntry;
+                    newEntry.next = entry.next;
+                } else this.last = newEntry;
 
-                },
+            },
 
-                remove: function (entry) {
-                    if (entry.prev != null) entry.prev.next = entry.next;
-                    else this.first = entry.next;
+            remove: function (entry) {
+                if (entry.prev != null) entry.prev.next = entry.next;
+                else this.first = entry.next;
 
-                    if (entry.next != null) entry.next.prev = entry.prev;
-                    else this.last = entry.prev;
-                }
-            }; // Overload:function()
+                if (entry.next != null) entry.next.prev = entry.prev;
+                else this.last = entry.prev;
+            }
+        };
+
+        // Overload:function()
         // Overload:function(compareSelector)
         var Dictionary = function (compareSelector) {
             this.countField = 0;
@@ -2380,116 +2386,117 @@ Enumerable = (function () {
             this.compareSelector = (compareSelector == null) ? Functions.Identity : compareSelector;
         };
         Dictionary.prototype =
-            {
-                add: function (key, value) {
-                    var compareKey = this.compareSelector(key);
-                    var hash = computeHashCode(compareKey);
-                    var entry = new HashEntry(key, value);
-                    if (callHasOwnProperty(this.buckets, hash)) {
-                        var array = this.buckets[hash];
-                        for (var i = 0; i < array.length; i++) {
-                            if (this.compareSelector(array[i].key) === compareKey) {
-                                this.entryList.replace(array[i], entry);
-                                array[i] = entry;
-                                return;
-                            }
-                        }
-                        array.push(entry);
-                    } else {
-                        this.buckets[hash] = [entry];
-                    }
-                    this.countField++;
-                    this.entryList.addLast(entry);
-                },
-
-                get: function (key) {
-                    var compareKey = this.compareSelector(key);
-                    var hash = computeHashCode(compareKey);
-                    if (!callHasOwnProperty(this.buckets, hash)) return undefined;
-
-                    var array = this.buckets[hash];
-                    for (var i = 0; i < array.length; i++) {
-                        var entry = array[i];
-                        if (this.compareSelector(entry.key) === compareKey) return entry.value;
-                    }
-                    return undefined;
-                },
-
-                set: function (key, value) {
-                    var compareKey = this.compareSelector(key);
-                    var hash = computeHashCode(compareKey);
-                    if (callHasOwnProperty(this.buckets, hash)) {
-                        var array = this.buckets[hash];
-                        for (var i = 0; i < array.length; i++) {
-                            if (this.compareSelector(array[i].key) === compareKey) {
-                                var newEntry = new HashEntry(key, value);
-                                this.entryList.replace(array[i], newEntry);
-                                array[i] = newEntry;
-                                return true;
-                            }
-                        }
-                    }
-                    return false;
-                },
-
-                contains: function (key) {
-                    var compareKey = this.compareSelector(key);
-                    var hash = computeHashCode(compareKey);
-                    if (!callHasOwnProperty(this.buckets, hash)) return false;
-
-                    var array = this.buckets[hash];
-                    for (var i = 0; i < array.length; i++) {
-                        if (this.compareSelector(array[i].key) === compareKey) return true;
-                    }
-                    return false;
-                },
-
-                clear: function () {
-                    this.countField = 0;
-                    this.buckets = {};
-                    this.entryList = new EntryList();
-                },
-
-                remove: function (key) {
-                    var compareKey = this.compareSelector(key);
-                    var hash = computeHashCode(compareKey);
-                    if (!callHasOwnProperty(this.buckets, hash)) return;
-
+        {
+            add: function (key, value) {
+                var compareKey = this.compareSelector(key);
+                var hash = computeHashCode(compareKey);
+                var entry = new HashEntry(key, value);
+                if (callHasOwnProperty(this.buckets, hash)) {
                     var array = this.buckets[hash];
                     for (var i = 0; i < array.length; i++) {
                         if (this.compareSelector(array[i].key) === compareKey) {
-                            this.entryList.remove(array[i]);
-                            array.splice(i, 1);
-                            if (array.length == 0) delete this.buckets[hash];
-                            this.countField--;
+                            this.entryList.replace(array[i], entry);
+                            array[i] = entry;
                             return;
                         }
                     }
-                },
-
-                count: function () {
-                    return this.countField;
-                },
-
-                toEnumerable: function () {
-                    var self = this;
-                    return new Enumerable(function () {
-                        var currentEntry;
-
-                        return new IEnumerator(
-                            function () { currentEntry = self.entryList.first; },
-                            function () {
-                                if (currentEntry != null) {
-                                    var result = { key: currentEntry.key, value: currentEntry.value };
-                                    currentEntry = currentEntry.next;
-                                    return this.yieldReturn(result);
-                                }
-                                return false;
-                            },
-                            Functions.Blank);
-                    });
+                    array.push(entry);
+                } else {
+                    this.buckets[hash] = [entry];
                 }
-            };
+                this.countField++;
+                this.entryList.addLast(entry);
+            },
+
+            get: function (key) {
+                var compareKey = this.compareSelector(key);
+                var hash = computeHashCode(compareKey);
+                if (!callHasOwnProperty(this.buckets, hash)) return undefined;
+
+                var array = this.buckets[hash];
+                for (var i = 0; i < array.length; i++) {
+                    var entry = array[i];
+                    if (this.compareSelector(entry.key) === compareKey) return entry.value;
+                }
+                return undefined;
+            },
+
+            set: function (key, value) {
+                var compareKey = this.compareSelector(key);
+                var hash = computeHashCode(compareKey);
+                if (callHasOwnProperty(this.buckets, hash)) {
+                    var array = this.buckets[hash];
+                    for (var i = 0; i < array.length; i++) {
+                        if (this.compareSelector(array[i].key) === compareKey) {
+                            var newEntry = new HashEntry(key, value);
+                            this.entryList.replace(array[i], newEntry);
+                            array[i] = newEntry;
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            },
+
+            contains: function (key) {
+                var compareKey = this.compareSelector(key);
+                var hash = computeHashCode(compareKey);
+                if (!callHasOwnProperty(this.buckets, hash)) return false;
+
+                var array = this.buckets[hash];
+                for (var i = 0; i < array.length; i++) {
+                    if (this.compareSelector(array[i].key) === compareKey) return true;
+                }
+                return false;
+            },
+
+            clear: function () {
+                this.countField = 0;
+                this.buckets = {};
+                this.entryList = new EntryList();
+            },
+
+            remove: function (key) {
+                var compareKey = this.compareSelector(key);
+                var hash = computeHashCode(compareKey);
+                if (!callHasOwnProperty(this.buckets, hash)) return;
+
+                var array = this.buckets[hash];
+                for (var i = 0; i < array.length; i++) {
+                    if (this.compareSelector(array[i].key) === compareKey) {
+                        this.entryList.remove(array[i]);
+                        array.splice(i, 1);
+                        if (array.length == 0) delete this.buckets[hash];
+                        this.countField--;
+                        return;
+                    }
+                }
+            },
+
+            count: function () {
+                return this.countField;
+            },
+
+            toEnumerable: function () {
+                var self = this;
+                return new Enumerable(function () {
+                    var currentEntry;
+
+                    return new IEnumerator(
+                        function () { currentEntry = self.entryList.first; },
+                        function () {
+                            if (currentEntry != null) {
+                                var result = { key: currentEntry.key, value: currentEntry.value };
+                                currentEntry = currentEntry.next;
+                                return this.yieldReturn(result);
+                            }
+                            return false;
+                        },
+                        Functions.Blank);
+                });
+            }
+        };
+
         return Dictionary;
     })();
 
@@ -2510,6 +2517,7 @@ Enumerable = (function () {
             });
         };
     };
+
     var Grouping = function (groupKey, elements) {
         this.key = function () {
             return groupKey;
@@ -2518,6 +2526,11 @@ Enumerable = (function () {
     };
     Grouping.prototype = new ArrayEnumerable();
 
-    // out to global
-    return Enumerable;
-})()
+    // module export
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = Enumerable;
+    }
+    else {
+        root.Enumerable = Enumerable;
+    }
+})(this);

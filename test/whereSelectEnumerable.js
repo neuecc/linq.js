@@ -3,6 +3,9 @@
 /// <reference path="qunit.js"/>
 /// <reference path="~/bindings/linq.qunit.js" />
 
+
+Enumerable.range(1, 10).take(10);
+
 module("WhereSelectEnumerable");
 
 var seq = Enumerable.range(5, 10); // 5-14

@@ -4,14 +4,13 @@
     <title>linq.js tutorial</title>
     <script type="text/javascript" src="../linq.js"></script>
     <script type="text/javascript">
-        var textStack = []
-        document.write = function ()
-        {
-            for (var i = 0; i < arguments.length; i++)
-            {
-                textStack.push(arguments[i]);
-            }
-        }
+        var textStack = [];
+        document.write = function () {
+            Enumerable.from(arguments).forEach("textStack.push($)");
+        };
+        document.writeln = function () {
+            Enumerable.from(arguments).forEach("textStack.push($ + '<br />')");
+        };
 
         window.onload = function ()
         {
