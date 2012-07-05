@@ -2009,7 +2009,7 @@ dict.toEnumerable().select("$.key.id + ':' + $.value")</pre>
             </tr>
             <tr>
                 <td rowspan="3">
-                    toJSON
+                    toJSONString
                 </td>
                 <td rowspan="3">
                     String
@@ -2018,8 +2018,8 @@ dict.toEnumerable().select("$.key.id + ':' + $.value")</pre>
                     ()
                 </td>
                 <td>
-                    <pre>// toJSON only work Native JSON support browser or include json2.js
-Enumerable.from([{Foo:1, Bar:'z'},{Foo:5, Bar:null}]).toJSON()</pre>
+                    <pre>// toJSONString only work Native JSON support browser or include json2.js
+Enumerable.from([{Foo:1, Bar:'z'},{Foo:5, Bar:null}]).toJSONString()</pre>
                 </td>
             </tr>
             <tr>
@@ -2028,7 +2028,7 @@ Enumerable.from([{Foo:1, Bar:'z'},{Foo:5, Bar:null}]).toJSON()</pre>
                 </td>
                 <td>
                     <pre>Enumerable.from(["a","b","c"])
-.toJSON(function(k,v){return (typeof v === 'object') ? v : v.toString().toUpperCase()})</pre>
+.toJSONString(function(k,v){return (typeof v === 'object') ? v : v.toString().toUpperCase()})</pre>
                 </td>
             </tr>
             <tr>
@@ -2036,7 +2036,7 @@ Enumerable.from([{Foo:1, Bar:'z'},{Foo:5, Bar:null}]).toJSON()</pre>
                     TResult replacer(TKey, TValue), Number space
                 </td>
                 <td>
-                    <pre>Enumerable.range(1, 5).toJSON(null, 4)</pre>
+                    <pre>Enumerable.range(1, 5).toJSONString(null, 4)</pre>
                 </td>
             </tr>
             <tr>

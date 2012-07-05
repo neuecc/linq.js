@@ -72,16 +72,16 @@ test("toJoinedString", function ()
     equal(actual, "2-4-6");
 });
 
-test("toJSON", function ()
+test("toJSONString", function ()
 {
-    actual = Enumerable.from([{ a: 1, b: true }, { a: null, b: "aaa"}]).toJSON();
+    actual = Enumerable.from([{ a: 1, b: true }, { a: null, b: "aaa"}]).toJSONString();
     equal(actual, '[{"a":1,"b":true},{"a":null,"b":"aaa"}]');
 
-    actual = Enumerable.range(1, 5).toJSON();
+    actual = Enumerable.range(1, 5).toJSONString();
     equal(actual, '[1,2,3,4,5]');
 
     actual = Enumerable.from(["a", "b", "c"])
-        .toJSON(function (key, value)
+        .toJSONString(function (key, value)
         {
             if (typeof value === 'object') return value;
             return value.toString().toUpperCase();
@@ -89,6 +89,6 @@ test("toJSON", function ()
     equal(actual, '["A","B","C"]');
 
     actual = Enumerable.from([1, 2, 3, 4, 5])
-        .toJSON(function (key, value) { return value; }, 1);
+        .toJSONString(function (key, value) { return value; }, 1);
     ok(actual.indexOf("\n") != -1);
 });

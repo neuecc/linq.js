@@ -1,11 +1,19 @@
 ﻿// QUnit Extensions
 // Method Chaning base assertion.
 
-/// <reference path="~/linq.js" />
-
 (function () {
     // overwrite array
     Enumerable.Utils.extendTo(Array);
+
+    // defProp helper, support only modern browser
+    var defineToObject = function (methodName, value) {
+        Object.defineProperty(Object.prototype, methodName, {
+            enumerable: false,
+            configurable: false,
+            writable: true,
+            value: value
+        });
+    };
 
     // checker
     var isCollection = function (obj) {
@@ -15,23 +23,64 @@
         return false;
     };
 
-    // support only modern browser
-    Object.defineProperty(Object.prototype, "is", {
-        enumerable: false,
-        configurable: false,
-        writable: true,
-        value: function (v) {
-            if (isCollection(this)) {
-                if (arguments.length == 1 && isCollection(v)) {
-                    deepEqual(Enumerable.from(this).toArray(), v);
-                }
-                else {
-                    deepEqual(Enumerable.from(this).toArray(), Enumerable.from(arguments).toArray());
-                }
+    var executeCode = function (action) {
+        try {
+            action();
+            return null;
+        }
+        catch (e) {
+            return e;
+        }
+    };
+
+    defineToObject("is", function (expected, message) {
+        if (isCollection(this)) {
+            if (arguments.length == 1 && isCollection(expected)) {
+                deepEqual(Enumerable.from(this).toArray(), expected, message);
             }
             else {
-                strictEqual(this, v);
+                deepEqual(Enumerable.from(this).toArray(), Enumerable.from(arguments).toArray(), message);
             }
+        }
+        else {
+            // "this" is boxed value, can't work strictEqual
+            equal(this, expected, message);
+        }
+    });
+
+    defineToObject("isNot", function (expected, message) {
+        if (isCollection(this)) {
+            if (arguments.length == 1 && isCollection(expected)) {
+                notDeepEqual(Enumerable.from(this).toArray(), expected, message);
+            }
+            else {
+                notDeepEqual(Enumerable.from(this).toArray(), Enumerable.from(arguments).toArray(), message);
+            }
+        }
+        else {
+            // "this" is boxed value, can't work strictEqual
+            notEqual(this, expected, message);
+        }
+    });
+
+    defineToObject("catch", function (testCode, message) {
+        var error = executeCode(testCode());
+
+        if (error == null) {
+            ok(true, message);
+        }
+        else {
+            ok(false, "ErrorMessage:" + error.message + (message != null) ? " Message:" + message : "");
+        }
+
+        return error;
+    });
+
+    defineToObject("doesNotThrow", function (testCode, message) {
+        var error = executeCode(testCode());
+
+        if (error != null) {
+            ok(false, "Failed DoesNotThrow. CatchedErrorMessage:" + error.message + (message != null) ? " Message:" + message : "");
         }
     });
 })();

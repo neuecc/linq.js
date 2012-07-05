@@ -23,6 +23,7 @@ Let -> exchange
 MemoizeAll -> memoize
 Catch -> tryCatch
 Finally -> tryFinally
+ToJSON -> toJSONString
 
 following methods are changed behavior
 writeLine : document.write(value + "<br />") -> document.writeln(value)
@@ -33,7 +34,12 @@ Enumerable.Utils.createEnumerable
 Enumerable.Utils.createEnumerator
 Enumerable.Utils.extendTo
 
+add methods
+asEnumerable
 
+
+// TODO:tryCatch -> catchError
+// TODO:tryFinally -> finallyAction
 
 // TODO:Enumerable.Utils. vsdoc and reference
 

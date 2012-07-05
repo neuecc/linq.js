@@ -3,26 +3,24 @@
 <head>
     <title>test page</title>
     <script type="text/javascript" src="../linq.js"></script>
+    <script type="text/javascript" src="../test/qunit.js"></script>
+    <script type="text/javascript" src="../bindings/linq.qunit.js"></script>
     <script type="text/javascript">
 
 
-        Enumerable.Utils.extendTo(Array);
         try {
+            //Enumerable.Utils.extendTo(Array);
+            var test = new Number(10);
+            var num = 100;
 
 
 
-
-
-            var note = [1, 2, 3];
-
-            var json = JSON.stringify(note);
-            alert(json);
 
 
             //var __ = a.toArray();
         } catch (e) {
 
-            alert(e);
+            alert(e.message);
         }
     </script>
 

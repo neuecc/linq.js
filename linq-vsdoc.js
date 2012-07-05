@@ -532,7 +532,7 @@ Enumerable = (function() {
             // Overload:function()
             // Overload:function(replacer)
             // Overload:function(replacer, space)
-            toJSON: function(replacer, space) {
+            toJSONString: function(replacer, space) {
                 /// <summary>Creates a JSON String from sequence, performed only native JSON support browser or included json2.js.</summary>
                 /// <param name="replacer" type="Optional:Func">a replacer.</param>
                 /// <param name="space" type="Optional:Number">indent spaces.</param>

@@ -1,32 +1,22 @@
 ﻿/// <reference path="testrunner.htm"/>
 /// <reference path="~/linq.js" />
 /// <reference path="qunit.js"/>
+/// <reference path="~/bindings/linq.qunit.js" />
 
 module("Aggregate");
 
-test("aggregate", function ()
-{
-    actual = Enumerable.range(1, 10).aggregate("a,b=>a+b");
-    equal(actual, 55);
-
-    actual = Enumerable.range(1, 10).aggregate(10, "a,b=>a+b");
-    equal(actual, 65);
-
-    actual = Enumerable.range(1, 10).aggregate(10, "a,b=>a+b", "val=>val*10");
-    equal(actual, 650);
+test("aggregate", function () {
+    Enumerable.range(1, 10).aggregate("a,b=>a+b").is(55);
+    Enumerable.range(1, 10).aggregate(10, "a,b=>a+b").is(65);
+    Enumerable.range(1, 10).aggregate(10, "a,b=>a+b", "val=>val*10").is(650);
 });
 
-test("average", function ()
-{
-    actual = Enumerable.range(1, 10).average();
-    equal(actual, 5.5);
-
-    actual = Enumerable.range(1, 10).select("v,i=>{v:v,i:i}").average("t=>t.i");
-    equal(actual, 4.5);
+test("average", function () {
+    Enumerable.range(1, 10).average().is(5.5);
+    Enumerable.range(1, 10).select("v,i=>{v:v,i:i}").average("t=>t.i").is(4.5);
 });
 
-test("count", function ()
-{
+test("count", function () {
     actual = Enumerable.range(1, 10).count();
     equal(actual, 10);
     actual = Enumerable.empty().count();
@@ -36,8 +26,7 @@ test("count", function ()
     equal(actual, 4);
 });
 
-test("Max", function ()
-{
+test("Max", function () {
     actual = Enumerable.range(1, 10).max();
     equal(actual, 10);
 
@@ -45,8 +34,7 @@ test("Max", function ()
     equal(actual, 9);
 });
 
-test("min", function ()
-{
+test("min", function () {
     actual = Enumerable.range(1, 10).min();
     equal(actual, 1);
 
@@ -54,20 +42,17 @@ test("min", function ()
     equal(actual, 0);
 });
 
-test("maxBy", function ()
-{
+test("maxBy", function () {
     actual = Enumerable.range(1, 10).select("v,i=>{v:v,i:i}").maxBy("t=>t.i");
     deepEqual(actual, { v: 10, i: 9 });
 });
 
-test("minBy", function ()
-{
+test("minBy", function () {
     actual = Enumerable.range(1, 10).select("v,i=>{v:v,i:i}").minBy("t=>t.i");
     deepEqual(actual, { v: 1, i: 0 });
 });
 
-test("sum", function ()
-{
+test("sum", function () {
     actual = Enumerable.range(1, 10).sum();
     equal(actual, 55);
     actual = Enumerable.empty().sum();

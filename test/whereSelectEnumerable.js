@@ -3,9 +3,6 @@
 /// <reference path="qunit.js"/>
 /// <reference path="~/bindings/linq.qunit.js" />
 
-
-Enumerable.range(1, 10).take(10);
-
 module("WhereSelectEnumerable");
 
 var seq = Enumerable.range(5, 10); // 5-14
@@ -35,26 +32,30 @@ test("selectselect", function () {
     seq2.select("$$*2").select("$*10").is(0, 20, 40, 60, 80);
 });
 
-test("whereselect", function() {
+test("whereselect", function () {
     seq.where("$%2==0").select("$*2").is(12, 16, 20, 24, 28);
+    seq.where("$%2==0").select("$+$$*2").is(6, 10, 14, 18, 22);
+    seq.where("$$%2==0").select("$*2").is(10, 14, 18, 22, 26);
+    seq.where("$$%2==0").select("$+$$*2").is(5, 9, 13, 17, 21);
 });
 
 test("selectwhere", function () {
     seq.select("$*2").where("$%2==0").is(10, 12, 14, 16, 18, 20, 22, 24, 26, 28);
+    seq.select("$+$$*2").where("$%2==0").is(8, 14, 20, 26, 32);
+    seq.select("$*2").where("$$%2==0").is(10, 14, 18, 22, 26);
+    seq.select("$+$$*2").where("$$%2==0").is(5, 11, 17, 23, 29);
 });
 
 test("whereselectwhere", function () {
-
+    seq.where("$%2==0").select("$*2").where("$%3==0").is(12, 24);
+    seq.where("$%2==0").select("$+$$*2").where("$$%2==0").is(6, 14, 22);
+    seq.where("$$%2==0").select("$*2").where("$$%2==0").is(10, 18, 26);
+    seq.where("$$%2==0").select("$+$$*2").where("$%3==0").is(9, 21);
 });
 
 test("selectwhereselect", function () {
-
-});
-
-test("wherewhereselectwhere", function () {
-
-});
-
-test("selectselectwhereselect", function () {
-
+    seq.select("$*2").where("$%2==0").select("$*2").is(20, 24, 28, 32, 36, 40, 44, 48, 52, 56);
+    seq.select("$+$$*2").where("$%2==0").select("$$*2").is(0, 2, 4, 6, 8);
+    seq.select("$*2").where("$$%2==0").select("$*2+$$").is(20, 29, 38, 47, 56);
+    seq.select("$+$$*2").where("$$%2==0").select("$*2").is(10, 22, 34, 46, 58);
 });
