@@ -21,8 +21,8 @@ ToString -> toJoinedString
 Do -> doAction
 Let -> exchange
 MemoizeAll -> memoize
-Catch -> tryCatch
-Finally -> tryFinally
+Catch -> catchError
+Finally -> finallyAction
 ToJSON -> toJSONString
 
 following methods are changed behavior
@@ -47,6 +47,12 @@ asEnumerable
 // TODO:Change License, MIT??
 
 //TODO:defer, weightedSample
+
+
+
+        if (intellisense) {
+            this.firstOrDefault();
+        }
 
 --
 

@@ -62,23 +62,35 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bindings\linq.rx.js" />
-    <Content Include="bindings\RxVSDocGenerator\Mono.Cecil.dll" />
-    <Content Include="bindings\RxVSDocGenerator\ReadMe_RxVSDocGenerator.txt" />
-    <Content Include="bindings\RxVSDocGenerator\RxVSDocGenerator.exe" />
-    <Content Include="bindings\linq.jquery.js" />
-    <Content Include="bindings\linq.qunit.js" />
+    <Content Include="extensions\linq.rx.js" />
+    <Content Include="extensions\linq.jquery.js" />
+    <Content Include="extensions\linq.qunit.js" />
     <Content Include="internal\lib\AjaxMin.dll" />
     <Content Include="internal\lib\compiler.jar" />
     <Content Include="internal\lib\Ionic.Zip.dll" />
-    <Content Include="internal\lib\jquery-1.4.1-vsdoc.js" />
-    <Content Include="internal\lib\jquery-1.4.1.js" />
-    <Content Include="internal\lib\l2o.js" />
-    <Content Include="internal\lib\rx.jQuery.js" />
-    <Content Include="internal\lib\rx.js" />
+    <Content Include="internal\lib\jQuery\jquery-1.7.2.intellisense.js" />
+    <Content Include="internal\lib\jQuery\jquery-1.7.2.js" />
+    <Content Include="internal\lib\jQuery\jquery-1.7.2.min.js" />
+    <Content Include="internal\lib\rx\rx-vsdoc.js" />
+    <Content Include="internal\lib\rx\rx.aggregates-vsdoc.js" />
+    <Content Include="internal\lib\rx\rx.aggregates.min.js" />
+    <Content Include="internal\lib\rx\rx.coincidence-vsdoc.js" />
+    <Content Include="internal\lib\rx\rx.coincidence.min.js" />
+    <Content Include="internal\lib\rx\rx.experimental-vsdoc.js" />
+    <Content Include="internal\lib\rx\rx.experimental.min.js" />
+    <Content Include="internal\lib\rx\rx.joinpatterns-vsdoc.js" />
+    <Content Include="internal\lib\rx\rx.joinpatterns.min.js" />
+    <Content Include="internal\lib\rx\rx.jquery-vsdoc.js" />
+    <Content Include="internal\lib\rx\rx.jquery.js" />
+    <Content Include="internal\lib\rx\rx.jquery.min.js" />
+    <Content Include="internal\lib\rx\rx.min.js" />
+    <Content Include="internal\lib\rx\rx.testing-vsdoc.js" />
+    <Content Include="internal\lib\rx\rx.testing.min.js" />
+    <Content Include="internal\lib\rx\rx.time-vsdoc.js" />
+    <Content Include="internal\lib\rx\rx.time.min.js" />
     <Content Include="internal\nuget-package\NuGet.exe" />
     <Content Include="internal\sandbox.htm" />
-    <Content Include="linq-vsdoc.js" />
+    <Content Include="___linq-vsdoc.js" />
     <Content Include="linq.js" />
     <Content Include="ReadMe.txt" />
     <Content Include="reference.htm" />
@@ -103,16 +115,8 @@
     <Content Include="test\testrunner.htm" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="bindings\RxVSDocGenerator\RxVSDocGenerator.cs" />
     <Compile Include="sample\LinqJS.cs" />
     <Content Include="test\whereSelectEnumerable.js" />
-    <Content Include="web.config" />
-    <Content Include="web.Debug.config">
-      <DependentUpon>web.config</DependentUpon>
-    </Content>
-    <Content Include="web.Release.config">
-      <DependentUpon>web.config</DependentUpon>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="internal\minifier.fsx" />
@@ -132,6 +136,7 @@
     <None Include="snippets\Func0.snippet" />
     <None Include="snippets\Func1.snippet" />
     <None Include="snippets\Func2.snippet" />
+    <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

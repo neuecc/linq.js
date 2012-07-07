@@ -1,39 +1,41 @@
 ﻿// binding for RxJS
 // ToObservable / toEnumerable
 
-(function (Enumerable)
-{
-    Enumerable.prototype.ToObservable = function (scheduler)
-    {
+(function (root) {
+    if (root.Enumerable == null) {
+        throw new Error("can't find Enumerable. linq.rx.js must load after linq.js");
+    }
+    if (root.Rx == null) {
+        throw new Error("can't find Rx. linq.rx.js must load after RxJS");
+    }
+
+    var Enumerable = root.Enumerable;
+    var Rx = root.Rx;
+
+    Enumerable.prototype.toObservable = function (scheduler) {
         /// <summary>Converts an enumerable sequence to an observable sequence.</summary>
         /// <param type="Optional:Rx.Scheduler" name="scheduler">Rx.Scheduler. Default is CurrentThread.</param>
         var source = this;
         if (scheduler == null) scheduler = Rx.Scheduler.CurrentThread;
 
-        return Rx.Observable.CreateWithDisposable(function (observer)
-        {
+        return Rx.Observable.createWithDisposable(function (observer) {
             var disposable = new Rx.BooleanDisposable();
             var enumerator = source.getEnumerator();
 
-            scheduler.ScheduleRecursive(function (self)
-            {
-                try
-                {
-                    if (!disposable.GetIsDisposed() && enumerator.MoveNext())
-                    {
-                        observer.OnNext(enumerator.current());
+            scheduler.ScheduleRecursive(function (self) {
+                try {
+                    if (!disposable.getIsDisposed() && enumerator.moveNext()) {
+                        observer.onNext(enumerator.current());
                         self();
                     }
-                    else
-                    {
+                    else {
                         enumerator.dispose();
-                        observer.OnCompleted();
+                        observer.onCompleted();
                     }
                 }
-                catch (e)
-                {
+                catch (e) {
                     enumerator.dispose();
-                    observer.OnError(e);
+                    observer.onError(e);
                 }
             });
 
@@ -42,16 +44,14 @@
     }
 
 
-    Rx.Observable.prototype.toEnumerable = function ()
-    {
+    Rx.Observable.prototype.toEnumerable = function () {
         /// <summary>Converts an observable sequence to an enumerable sequence. Notice:cold observable only</summary>
         var obs = this;
         return Enumerable.empty()
-            .exchange(function ()
-            {
+            .letBind(function () {
                 var array = [];
                 obs.Subscribe(function (x) { array.push(x) }).dispose();
                 return array;
             });
     }
-})(this.Enumerable || this.jQuery.Enumerable);
+})(this);

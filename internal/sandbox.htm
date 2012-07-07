@@ -3,31 +3,32 @@
 <head>
     <title>test page</title>
     <script type="text/javascript" src="../linq.js"></script>
-    <script type="text/javascript" src="../test/qunit.js"></script>
     <script type="text/javascript">
 
 
+
+
+        Enumerable.range(1, 10).where(function (x) { return x % 2 == 0 })
+            .take(10)
+        .select(function (x) { return { Hoge: x, Huga: "tako" } })
+        .buffer(10)
+        .where(function (xs) {
+            //xs[0].Hoge
+            return false;
+        })
+        .orderBy()
+        .thenBy(function (x) { return x[10] });
 
 
         
 
 
 
-
-
-
-
-
-
-
-
-
-
+            
 
 
 
             
-                //.force();
 
 
 
@@ -52,37 +53,9 @@
 
 
 
+        //.sum();
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                //.sum();
-                
-            
 
 
 

@@ -86,7 +86,7 @@
             if (Utils.isSupportDefineProperty) {
                 Object.defineProperty(target, methodName, {
                     enumerable: false,
-                    configurable: false,
+                    configurable: true,
                     writable: true,
                     value: value
                 });
@@ -794,6 +794,7 @@
     // Overload:function(second,selector<outer,inner,index>)
     Enumerable.prototype.zip = function (second, selector) {
         selector = Utils.createLambda(selector);
+
         var source = this;
 
         return new Enumerable(function () {

@@ -1,7 +1,13 @@
 ﻿// QUnit Extensions
 // Method Chaning base assertion.
 
-(function () {
+(function (root) {
+    if (root.Enumerable == null) {
+        throw new Error("can't find Enumerable. linq.qunit.js must load after linq.js");
+    }
+
+    var Enumerable = root.Enumerable;
+
     // overwrite array
     Enumerable.Utils.extendTo(Array);
 
@@ -9,7 +15,7 @@
     var defineToObject = function (methodName, value) {
         Object.defineProperty(Object.prototype, methodName, {
             enumerable: false,
-            configurable: false,
+            configurable: true,
             writable: true,
             value: value
         });
@@ -83,4 +89,4 @@
             ok(false, "Failed DoesNotThrow. CatchedErrorMessage:" + error.message + (message != null) ? " Message:" + message : "");
         }
     });
-})();
+})(this);
