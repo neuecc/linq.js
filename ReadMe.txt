@@ -37,6 +37,10 @@ Enumerable.Utils.extendTo
 add methods
 asEnumerable
 
+performance optimization
+where->select and where->where,... and select->select,...
+range, rangeDown, rangeTo
+
 
 // TODO:Enumerable.Utils. vsdoc and reference
 
@@ -46,13 +50,11 @@ asEnumerable
 
 // TODO:Change License, MIT??
 
-//TODO:defer, weightedSample
+//TODO:defer, weightedSample, distinctUntilChanged
 
 
 
-        if (intellisense) {
-            this.firstOrDefault();
-        }
+        if (intellisense) this.firstOrDefault();
 
 --
 

@@ -359,23 +359,77 @@
     // Overload:function(start, count, step)
     Enumerable.range = function (start, count, step) {
         if (step == null) step = 1;
-        return Enumerable.toInfinity(start, step).take(count);
+
+        return new Enumerable(function () {
+            var value;
+            var index = 0;
+
+            return new IEnumerator(
+                function () { value = start - step; },
+                function () {
+                    return (index++ < count)
+                        ? this.yieldReturn(value += step)
+                        : this.yieldBreak();
+                },
+                Functions.Blank);
+        });
     };
 
     // Overload:function(start, count)
     // Overload:function(start, count, step)
     Enumerable.rangeDown = function (start, count, step) {
         if (step == null) step = 1;
-        return Enumerable.toNegativeInfinity(start, step).take(count);
+
+        return new Enumerable(function () {
+            var value;
+            var index = 0;
+
+            return new IEnumerator(
+                function () { value = start + step; },
+                function () {
+                    return (index++ < count)
+                        ? this.yieldReturn(value -= step)
+                        : this.yieldBreak();
+                },
+                Functions.Blank);
+        });
     };
 
     // Overload:function(start, to)
     // Overload:function(start, to, step)
     Enumerable.rangeTo = function (start, to, step) {
         if (step == null) step = 1;
-        return (start < to)
-            ? Enumerable.toInfinity(start, step).takeWhile(function (i) { return i <= to; })
-            : Enumerable.toNegativeInfinity(start, step).takeWhile(function (i) { return i >= to; });
+
+        if (start < to) {
+            return new Enumerable(function () {
+                var value;
+
+                return new IEnumerator(
+                function () { value = start - step; },
+                function () {
+                    var next = value += step;
+                    return (next <= to)
+                        ? this.yieldReturn(next)
+                        : this.yieldBreak();
+                },
+                Functions.Blank);
+            });
+        }
+        else {
+            return new Enumerable(function () {
+                var value;
+
+                return new IEnumerator(
+                function () { value = start + step; },
+                function () {
+                    var next = value -= step;
+                    return (next >= to)
+                        ? this.yieldReturn(next)
+                        : this.yieldBreak();
+                },
+                Functions.Blank);
+            });
+        }
     };
 
     // Overload:function(obj)
