@@ -22,6 +22,13 @@ test("collection.is", function () {
     Enumerable.range(5, 10).is(Enumerable.rangeTo(5, 14), "Enumerable OK?");
 });
 
+test("function.is", function () {
+    var o = { a: "a", b: 100, c: true };
+    o.is(function (x) { return x.a == "a" && x.b == 100 && x.c == true; });
+    
+    "foobar".is(function (x) { return x.toUpperCase() == "FOOBAR" });
+});
+
 test("primitive.isNot", function () {
     Math.pow(10, 2).isNot(1000, "must not be 100!!!");
     var x = 1000;
@@ -40,6 +47,12 @@ test("collection.isNot", function () {
     Enumerable.range(1, 10).isNot(1, 2, 3, 4, 5, 6, 8, 9, 10);
     Enumerable.range(5, 10).isNot(Enumerable.rangeTo(5, 12));
     Enumerable.range(5, 10).isNot(Enumerable.rangeTo(5, 15), "Enumerable OK?");
+});
+
+test("function.isNot", function () {
+    var o = { a: "a", b: 100, c: true };
+    o.isNot(function (x) { return x.a == "a" && x.b == 1300 && x.c == true; });
+    "foobar".isNot(function (x) { return x.toUpperCase() == "FOoBAR" });
 });
 
 

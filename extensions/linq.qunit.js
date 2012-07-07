@@ -55,7 +55,12 @@
         /// </signature>
         /// <signature>
         ///   <summary>collection deepEqual. argument is multiple.</summary>
-        ///   <param name="multipleExpected" type="Object">mulitple arguments, expected collection values.</param>
+        ///   <param name="multipleExpected" type="Object">mulitple arguments. ex:[1,2,3].is(1,2,3).</param>
+        /// </signature>
+        /// <signature>
+        ///   <summary>ok(true). expected function pass actual. if result is true then ok.</summary>
+        ///   <param name="expected" type="Function">function checker, return boolean</param>
+        ///   <param name="message" type="String">Optional:assertion message</param>
         /// </signature>
         if (isCollection(this)) {
             if (arguments.length <= 2 && isCollection(expected)) {
@@ -66,8 +71,12 @@
             }
         }
         else {
-            // "this" is always boxed
-            strictEqual(unbox(this), expected, message);
+            if (expected instanceof Function) {
+                ok(expected(unbox(this)), message);
+            }
+            else {
+                strictEqual(unbox(this), expected, message);
+            }
         }
     });
 
@@ -79,7 +88,12 @@
         /// </signature>
         /// <signature>
         ///   <summary>collection notDeepEqual. argument is multiple.</summary>
-        ///   <param name="multipleExpected" type="Object">mulitple arguments, expected collection values.</param>
+        ///   <param name="multipleExpected" type="Object">mulitple arguments. ex:[1,2,3].isNot(-1,2,3).</param>
+        /// </signature>
+        /// <signature>
+        ///   <summary>ok(false). expected function pass actual. if result is false then ok.</summary>
+        ///   <param name="expected" type="Function">function checker, return boolean</param>
+        ///   <param name="message" type="String">Optional:assertion message</param>
         /// </signature>
         if (isCollection(this)) {
             if (arguments.length <= 2 && isCollection(expected)) {
@@ -90,8 +104,12 @@
             }
         }
         else {
-            // "this" is always boxed
-            notStrictEqual(unbox(this), expected, message);
+            if (expected instanceof Function) {
+                ok(!expected(unbox(this)), message);
+            }
+            else {
+                notStrictEqual(unbox(this), expected, message);
+            }
         }
     });
 
