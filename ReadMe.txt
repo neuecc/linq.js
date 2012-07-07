@@ -38,9 +38,6 @@ add methods
 asEnumerable
 
 
-// TODO:tryCatch -> catchError
-// TODO:tryFinally -> finallyAction
-
 // TODO:Enumerable.Utils. vsdoc and reference
 
 // TODO:WriteLine add separator???
@@ -48,6 +45,8 @@ asEnumerable
 // TODO:Trace! && Log!
 
 // TODO:Change License, MIT??
+
+//TODO:defer, weightedSample
 
 --
 

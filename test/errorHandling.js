@@ -4,7 +4,7 @@
 
 module("ErrorHandling");
 
-test("tryCatch", function ()
+test("catchError", function ()
 {
     var msg;
     actual = Enumerable.range(1, 10)
@@ -13,7 +13,7 @@ test("tryCatch", function ()
             if (i == 5) throw new Error("aiueo");
             return i;
         })
-        .tryCatch(function (e)
+        .catchError(function (e)
         {
             msg = e.message;
         })
@@ -22,7 +22,7 @@ test("tryCatch", function ()
     equal(msg,"aiueo");
 });
 
-test("tryFinally", function ()
+test("finallyAction", function ()
 {
     var msg;
     actual = Enumerable.range(1, 10)
@@ -31,11 +31,11 @@ test("tryFinally", function ()
             if (i == 5) throw new Error("aiueo");
             return i;
         })
-        .tryCatch(function (e)
+        .catchError(function (e)
         {
             msg = e.message;
         })
-        .tryFinally(function (f)
+        .finallyAction(function (f)
         {
             msg += "f";
         })

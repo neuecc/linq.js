@@ -1,7 +1,7 @@
 ﻿/// <reference path="testrunner.htm"/>
 /// <reference path="~/linq.js" />
 /// <reference path="qunit.js"/>
-/// <reference path="~/bindings/linq.qunit.js" />
+/// <reference path="~/extensions/linq.qunit.js" />
 
 module("WhereSelectEnumerable");
 

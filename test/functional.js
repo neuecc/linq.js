@@ -4,10 +4,10 @@
 
 module("Functional");
 
-test("exchange", function ()
+test("letBind", function ()
 {
     var sum = Enumerable.range(1, 10)
-        .exchange(function (e)
+        .letBind(function (e)
         {
             return e.zip(e, function (a, b) { return { a: a, b: b} });
         })
