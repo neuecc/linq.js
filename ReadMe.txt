@@ -26,7 +26,7 @@ Finally -> finallyAction
 ToJSON -> toJSONString
 
 following methods are changed behavior
-writeLine : document.write(value + "<br />") -> document.writeln(value)
+writeLine : document.write(value + "<br />") -> document.writeln(value), overload changed
 
 add utility methods
 Enumerable.Utils.createLambda
@@ -34,8 +34,11 @@ Enumerable.Utils.createEnumerable
 Enumerable.Utils.createEnumerator
 Enumerable.Utils.extendTo
 
-add methods
+add enumerable methods
+Enumerable.zipAll
+Enumerable.merge
 asEnumerable
+log
 
 performance optimization
 where->select and where->where,... and select->select,...
@@ -43,14 +46,12 @@ range, rangeDown, rangeTo
 
 
 // TODO:Enumerable.Utils. vsdoc and reference
+// TODO:IntelliSense and vsdoc for Visual Studio 2012
 
-// TODO:WriteLine add separator???
-
-// TODO:Trace! && Log!
 
 // TODO:Change License, MIT??
 
-//TODO:defer, weightedSample, distinctUntilChanged, zipAll, merge
+//TODO:defer, weightedSample, distinctUntilChanged
 
 
 

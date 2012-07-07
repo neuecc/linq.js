@@ -7,18 +7,19 @@
 
 
 
-        var hoge = Enumerable.zipAll(
-            [1, 2, 3],
-            [-3, 4, 10],
-            function (x, y) { return x * y; })
-        .toArray();
-        
+
+        var unbox = function (obj) {
+            if (obj instanceof Number) return obj + 0;
+            if (obj instanceof String) return obj + "";
+            if (obj instanceof Boolean) return !!obj;
+            return obj;
+        };
         
         
 
+        alert([] instanceof Array);
 
-        alert(hoge);
-
+      
 
 
 

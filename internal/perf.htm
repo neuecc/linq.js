@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>perf</title>
+    <script src="../linq.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var bench = function (action) {
+            var now = new Date();
+            for (var i = 0; i < 100; i++) action();
+            return (new Date() - now) + "ms";
+        }
+
+        var pred1 = function (x) { return x % 2 == 0; }
+        var pred2 = function (x) { return x % 3 == 0; }
+        var pred3 = function (x) { return x % 5 == 0; }
+        var sele1 = function (x) { return x * x; }
+
+        var compose = function (a, b) {
+            return function (x) { return a(x) && b(x); }
+        }
+
+        var selectorCompose = function (a, b) {
+            return function (x) { return a(b(x)); };
+        }
+
+        var compPred = compose(compose(pred1, pred2), pred3);
+        var compSele = selectorCompose(selectorCompose(sele1, sele1), sele1);
+
+
+
+        var seq = Enumerable.range(1, 1000).toArray();
+        var ms1 = bench(function () {
+            Enumerable.from(seq)
+                .where(pred1)
+                .where(pred2)
+                .where(pred3)
+                .select(sele1)
+                .select(sele1)
+                .select(sele1)
+                .force();
+        });
+        document.writeln("linq v3:" + ms1 + "<br />");
+
+        var ms1 = bench(function () {
+            Enumerable.from(seq)
+                .where(function (x) { return x % 2 == 0 && x % 3 == 0 && x % 5 == 0 })
+                .select(function (x) {
+                    var a = (x * x);
+                    var b = a * a;
+                    var c = b * b;
+                    return c;
+                })
+                .force();
+        });
+        document.writeln("linq v3_2:" + ms1 + "<br />");
+
+        var ms1 = bench(function () {
+            Enumerable.from(seq)
+                .where(compPred)
+                .select(compSele)
+                .force();
+        });
+        document.writeln("linq v3_3:" + ms1 + "<br />");
+    </script>
+</head>
+<body>
+</body>
+</html>

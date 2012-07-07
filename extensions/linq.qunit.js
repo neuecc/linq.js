@@ -7,6 +7,7 @@
     }
 
     var Enumerable = root.Enumerable;
+    Enumerable.Assert = {};
 
     // overwrite array
     Enumerable.Utils.extendTo(Array);
@@ -29,6 +30,13 @@
         return false;
     };
 
+    var unbox = function (obj) {
+        if (obj instanceof Number) return obj + 0;
+        if (obj instanceof String) return obj + "";
+        if (obj instanceof Boolean) return !!obj;
+        return obj;
+    };
+
     var executeCode = function (action) {
         try {
             action();
@@ -40,53 +48,77 @@
     };
 
     defineToObject("is", function (expected, message) {
+        /// <signature>
+        ///   <summary>strictEqual. if "this" is Array or Enumerable then deepEqual with expected and both normalized to array.</summary>
+        ///   <param name="expected" type="Object">expected value</param>
+        ///   <param name="message" type="String">Optional:assertion message</param>
+        /// </signature>
+        /// <signature>
+        ///   <summary>collection deepEqual. argument is multiple.</summary>
+        ///   <param name="multipleExpected" type="Object">mulitple arguments, expected collection values.</param>
+        /// </signature>
         if (isCollection(this)) {
-            if (arguments.length == 1 && isCollection(expected)) {
-                deepEqual(Enumerable.from(this).toArray(), expected, message);
+            if (arguments.length <= 2 && isCollection(expected)) {
+                deepEqual(Enumerable.from(this).toArray(), Enumerable.from(expected).toArray(), message);
             }
             else {
-                deepEqual(Enumerable.from(this).toArray(), Enumerable.from(arguments).toArray(), message);
+                deepEqual(Enumerable.from(this).toArray(), Enumerable.from(arguments).toArray());
             }
         }
         else {
-            // "this" is boxed value, can't work strictEqual
-            equal(this, expected, message);
+            // "this" is always boxed
+            strictEqual(unbox(this), expected, message);
         }
     });
 
     defineToObject("isNot", function (expected, message) {
+        /// <signature>
+        ///   <summary>notStrictEqual. if "this" is Array or Enumerable then notDeepEqual with expected and both normalized to array.</summary>
+        ///   <param name="expected" type="Object">expected value.</param>
+        ///   <param name="message" type="String">Optional:assertion message.</param>
+        /// </signature>
+        /// <signature>
+        ///   <summary>collection notDeepEqual. argument is multiple.</summary>
+        ///   <param name="multipleExpected" type="Object">mulitple arguments, expected collection values.</param>
+        /// </signature>
         if (isCollection(this)) {
-            if (arguments.length == 1 && isCollection(expected)) {
-                notDeepEqual(Enumerable.from(this).toArray(), expected, message);
+            if (arguments.length <= 2 && isCollection(expected)) {
+                notDeepEqual(Enumerable.from(this).toArray(), Enumerable.from(expected).toArray(), message);
             }
             else {
-                notDeepEqual(Enumerable.from(this).toArray(), Enumerable.from(arguments).toArray(), message);
+                notDeepEqual(Enumerable.from(this).toArray(), Enumerable.from(arguments).toArray());
             }
         }
         else {
-            // "this" is boxed value, can't work strictEqual
-            notEqual(this, expected, message);
+            // "this" is always boxed
+            notStrictEqual(unbox(this), expected, message);
         }
     });
 
-    defineToObject("catch", function (testCode, message) {
-        var error = executeCode(testCode());
+    Enumerable.Assert.expectError = function (testAction, message) {
+        /// <summary>Throw error in testCode.</summary>
+        /// <param name="testCode" type="Function">action function.</param>
+        /// <param name="message" type="String">Optional:assertion message.</param>
+        var error = executeCode(testAction);
 
-        if (error == null) {
+        if (error != null) {
             ok(true, message);
         }
         else {
-            ok(false, "ErrorMessage:" + error.message + (message != null) ? " Message:" + message : "");
+            ok(false, "Failed testCode does not throw error." + ((message != null) ? " Message:" + message : ""));
         }
 
         return error;
-    });
+    };
 
-    defineToObject("doesNotThrow", function (testCode, message) {
-        var error = executeCode(testCode());
+    defineToObject("doesNotThrow", function (testAction, message) {
+        /// <summary>Does not throw error in testCode.</summary>
+        /// <param name="testCode" type="Function">action function.</param>
+        /// <param name="message" type="String">Optional:assertion message.</param>
+        var error = executeCode(testAction);
 
         if (error != null) {
-            ok(false, "Failed DoesNotThrow. CatchedErrorMessage:" + error.message + (message != null) ? " Message:" + message : "");
+            ok(false, "Failed testCode throws error. CatchedErrorMessage:" + error.message + ((message != null) ? " Message:" + message : ""));
         }
     });
 })(this);

@@ -90,6 +90,8 @@
     <Content Include="internal\lib\rx\rx.time.min.js" />
     <Content Include="internal\nuget-package\NuGet.exe" />
     <Content Include="internal\sandbox.htm" />
+    <Content Include="internal\perf.htm" />
+    <Content Include="test\linq.qunit-test.js" />
     <Content Include="___linq-vsdoc.js" />
     <Content Include="linq.js" />
     <Content Include="ReadMe.txt" />

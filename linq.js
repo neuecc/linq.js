@@ -566,6 +566,7 @@
         });
     };
 
+    // mutiple arguments
     Enumerable.merge = function () {
         var args = arguments;
 
@@ -1978,14 +1979,20 @@
     };
 
     // Overload:function()
-    // Overload:function(selector)
-    Enumerable.prototype.writeLine = function (selector) {
+    // Overload:function(separator)
+    // Overload:function(separator,selector)
+    Enumerable.prototype.writeLine = function (separator, selector) {
+        if (separator == null) separator = "";
         selector = Utils.createLambda(selector);
 
+        var isFirst = true;
         this.forEach(function (item) {
+            if (isFirst) isFirst = false;
+            else document.writeln(separator);
             document.writeln(selector(item));
         });
     };
+
 
     Enumerable.prototype.force = function () {
         var enumerator = this.getEnumerator();
@@ -2123,6 +2130,18 @@
     /* For Debug Methods */
 
     // Overload:function()
+    // Overload:function(selector)
+    Enumerable.prototype.log = function (selector) {
+        selector = Utils.createLambda(selector);
+
+        return this.doAction(function (item) {
+            if (typeof console !== Types.Undefined) {
+                console.log(selector(item));
+            }
+        });
+    }
+
+    // Overload:function()
     // Overload:function(message)
     // Overload:function(message,selector)
     Enumerable.prototype.trace = function (message, selector) {
@@ -2131,7 +2150,7 @@
 
         return this.doAction(function (item) {
             if (typeof console !== Types.Undefined) {
-                console.log(message + ":" + selector(item));
+                console.log(message, selector(item));
             }
         });
     }
@@ -2182,6 +2201,7 @@
             Functions.Blank
         );
     };
+
     var SortContext = function (keySelector, descending, child) {
         this.keySelector = keySelector;
         this.descending = descending;
@@ -2345,16 +2365,16 @@
 
     ArrayEnumerable.prototype.getEnumerator = function () {
         var source = this.getSource();
-        var index = 0;
+        var index = -1;
 
-        return new IEnumerator(
-            Functions.Blank,
-            function () {
-                return (index < source.length)
-                    ? this.yieldReturn(source[index++])
-                    : false;
+        // fast and simple enumerator
+        return {
+            current: function () { return source[index]; },
+            moveNext: function () {
+                return ++index < source.length;
             },
-            Functions.Blank);
+            dispose: Functions.Blank
+        };
     };
 
     // optimization for multiple where and multiple select and whereselect
