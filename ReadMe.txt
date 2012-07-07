@@ -50,7 +50,7 @@ range, rangeDown, rangeTo
 
 // TODO:Change License, MIT??
 
-//TODO:defer, weightedSample, distinctUntilChanged
+//TODO:defer, weightedSample, distinctUntilChanged, zipAll, merge
 
 
 

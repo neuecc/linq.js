@@ -530,6 +530,77 @@
         });
     };
 
+    // mutiple arguments, last one is selector, others are enumerable
+    Enumerable.zipAll = function () {
+        var args = arguments;
+        var selector = Utils.createLambda(arguments[arguments.length - 1]);
+
+        return new Enumerable(function () {
+            var enumerators;
+            var index = 0;
+
+            return new IEnumerator(
+                function () {
+                    var array = Enumerable.from(args)
+                        .takeExceptLast()
+                        .select(Enumerable.from)
+                        .select(function (x) { return x.getEnumerator() })
+                        .toArray();
+                    enumerators = Enumerable.from(array);
+                },
+                function () {
+                    if (enumerators.all(function (x) { return x.moveNext() })) {
+                        var array = enumerators
+                            .select(function (x) { return x.current() })
+                            .concat(Enumerable.make(index++))
+                            .toArray();
+                        return this.yieldReturn(selector.apply(null, array));
+                    }
+                    else {
+                        return this.yieldBreak();
+                    }
+                },
+                function () {
+                    Enumerable.from(enumerators).forEach(Utils.dispose);
+                });
+        });
+    };
+
+    Enumerable.merge = function () {
+        var args = arguments;
+
+        return new Enumerable(function () {
+            var enumerators;
+            var index = -1;
+
+            return new IEnumerator(
+                function () {
+                    enumerators = Enumerable.from(args)
+                        .select(Enumerable.from)
+                        .select(function (x) { return x.getEnumerator() })
+                        .toArray();
+                },
+                function () {
+                    while (enumerators.length > 0) {
+                        index = (index >= enumerators.length - 1) ? 0 : index + 1;
+                        var enumerator = enumerators[index];
+
+                        if (enumerator.moveNext()) {
+                            return this.yieldReturn(enumerator.current());
+                        }
+                        else {
+                            enumerator.dispose();
+                            enumerators.splice(index--, 1);
+                        }
+                    }
+                    return this.yieldBreak();
+                },
+                function () {
+                    Enumerable.from(enumerators).forEach(Utils.dispose);
+                });
+        });
+    };
+
     // Extension Methods
 
     /* Projection and Filtering Methods */

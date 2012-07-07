@@ -156,3 +156,49 @@ test("unfold", function () {
     actual = Enumerable.unfold(5, "$+3").take(5).toArray();
     deepEqual(actual, [5, 8, 11, 14, 17]);
 });
+
+test("zipAll", function () {
+    Enumerable.zipAll(
+            [1, 2, 3],
+            [-3, 4, 10],
+            function (x, y) { return x * y; })
+        .is(-3, 8, 30);
+
+    Enumerable.zipAll(
+            [1, 2, 3],
+            [-3, 4, 10],
+            function (x, y, z) { return z; })
+        .is(0, 1, 2);
+
+    Enumerable.zipAll(
+            [1, 2, 3],
+            [-3, 4, 10],
+            [-7, 20, 30, 100],
+            function (x, y, z) { return x * y + z; })
+        .is(-10, 28, 60);
+
+    Enumerable.zipAll(
+            [1, 2, 3],
+            [-3, 4, 10],
+            [-7, 20, 30, 100],
+            function (x, y, z, i) { return z + i; })
+        .is(-7, 21, 32);
+});
+
+test("merge", function () {
+    Enumerable.merge(
+            [1, 2, 3],
+            [-3, 4, 10])
+        .is(1, -3, 2, 4, 3, 10);
+
+    Enumerable.merge(
+            [1, 2, 3],
+            [-3, 4, 10])
+        .is(1, -3, 2, 4, 3, 10);
+
+    Enumerable.merge(
+            [1, 2, 3],
+            [-3, 4],
+            [-7, 20, 30, 100])
+        .is(1, -3, -7, 2, 4, 20, 3, 30, 100);
+});
