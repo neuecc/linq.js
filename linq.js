@@ -135,7 +135,8 @@
                     case State.After:
                         return false;
                 }
-            } catch (e) {
+            }
+            catch (e) {
                 this.dispose();
                 throw e;
             }
@@ -602,6 +603,24 @@
         });
     };
 
+    Enumerable.defer = function (enumerableFactory) {
+
+        return new Enumerable(function () {
+            var enuerator;
+
+            return new IEnumerator(
+                function () { enumerator = enumerableFactory().getEnumerator(); },
+                function () {
+                    return (enumerator.moveNext())
+                        ? this.yieldReturn(enumerator.current())
+                        : this.yieldBreak();
+                },
+                function () {
+                    Utils.dispose(enumerator);
+                });
+        });
+    };
+
     // Extension Methods
 
     /* Projection and Filtering Methods */
@@ -620,26 +639,27 @@
             var buffer = [];
 
             return new IEnumerator(
-                    function () { enumerator = source.getEnumerator(); },
-                    function () {
-                        while (true) {
-                            if (enumerator.moveNext()) {
-                                buffer.push(enumerator.current());
-                                return this.yieldReturn(resultSelector(enumerator.current(), nestLevel));
-                            }
-
-                            var next = Enumerable.from(buffer).selectMany(function (x) { return func(x); });
-                            if (!next.any()) {
-                                return false;
-                            } else {
-                                nestLevel++;
-                                buffer = [];
-                                Utils.dispose(enumerator);
-                                enumerator = next.getEnumerator();
-                            }
+                function () { enumerator = source.getEnumerator(); },
+                function () {
+                    while (true) {
+                        if (enumerator.moveNext()) {
+                            buffer.push(enumerator.current());
+                            return this.yieldReturn(resultSelector(enumerator.current(), nestLevel));
                         }
-                    },
-                    function () { Utils.dispose(enumerator); });
+
+                        var next = Enumerable.from(buffer).selectMany(function (x) { return func(x); });
+                        if (!next.any()) {
+                            return false;
+                        }
+                        else {
+                            nestLevel++;
+                            buffer = [];
+                            Utils.dispose(enumerator);
+                            enumerator = next.getEnumerator();
+                        }
+                    }
+                },
+                function () { Utils.dispose(enumerator); });
         });
     };
 
@@ -656,28 +676,29 @@
             var enumerator;
 
             return new IEnumerator(
-                    function () { enumerator = source.getEnumerator(); },
-                    function () {
-                        while (true) {
-                            if (enumerator.moveNext()) {
-                                var value = resultSelector(enumerator.current(), enumeratorStack.length);
-                                enumeratorStack.push(enumerator);
-                                enumerator = Enumerable.from(func(enumerator.current())).getEnumerator();
-                                return this.yieldReturn(value);
-                            }
+                function () { enumerator = source.getEnumerator(); },
+                function () {
+                    while (true) {
+                        if (enumerator.moveNext()) {
+                            var value = resultSelector(enumerator.current(), enumeratorStack.length);
+                            enumeratorStack.push(enumerator);
+                            enumerator = Enumerable.from(func(enumerator.current())).getEnumerator();
+                            return this.yieldReturn(value);
+                        }
 
-                            if (enumeratorStack.length <= 0) return false;
-                            Utils.dispose(enumerator);
-                            enumerator = enumeratorStack.pop();
-                        }
-                    },
-                    function () {
-                        try {
-                            Utils.dispose(enumerator);
-                        } finally {
-                            Enumerable.from(enumeratorStack).forEach(function (s) { s.dispose(); });
-                        }
-                    });
+                        if (enumeratorStack.length <= 0) return false;
+                        Utils.dispose(enumerator);
+                        enumerator = enumeratorStack.pop();
+                    }
+                },
+                function () {
+                    try {
+                        Utils.dispose(enumerator);
+                    }
+                    finally {
+                        Enumerable.from(enumeratorStack).forEach(function (s) { s.dispose(); });
+                    }
+                });
         });
     };
 
@@ -689,40 +710,43 @@
             var middleEnumerator = null;
 
             return new IEnumerator(
-                    function () { enumerator = source.getEnumerator(); },
-                    function () {
-                        while (true) {
-                            if (middleEnumerator != null) {
-                                if (middleEnumerator.moveNext()) {
-                                    return this.yieldReturn(middleEnumerator.current());
-                                } else {
-                                    middleEnumerator = null;
-                                }
+                function () { enumerator = source.getEnumerator(); },
+                function () {
+                    while (true) {
+                        if (middleEnumerator != null) {
+                            if (middleEnumerator.moveNext()) {
+                                return this.yieldReturn(middleEnumerator.current());
                             }
-
-                            if (enumerator.moveNext()) {
-                                if (enumerator.current() instanceof Array) {
-                                    Utils.dispose(middleEnumerator);
-                                    middleEnumerator = Enumerable.from(enumerator.current())
-                                        .selectMany(Functions.Identity)
-                                        .flatten()
-                                        .getEnumerator();
-                                    continue;
-                                } else {
-                                    return this.yieldReturn(enumerator.current());
-                                }
+                            else {
+                                middleEnumerator = null;
                             }
+                        }
 
-                            return false;
+                        if (enumerator.moveNext()) {
+                            if (enumerator.current() instanceof Array) {
+                                Utils.dispose(middleEnumerator);
+                                middleEnumerator = Enumerable.from(enumerator.current())
+                                    .selectMany(Functions.Identity)
+                                    .flatten()
+                                    .getEnumerator();
+                                continue;
+                            }
+                            else {
+                                return this.yieldReturn(enumerator.current());
+                            }
                         }
-                    },
-                    function () {
-                        try {
-                            Utils.dispose(enumerator);
-                        } finally {
-                            Utils.dispose(middleEnumerator);
-                        }
-                    });
+
+                        return false;
+                    }
+                },
+                function () {
+                    try {
+                        Utils.dispose(enumerator);
+                    }
+                    finally {
+                        Utils.dispose(middleEnumerator);
+                    }
+                });
         });
     };
 
@@ -734,17 +758,17 @@
             var enumerator;
 
             return new IEnumerator(
-                    function () {
-                        enumerator = source.getEnumerator();
-                        enumerator.moveNext();
-                    },
-                    function () {
-                        var prev = enumerator.current();
-                        return (enumerator.moveNext())
-                            ? this.yieldReturn(selector(prev, enumerator.current()))
-                            : false;
-                    },
-                    function () { Utils.dispose(enumerator); });
+                function () {
+                    enumerator = source.getEnumerator();
+                    enumerator.moveNext();
+                },
+                function () {
+                    var prev = enumerator.current();
+                    return (enumerator.moveNext())
+                        ? this.yieldReturn(selector(prev, enumerator.current()))
+                        : false;
+                },
+                function () { Utils.dispose(enumerator); });
         });
     };
 
@@ -770,24 +794,25 @@
             var isFirst = true;
 
             return new IEnumerator(
-                    function () { enumerator = source.getEnumerator(); },
-                    function () {
-                        if (isFirst) {
-                            isFirst = false;
-                            if (!isUseSeed) {
-                                if (enumerator.moveNext()) {
-                                    return this.yieldReturn(value = enumerator.current());
-                                }
-                            } else {
-                                return this.yieldReturn(value = seed);
+                function () { enumerator = source.getEnumerator(); },
+                function () {
+                    if (isFirst) {
+                        isFirst = false;
+                        if (!isUseSeed) {
+                            if (enumerator.moveNext()) {
+                                return this.yieldReturn(value = enumerator.current());
                             }
                         }
+                        else {
+                            return this.yieldReturn(value = seed);
+                        }
+                    }
 
-                        return (enumerator.moveNext())
-                            ? this.yieldReturn(value = func(value, enumerator.current()))
-                            : false;
-                    },
-                    function () { Utils.dispose(enumerator); });
+                    return (enumerator.moveNext())
+                        ? this.yieldReturn(value = func(value, enumerator.current()))
+                        : false;
+                },
+                function () { Utils.dispose(enumerator); });
         });
     };
 
@@ -807,13 +832,13 @@
                 var index = 0;
 
                 return new IEnumerator(
-                        function () { enumerator = source.getEnumerator(); },
-                        function () {
-                            return (enumerator.moveNext())
-                                ? this.yieldReturn(selector(enumerator.current(), index++))
-                                : false;
-                        },
-                        function () { Utils.dispose(enumerator); });
+                    function () { enumerator = source.getEnumerator(); },
+                    function () {
+                        return (enumerator.moveNext())
+                            ? this.yieldReturn(selector(enumerator.current(), index++))
+                            : false;
+                    },
+                    function () { Utils.dispose(enumerator); });
             });
         }
     };
@@ -834,31 +859,32 @@
             var index = 0;
 
             return new IEnumerator(
-                    function () { enumerator = source.getEnumerator(); },
-                    function () {
-                        if (middleEnumerator === undefined) {
-                            if (!enumerator.moveNext()) return false;
+                function () { enumerator = source.getEnumerator(); },
+                function () {
+                    if (middleEnumerator === undefined) {
+                        if (!enumerator.moveNext()) return false;
+                    }
+                    do {
+                        if (middleEnumerator == null) {
+                            var middleSeq = collectionSelector(enumerator.current(), index++);
+                            middleEnumerator = Enumerable.from(middleSeq).getEnumerator();
                         }
-                        do {
-                            if (middleEnumerator == null) {
-                                var middleSeq = collectionSelector(enumerator.current(), index++);
-                                middleEnumerator = Enumerable.from(middleSeq).getEnumerator();
-                            }
-                            if (middleEnumerator.moveNext()) {
-                                return this.yieldReturn(resultSelector(enumerator.current(), middleEnumerator.current()));
-                            }
-                            Utils.dispose(middleEnumerator);
-                            middleEnumerator = null;
-                        } while (enumerator.moveNext());
-                        return false;
-                    },
-                    function () {
-                        try {
-                            Utils.dispose(enumerator);
-                        } finally {
-                            Utils.dispose(middleEnumerator);
+                        if (middleEnumerator.moveNext()) {
+                            return this.yieldReturn(resultSelector(enumerator.current(), middleEnumerator.current()));
                         }
-                    });
+                        Utils.dispose(middleEnumerator);
+                        middleEnumerator = null;
+                    } while (enumerator.moveNext());
+                    return false;
+                },
+                function () {
+                    try {
+                        Utils.dispose(enumerator);
+                    }
+                    finally {
+                        Utils.dispose(middleEnumerator);
+                    }
+                });
         });
     };
 
@@ -878,18 +904,44 @@
                 var index = 0;
 
                 return new IEnumerator(
-                        function () { enumerator = source.getEnumerator(); },
-                        function () {
-                            while (enumerator.moveNext()) {
-                                if (predicate(enumerator.current(), index++)) {
-                                    return this.yieldReturn(enumerator.current());
-                                }
+                    function () { enumerator = source.getEnumerator(); },
+                    function () {
+                        while (enumerator.moveNext()) {
+                            if (predicate(enumerator.current(), index++)) {
+                                return this.yieldReturn(enumerator.current());
                             }
-                            return false;
-                        },
-                        function () { Utils.dispose(enumerator); });
+                        }
+                        return false;
+                    },
+                    function () { Utils.dispose(enumerator); });
             });
         }
+    };
+
+
+    // Overload:function(selector<element>)
+    // Overload:function(selector<element,index>)
+    Enumerable.prototype.choose = function (selector) {
+        selector = Utils.createLambda(selector);
+        var source = this;
+
+        return new Enumerable(function () {
+            var enumerator;
+            var index = 0;
+
+            return new IEnumerator(
+                function () { enumerator = source.getEnumerator(); },
+                function () {
+                    while (enumerator.moveNext()) {
+                        var result = selector(enumerator.current(), index++);
+                        if (result != null) {
+                            return this.yieldReturn(result);
+                        }
+                    }
+                    return this.yieldBreak();
+                },
+                function () { Utils.dispose(enumerator); });
+        });
     };
 
     Enumerable.prototype.ofType = function (type) {
@@ -912,8 +964,8 @@
                 break;
         }
         return (typeName === null)
-                ? this.where(function (x) { return x instanceof type; })
-                : this.where(function (x) { return typeof x === typeName; });
+            ? this.where(function (x) { return x instanceof type; })
+            : this.where(function (x) { return typeof x === typeName; });
     };
 
     // Overload:function(second,selector<outer,inner>)
@@ -929,23 +981,23 @@
             var index = 0;
 
             return new IEnumerator(
-                    function () {
-                        firstEnumerator = source.getEnumerator();
-                        secondEnumerator = Enumerable.from(second).getEnumerator();
-                    },
-                    function () {
-                        if (firstEnumerator.moveNext() && secondEnumerator.moveNext()) {
-                            return this.yieldReturn(selector(firstEnumerator.current(), secondEnumerator.current(), index++));
-                        }
-                        return false;
-                    },
-                    function () {
-                        try {
-                            Utils.dispose(firstEnumerator);
-                        } finally {
-                            Utils.dispose(secondEnumerator);
-                        }
-                    });
+                function () {
+                    firstEnumerator = source.getEnumerator();
+                    secondEnumerator = Enumerable.from(second).getEnumerator();
+                },
+                function () {
+                    if (firstEnumerator.moveNext() && secondEnumerator.moveNext()) {
+                        return this.yieldReturn(selector(firstEnumerator.current(), secondEnumerator.current(), index++));
+                    }
+                    return false;
+                },
+                function () {
+                    try {
+                        Utils.dispose(firstEnumerator);
+                    } finally {
+                        Utils.dispose(secondEnumerator);
+                    }
+                });
         });
     };
 
@@ -967,31 +1019,31 @@
             var innerCount = 0;
 
             return new IEnumerator(
-                    function () {
-                        outerEnumerator = source.getEnumerator();
-                        lookup = Enumerable.from(inner).toLookup(innerKeySelector, Functions.Identity, compareSelector);
-                    },
-                    function () {
-                        while (true) {
-                            if (innerElements != null) {
-                                var innerElement = innerElements[innerCount++];
-                                if (innerElement !== undefined) {
-                                    return this.yieldReturn(resultSelector(outerEnumerator.current(), innerElement));
-                                }
-
-                                innerElement = null;
-                                innerCount = 0;
+                function () {
+                    outerEnumerator = source.getEnumerator();
+                    lookup = Enumerable.from(inner).toLookup(innerKeySelector, Functions.Identity, compareSelector);
+                },
+                function () {
+                    while (true) {
+                        if (innerElements != null) {
+                            var innerElement = innerElements[innerCount++];
+                            if (innerElement !== undefined) {
+                                return this.yieldReturn(resultSelector(outerEnumerator.current(), innerElement));
                             }
 
-                            if (outerEnumerator.moveNext()) {
-                                var key = outerKeySelector(outerEnumerator.current());
-                                innerElements = lookup.get(key).toArray();
-                            } else {
-                                return false;
-                            }
+                            innerElement = null;
+                            innerCount = 0;
                         }
-                    },
-                    function () { Utils.dispose(outerEnumerator); });
+
+                        if (outerEnumerator.moveNext()) {
+                            var key = outerKeySelector(outerEnumerator.current());
+                            innerElements = lookup.get(key).toArray();
+                        } else {
+                            return false;
+                        }
+                    }
+                },
+                function () { Utils.dispose(outerEnumerator); });
         });
     };
 
@@ -1009,18 +1061,18 @@
             var lookup = null;
 
             return new IEnumerator(
-                    function () {
-                        enumerator = source.getEnumerator();
-                        lookup = Enumerable.from(inner).toLookup(innerKeySelector, Functions.Identity, compareSelector);
-                    },
-                    function () {
-                        if (enumerator.moveNext()) {
-                            var innerElement = lookup.get(outerKeySelector(enumerator.current()));
-                            return this.yieldReturn(resultSelector(enumerator.current(), innerElement));
-                        }
-                        return false;
-                    },
-                    function () { Utils.dispose(enumerator); });
+                function () {
+                    enumerator = source.getEnumerator();
+                    lookup = Enumerable.from(inner).toLookup(innerKeySelector, Functions.Identity, compareSelector);
+                },
+                function () {
+                    if (enumerator.moveNext()) {
+                        var innerElement = lookup.get(outerKeySelector(enumerator.current()));
+                        return this.yieldReturn(resultSelector(enumerator.current(), innerElement));
+                    }
+                    return false;
+                },
+                function () { Utils.dispose(enumerator); });
         });
     };
 
@@ -1053,7 +1105,8 @@
                 if (predicate(enumerator.current())) return true;
             }
             return false;
-        } finally {
+        }
+        finally {
             Utils.dispose(enumerator);
         }
     };
@@ -1066,22 +1119,23 @@
             var secondEnumerator;
 
             return new IEnumerator(
-                    function () { firstEnumerator = source.getEnumerator(); },
-                    function () {
-                        if (secondEnumerator == null) {
-                            if (firstEnumerator.moveNext()) return this.yieldReturn(firstEnumerator.current());
-                            secondEnumerator = Enumerable.from(second).getEnumerator();
-                        }
-                        if (secondEnumerator.moveNext()) return this.yieldReturn(secondEnumerator.current());
-                        return false;
-                    },
-                    function () {
-                        try {
-                            Utils.dispose(firstEnumerator);
-                        } finally {
-                            Utils.dispose(secondEnumerator);
-                        }
-                    });
+                function () { firstEnumerator = source.getEnumerator(); },
+                function () {
+                    if (secondEnumerator == null) {
+                        if (firstEnumerator.moveNext()) return this.yieldReturn(firstEnumerator.current());
+                        secondEnumerator = Enumerable.from(second).getEnumerator();
+                    }
+                    if (secondEnumerator.moveNext()) return this.yieldReturn(secondEnumerator.current());
+                    return false;
+                },
+                function () {
+                    try {
+                        Utils.dispose(firstEnumerator);
+                    }
+                    finally {
+                        Utils.dispose(secondEnumerator);
+                    }
+                });
         });
     };
 
@@ -1095,31 +1149,32 @@
             var isEnumerated = false;
 
             return new IEnumerator(
-                    function () {
-                        firstEnumerator = source.getEnumerator();
-                        secondEnumerator = Enumerable.from(second).getEnumerator();
-                    },
-                    function () {
-                        if (count == index && secondEnumerator.moveNext()) {
-                            isEnumerated = true;
-                            return this.yieldReturn(secondEnumerator.current());
-                        }
-                        if (firstEnumerator.moveNext()) {
-                            count++;
-                            return this.yieldReturn(firstEnumerator.current());
-                        }
-                        if (!isEnumerated && secondEnumerator.moveNext()) {
-                            return this.yieldReturn(secondEnumerator.current());
-                        }
-                        return false;
-                    },
-                    function () {
-                        try {
-                            Utils.dispose(firstEnumerator);
-                        } finally {
-                            Utils.dispose(secondEnumerator);
-                        }
-                    });
+                function () {
+                    firstEnumerator = source.getEnumerator();
+                    secondEnumerator = Enumerable.from(second).getEnumerator();
+                },
+                function () {
+                    if (count == index && secondEnumerator.moveNext()) {
+                        isEnumerated = true;
+                        return this.yieldReturn(secondEnumerator.current());
+                    }
+                    if (firstEnumerator.moveNext()) {
+                        count++;
+                        return this.yieldReturn(firstEnumerator.current());
+                    }
+                    if (!isEnumerated && secondEnumerator.moveNext()) {
+                        return this.yieldReturn(secondEnumerator.current());
+                    }
+                    return false;
+                },
+                function () {
+                    try {
+                        Utils.dispose(firstEnumerator);
+                    }
+                    finally {
+                        Utils.dispose(secondEnumerator);
+                    }
+                });
         });
     };
 
@@ -1140,7 +1195,8 @@
                 if (compareSelector(enumerator.current()) === value) return true;
             }
             return false;
-        } finally {
+        }
+        finally {
             Utils.dispose(enumerator);
         }
     };
@@ -1153,18 +1209,18 @@
             var isFirst = true;
 
             return new IEnumerator(
-                    function () { enumerator = source.getEnumerator(); },
-                    function () {
-                        if (enumerator.moveNext()) {
-                            isFirst = false;
-                            return this.yieldReturn(enumerator.current());
-                        } else if (isFirst) {
-                            isFirst = false;
-                            return this.yieldReturn(defaultValue);
-                        }
-                        return false;
-                    },
-                    function () { Utils.dispose(enumerator); });
+                function () { enumerator = source.getEnumerator(); },
+                function () {
+                    if (enumerator.moveNext()) {
+                        isFirst = false;
+                        return this.yieldReturn(enumerator.current());
+                    } else if (isFirst) {
+                        isFirst = false;
+                        return this.yieldReturn(defaultValue);
+                    }
+                    return false;
+                },
+                function () { Utils.dispose(enumerator); });
         });
     };
 
@@ -1172,6 +1228,42 @@
     // Overload:function(compareSelector)
     Enumerable.prototype.distinct = function (compareSelector) {
         return this.except(Enumerable.empty(), compareSelector);
+    };
+
+    Enumerable.prototype.distinctUntilChanged = function (compareSelector) {
+        compareSelector = Utils.createLambda(compareSelector);
+        var source = this;
+
+        return new Enumerable(function () {
+            var enumerator;
+            var compareKey;
+            var initial;
+
+            return new IEnumerator(
+                function () {
+                    enumerator = source.getEnumerator();
+                },
+                function () {
+                    while (enumerator.moveNext()) {
+                        var key = compareSelector(enumerator.current());
+
+                        if (initial) {
+                            initial = false;
+                            compareKey = key;
+                            return this.yieldReturn(enumerator.current());
+                        }
+
+                        if (compareKey === key) {
+                            continue;
+                        }
+
+                        compareKey = key;
+                        return this.yieldReturn(enumerator.current());
+                    }
+                    return this.yieldBreak();
+                },
+                function () { Utils.dispose(enumerator); });
+        });
     };
 
     // Overload:function(second)
@@ -1185,22 +1277,22 @@
             var keys;
 
             return new IEnumerator(
-                    function () {
-                        enumerator = source.getEnumerator();
-                        keys = new Dictionary(compareSelector);
-                        Enumerable.from(second).forEach(function (key) { keys.add(key); });
-                    },
-                    function () {
-                        while (enumerator.moveNext()) {
-                            var current = enumerator.current();
-                            if (!keys.contains(current)) {
-                                keys.add(current);
-                                return this.yieldReturn(current);
-                            }
+                function () {
+                    enumerator = source.getEnumerator();
+                    keys = new Dictionary(compareSelector);
+                    Enumerable.from(second).forEach(function (key) { keys.add(key); });
+                },
+                function () {
+                    while (enumerator.moveNext()) {
+                        var current = enumerator.current();
+                        if (!keys.contains(current)) {
+                            keys.add(current);
+                            return this.yieldReturn(current);
                         }
-                        return false;
-                    },
-                    function () { Utils.dispose(enumerator); });
+                    }
+                    return false;
+                },
+                function () { Utils.dispose(enumerator); });
         });
     };
 
@@ -1216,24 +1308,24 @@
             var outs;
 
             return new IEnumerator(
-                    function () {
-                        enumerator = source.getEnumerator();
+                function () {
+                    enumerator = source.getEnumerator();
 
-                        keys = new Dictionary(compareSelector);
-                        Enumerable.from(second).forEach(function (key) { keys.add(key); });
-                        outs = new Dictionary(compareSelector);
-                    },
-                    function () {
-                        while (enumerator.moveNext()) {
-                            var current = enumerator.current();
-                            if (!outs.contains(current) && keys.contains(current)) {
-                                outs.add(current);
-                                return this.yieldReturn(current);
-                            }
+                    keys = new Dictionary(compareSelector);
+                    Enumerable.from(second).forEach(function (key) { keys.add(key); });
+                    outs = new Dictionary(compareSelector);
+                },
+                function () {
+                    while (enumerator.moveNext()) {
+                        var current = enumerator.current();
+                        if (!outs.contains(current) && keys.contains(current)) {
+                            outs.add(current);
+                            return this.yieldReturn(current);
                         }
-                        return false;
-                    },
-                    function () { Utils.dispose(enumerator); });
+                    }
+                    return false;
+                },
+                function () { Utils.dispose(enumerator); });
         });
     };
 
@@ -1248,17 +1340,19 @@
             try {
                 while (firstEnumerator.moveNext()) {
                     if (!secondEnumerator.moveNext()
-                            || compareSelector(firstEnumerator.current()) !== compareSelector(secondEnumerator.current())) {
-                                return false;
-                            }
+                    || compareSelector(firstEnumerator.current()) !== compareSelector(secondEnumerator.current())) {
+                        return false;
+                    }
                 }
 
                 if (secondEnumerator.moveNext()) return false;
                 return true;
-            } finally {
+            }
+            finally {
                 Utils.dispose(secondEnumerator);
             }
-        } finally {
+        }
+        finally {
             Utils.dispose(firstEnumerator);
         }
     };
@@ -1273,38 +1367,39 @@
             var keys;
 
             return new IEnumerator(
-                    function () {
-                        firstEnumerator = source.getEnumerator();
-                        keys = new Dictionary(compareSelector);
-                    },
-                    function () {
-                        var current;
-                        if (secondEnumerator === undefined) {
-                            while (firstEnumerator.moveNext()) {
-                                current = firstEnumerator.current();
-                                if (!keys.contains(current)) {
-                                    keys.add(current);
-                                    return this.yieldReturn(current);
-                                }
-                            }
-                            secondEnumerator = Enumerable.from(second).getEnumerator();
-                        }
-                        while (secondEnumerator.moveNext()) {
-                            current = secondEnumerator.current();
+                function () {
+                    firstEnumerator = source.getEnumerator();
+                    keys = new Dictionary(compareSelector);
+                },
+                function () {
+                    var current;
+                    if (secondEnumerator === undefined) {
+                        while (firstEnumerator.moveNext()) {
+                            current = firstEnumerator.current();
                             if (!keys.contains(current)) {
                                 keys.add(current);
                                 return this.yieldReturn(current);
                             }
                         }
-                        return false;
-                    },
-                    function () {
-                        try {
-                            Utils.dispose(firstEnumerator);
-                        } finally {
-                            Utils.dispose(secondEnumerator);
+                        secondEnumerator = Enumerable.from(second).getEnumerator();
+                    }
+                    while (secondEnumerator.moveNext()) {
+                        current = secondEnumerator.current();
+                        if (!keys.contains(current)) {
+                            keys.add(current);
+                            return this.yieldReturn(current);
                         }
-                    });
+                    }
+                    return false;
+                },
+                function () {
+                    try {
+                        Utils.dispose(firstEnumerator);
+                    }
+                    finally {
+                        Utils.dispose(secondEnumerator);
+                    }
+                });
         });
     };
 
@@ -1326,16 +1421,16 @@
             var index;
 
             return new IEnumerator(
-                    function () {
-                        buffer = source.toArray();
-                        index = buffer.length;
-                    },
-                    function () {
-                        return (index > 0)
-                            ? this.yieldReturn(buffer[--index])
-                            : false;
-                    },
-                    Functions.Blank);
+                function () {
+                    buffer = source.toArray();
+                    index = buffer.length;
+                },
+                function () {
+                    return (index > 0)
+                        ? this.yieldReturn(buffer[--index])
+                        : false;
+                },
+                Functions.Blank);
         });
     };
 
@@ -1346,15 +1441,60 @@
             var buffer;
 
             return new IEnumerator(
-                    function () { buffer = source.toArray(); },
-                    function () {
-                        if (buffer.length > 0) {
-                            var i = Math.floor(Math.random() * buffer.length);
-                            return this.yieldReturn(buffer.splice(i, 1)[0]);
+                function () { buffer = source.toArray(); },
+                function () {
+                    if (buffer.length > 0) {
+                        var i = Math.floor(Math.random() * buffer.length);
+                        return this.yieldReturn(buffer.splice(i, 1)[0]);
+                    }
+                    return false;
+                },
+                Functions.Blank);
+        });
+    };
+
+    Enumerable.prototype.weightedSample = function (weightSelector) {
+        weightSelector = Utils.createLambda(weightSelector);
+        var source = this;
+
+        return new Enumerable(function () {
+            var sortedByBound;
+            var totalWeight = 0;
+
+            return new IEnumerator(
+                function () {
+                    sortedByBound = source
+                        .choose(function (x) {
+                            var weight = weightSelector(x);
+                            if (weight <= 0) return null; // ignore 0
+
+                            totalWeight += weight;
+                            return { value: x, bound: totalWeight };
+                        })
+                        .toArray();
+                },
+                function () {
+                    if (sortedByBound.length > 0) {
+                        var draw = Math.floor(Math.random() * totalWeight) + 1;
+
+                        var lower = -1;
+                        var upper = sortedByBound.length;
+                        while (upper - lower > 1) {
+                            var index = Math.floor((lower + upper) / 2);
+                            if (sortedByBound[index].bound >= draw) {
+                                upper = index;
+                            }
+                            else {
+                                lower = index;
+                            }
                         }
-                        return false;
-                    },
-                    Functions.Blank);
+
+                        return this.yieldReturn(sortedByBound[upper].value);
+                    }
+
+                    return this.yieldBreak();
+                },
+                Functions.Blank);
         });
     };
 
@@ -1375,20 +1515,20 @@
             var enumerator;
 
             return new IEnumerator(
-                    function () {
-                        enumerator = source.toLookup(keySelector, elementSelector, compareSelector)
-                            .toEnumerable()
-                            .getEnumerator();
-                    },
-                    function () {
-                        while (enumerator.moveNext()) {
-                            return (resultSelector == null)
-                                ? this.yieldReturn(enumerator.current())
-                                : this.yieldReturn(resultSelector(enumerator.current().key(), enumerator.current()));
-                        }
-                        return false;
-                    },
-                    function () { Utils.dispose(enumerator); });
+                function () {
+                    enumerator = source.toLookup(keySelector, elementSelector, compareSelector)
+                        .toEnumerable()
+                        .getEnumerator();
+                },
+                function () {
+                    while (enumerator.moveNext()) {
+                        return (resultSelector == null)
+                            ? this.yieldReturn(enumerator.current())
+                            : this.yieldReturn(resultSelector(enumerator.current().key(), enumerator.current()));
+                    }
+                    return false;
+                },
+                function () { Utils.dispose(enumerator); });
         });
     };
 
@@ -1406,7 +1546,8 @@
         if (resultSelector == null) {
             hasResultSelector = false;
             resultSelector = function (key, group) { return new Grouping(key, group); };
-        } else {
+        }
+        else {
             hasResultSelector = true;
             resultSelector = Utils.createLambda(resultSelector);
         }
@@ -1418,38 +1559,40 @@
             var group = [];
 
             return new IEnumerator(
-                    function () {
-                        enumerator = source.getEnumerator();
-                        if (enumerator.moveNext()) {
-                            key = keySelector(enumerator.current());
-                            compareKey = compareSelector(key);
+                function () {
+                    enumerator = source.getEnumerator();
+                    if (enumerator.moveNext()) {
+                        key = keySelector(enumerator.current());
+                        compareKey = compareSelector(key);
+                        group.push(elementSelector(enumerator.current()));
+                    }
+                },
+                function () {
+                    var hasNext;
+                    while ((hasNext = enumerator.moveNext()) == true) {
+                        if (compareKey === compareSelector(keySelector(enumerator.current()))) {
                             group.push(elementSelector(enumerator.current()));
                         }
-                    },
-                    function () {
-                        var hasNext;
-                        while ((hasNext = enumerator.moveNext()) == true) {
-                            if (compareKey === compareSelector(keySelector(enumerator.current()))) {
-                                group.push(elementSelector(enumerator.current()));
-                            } else break;
+                        else break;
+                    }
+
+                    if (group.length > 0) {
+                        var result = (hasResultSelector)
+                            ? resultSelector(key, Enumerable.from(group))
+                            : resultSelector(key, group);
+                        if (hasNext) {
+                            key = keySelector(enumerator.current());
+                            compareKey = compareSelector(key);
+                            group = [elementSelector(enumerator.current())];
                         }
+                        else group = [];
 
-                        if (group.length > 0) {
-                            var result = (hasResultSelector)
-                                ? resultSelector(key, Enumerable.from(group))
-                                : resultSelector(key, group);
-                            if (hasNext) {
-                                key = keySelector(enumerator.current());
-                                compareKey = compareSelector(key);
-                                group = [elementSelector(enumerator.current())];
-                            } else group = [];
+                        return this.yieldReturn(result);
+                    }
 
-                            return this.yieldReturn(result);
-                        }
-
-                        return false;
-                    },
-                    function () { Utils.dispose(enumerator); });
+                    return false;
+                },
+                function () { Utils.dispose(enumerator); });
         });
     };
 
@@ -1460,18 +1603,18 @@
             var enumerator;
 
             return new IEnumerator(
-                    function () { enumerator = source.getEnumerator(); },
-                    function () {
-                        var array = [];
-                        var index = 0;
-                        while (enumerator.moveNext()) {
-                            array.push(enumerator.current());
-                            if (++index >= count) return this.yieldReturn(array);
-                        }
-                        if (array.length > 0) return this.yieldReturn(array);
-                        return false;
-                    },
-                    function () { Utils.dispose(enumerator); });
+                function () { enumerator = source.getEnumerator(); },
+                function () {
+                    var array = [];
+                    var index = 0;
+                    while (enumerator.moveNext()) {
+                        array.push(enumerator.current());
+                        if (++index >= count) return this.yieldReturn(array);
+                    }
+                    if (array.length > 0) return this.yieldReturn(array);
+                    return false;
+                },
+                function () { Utils.dispose(enumerator); });
         });
     };
 
@@ -1678,18 +1821,18 @@
             var index = 0;
 
             return new IEnumerator(
-                    function () {
-                        enumerator = source.getEnumerator();
-                        while (index++ < count && enumerator.moveNext()) {
-                        }
-                        ;
-                    },
-                    function () {
-                        return (enumerator.moveNext())
-                            ? this.yieldReturn(enumerator.current())
-                            : false;
-                    },
-                    function () { Utils.dispose(enumerator); });
+                function () {
+                    enumerator = source.getEnumerator();
+                    while (index++ < count && enumerator.moveNext()) {
+                    }
+                    ;
+                },
+                function () {
+                    return (enumerator.moveNext())
+                        ? this.yieldReturn(enumerator.current())
+                        : false;
+                },
+                function () { Utils.dispose(enumerator); });
         });
     };
 
@@ -1705,24 +1848,24 @@
             var isSkipEnd = false;
 
             return new IEnumerator(
-                    function () { enumerator = source.getEnumerator(); },
-                    function () {
-                        while (!isSkipEnd) {
-                            if (enumerator.moveNext()) {
-                                if (!predicate(enumerator.current(), index++)) {
-                                    isSkipEnd = true;
-                                    return this.yieldReturn(enumerator.current());
-                                }
-                                continue;
-                            } else return false;
-                        }
+                function () { enumerator = source.getEnumerator(); },
+                function () {
+                    while (!isSkipEnd) {
+                        if (enumerator.moveNext()) {
+                            if (!predicate(enumerator.current(), index++)) {
+                                isSkipEnd = true;
+                                return this.yieldReturn(enumerator.current());
+                            }
+                            continue;
+                        } else return false;
+                    }
 
-                        return (enumerator.moveNext())
-                            ? this.yieldReturn(enumerator.current())
-                            : false;
+                    return (enumerator.moveNext())
+                        ? this.yieldReturn(enumerator.current())
+                        : false;
 
-                    },
-                    function () { Utils.dispose(enumerator); });
+                },
+                function () { Utils.dispose(enumerator); });
         });
     };
 
@@ -1734,14 +1877,14 @@
             var index = 0;
 
             return new IEnumerator(
-                    function () { enumerator = source.getEnumerator(); },
-                    function () {
-                        return (index++ < count && enumerator.moveNext())
-                            ? this.yieldReturn(enumerator.current())
-                            : false;
-                    },
-                    function () { Utils.dispose(enumerator); }
-                );
+                function () { enumerator = source.getEnumerator(); },
+                function () {
+                    return (index++ < count && enumerator.moveNext())
+                        ? this.yieldReturn(enumerator.current())
+                        : false;
+                },
+                function () { Utils.dispose(enumerator); }
+            );
         });
     };
 
@@ -1756,13 +1899,13 @@
             var index = 0;
 
             return new IEnumerator(
-                    function () { enumerator = source.getEnumerator(); },
-                    function () {
-                        return (enumerator.moveNext() && predicate(enumerator.current(), index++))
-                            ? this.yieldReturn(enumerator.current())
-                            : false;
-                    },
-                    function () { Utils.dispose(enumerator); });
+                function () { enumerator = source.getEnumerator(); },
+                function () {
+                    return (enumerator.moveNext() && predicate(enumerator.current(), index++))
+                        ? this.yieldReturn(enumerator.current())
+                        : false;
+                },
+                function () { Utils.dispose(enumerator); });
         });
     };
 
@@ -1779,18 +1922,18 @@
             var q = [];
 
             return new IEnumerator(
-                    function () { enumerator = source.getEnumerator(); },
-                    function () {
-                        while (enumerator.moveNext()) {
-                            if (q.length == count) {
-                                q.push(enumerator.current());
-                                return this.yieldReturn(q.shift());
-                            }
+                function () { enumerator = source.getEnumerator(); },
+                function () {
+                    while (enumerator.moveNext()) {
+                        if (q.length == count) {
                             q.push(enumerator.current());
+                            return this.yieldReturn(q.shift());
                         }
-                        return false;
-                    },
-                    function () { Utils.dispose(enumerator); });
+                        q.push(enumerator.current());
+                    }
+                    return false;
+                },
+                function () { Utils.dispose(enumerator); });
         });
     };
 
@@ -1804,20 +1947,20 @@
             var q = [];
 
             return new IEnumerator(
-                    function () { sourceEnumerator = source.getEnumerator(); },
-                    function () {
-                        while (sourceEnumerator.moveNext()) {
-                            if (q.length == count) q.shift();
-                            q.push(sourceEnumerator.current());
-                        }
-                        if (enumerator == null) {
-                            enumerator = Enumerable.from(q).getEnumerator();
-                        }
-                        return (enumerator.moveNext())
-                            ? this.yieldReturn(enumerator.current())
-                            : false;
-                    },
-                    function () { Utils.dispose(enumerator); });
+                function () { sourceEnumerator = source.getEnumerator(); },
+                function () {
+                    while (sourceEnumerator.moveNext()) {
+                        if (q.length == count) q.shift();
+                        q.push(sourceEnumerator.current());
+                    }
+                    if (enumerator == null) {
+                        enumerator = Enumerable.from(q).getEnumerator();
+                    }
+                    return (enumerator.moveNext())
+                        ? this.yieldReturn(enumerator.current())
+                        : false;
+                },
+                function () { Utils.dispose(enumerator); });
         });
     };
 
@@ -1933,15 +2076,15 @@
             var index = 0;
 
             return new IEnumerator(
-                    function () { enumerator = source.getEnumerator(); },
-                    function () {
-                        if (enumerator.moveNext()) {
-                            action(enumerator.current(), index++);
-                            return this.yieldReturn(enumerator.current());
-                        }
-                        return false;
-                    },
-                    function () { Utils.dispose(enumerator); });
+                function () { enumerator = source.getEnumerator(); },
+                function () {
+                    if (enumerator.moveNext()) {
+                        action(enumerator.current(), index++);
+                        return this.yieldReturn(enumerator.current());
+                    }
+                    return false;
+                },
+                function () { Utils.dispose(enumerator); });
         });
     };
 
@@ -1993,14 +2136,14 @@
         });
     };
 
-
     Enumerable.prototype.force = function () {
         var enumerator = this.getEnumerator();
 
         try {
             while (enumerator.moveNext()) {
             }
-        } finally {
+        }
+        finally {
             Utils.dispose(enumerator);
         }
     };
@@ -2015,36 +2158,42 @@
             var enumerator;
 
             return new IEnumerator(
-                    function () {
-                        enumerator = Enumerable.from(func(source)).getEnumerator();
-                    },
-                    function () {
-                        return (enumerator.moveNext())
-                            ? this.yieldReturn(enumerator.current())
-                            : false;
-                    },
-                    function () { Utils.dispose(enumerator); });
+                function () {
+                    enumerator = Enumerable.from(func(source)).getEnumerator();
+                },
+                function () {
+                    return (enumerator.moveNext())
+                        ? this.yieldReturn(enumerator.current())
+                        : false;
+                },
+                function () { Utils.dispose(enumerator); });
         });
     };
 
     Enumerable.prototype.share = function () {
         var source = this;
         var sharedEnumerator;
+        var disposed = false;
 
-        return new Enumerable(function () {
+        return new DisposableEnumerable(function () {
             return new IEnumerator(
-                    function () {
-                        if (sharedEnumerator == null) {
-                            sharedEnumerator = source.getEnumerator();
-                        }
-                    },
-                    function () {
-                        return (sharedEnumerator.moveNext())
-                            ? this.yieldReturn(sharedEnumerator.current())
-                            : false;
-                    },
-                    Functions.Blank
-                );
+                function () {
+                    if (sharedEnumerator == null) {
+                        sharedEnumerator = source.getEnumerator();
+                    }
+                },
+                function () {
+                    if (disposed) throw new Error("enumerator is disposed");
+
+                    return (sharedEnumerator.moveNext())
+                        ? this.yieldReturn(sharedEnumerator.current())
+                        : false;
+                },
+                Functions.Blank
+            );
+        }, function () {
+            disposed = true;
+            Utils.dispose(sharedEnumerator);
         });
     };
 
@@ -2052,29 +2201,36 @@
         var source = this;
         var cache;
         var enumerator;
+        var disposed = false;
 
-        return new Enumerable(function () {
+        return new DisposableEnumerable(function () {
             var index = -1;
 
             return new IEnumerator(
-                    function () {
-                        if (enumerator == null) {
-                            enumerator = source.getEnumerator();
-                            cache = [];
-                        }
-                    },
-                    function () {
-                        index++;
-                        if (cache.length <= index) {
-                            return (enumerator.moveNext())
-                                ? this.yieldReturn(cache[index] = enumerator.current())
-                                : false;
-                        }
+                function () {
+                    if (enumerator == null) {
+                        enumerator = source.getEnumerator();
+                        cache = [];
+                    }
+                },
+                function () {
+                    if (disposed) throw new Error("enumerator is disposed");
 
-                        return this.yieldReturn(cache[index]);
-                    },
-                    Functions.Blank
-                );
+                    index++;
+                    if (cache.length <= index) {
+                        return (enumerator.moveNext())
+                            ? this.yieldReturn(cache[index] = enumerator.current())
+                            : false;
+                    }
+
+                    return this.yieldReturn(cache[index]);
+                },
+                Functions.Blank
+            );
+        }, function () {
+            disposed = true;
+            Utils.dispose(enumerator);
+            cache = null;
         });
     };
 
@@ -2088,18 +2244,18 @@
             var enumerator;
 
             return new IEnumerator(
-                    function () { enumerator = source.getEnumerator(); },
-                    function () {
-                        try {
-                            return (enumerator.moveNext())
-                                ? this.yieldReturn(enumerator.current())
-                                : false;
-                        } catch (e) {
-                            handler(e);
-                            return false;
-                        }
-                    },
-                    function () { Utils.dispose(enumerator); });
+                function () { enumerator = source.getEnumerator(); },
+                function () {
+                    try {
+                        return (enumerator.moveNext())
+                            ? this.yieldReturn(enumerator.current())
+                            : false;
+                    } catch (e) {
+                        handler(e);
+                        return false;
+                    }
+                },
+                function () { Utils.dispose(enumerator); });
         });
     };
 
@@ -2111,19 +2267,19 @@
             var enumerator;
 
             return new IEnumerator(
-                    function () { enumerator = source.getEnumerator(); },
-                    function () {
-                        return (enumerator.moveNext())
-                            ? this.yieldReturn(enumerator.current())
-                            : false;
-                    },
-                    function () {
-                        try {
-                            Utils.dispose(enumerator);
-                        } finally {
-                            finallyAction();
-                        }
-                    });
+                function () { enumerator = source.getEnumerator(); },
+                function () {
+                    return (enumerator.moveNext())
+                        ? this.yieldReturn(enumerator.current())
+                        : false;
+                },
+                function () {
+                    try {
+                        Utils.dispose(enumerator);
+                    } finally {
+                        finallyAction();
+                    }
+                });
         });
     };
 
@@ -2232,6 +2388,12 @@
 
         return (this.descending) ? -comparison : comparison;
     };
+
+    var DisposableEnumerable = function (getEnumerator, dispose) {
+        this.dispose = dispose;
+        Enumerable.call(this, getEnumerator);
+    };
+    DisposableEnumerable.prototype = new Enumerable();
 
     // optimize array or arraylike object
 

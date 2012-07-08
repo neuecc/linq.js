@@ -37,7 +37,11 @@ Enumerable.Utils.extendTo
 add enumerable methods
 Enumerable.zipAll
 Enumerable.merge
+Enumerable.defer
 asEnumerable
+choose
+distinctUntilChanged
+weightedSample
 log
 
 performance optimization
@@ -46,12 +50,13 @@ range, rangeDown, rangeTo
 
 
 // TODO:Enumerable.Utils. vsdoc and reference
+// TODO:Reference...
 // TODO:IntelliSense and vsdoc for Visual Studio 2012
 
 
 // TODO:Change License, MIT??
 
-//TODO:defer, weightedSample, distinctUntilChanged
+
 
 
 

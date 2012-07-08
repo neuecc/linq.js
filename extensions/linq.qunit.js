@@ -22,7 +22,6 @@
         });
     };
 
-    // checker
     var isCollection = function (obj) {
         if (obj instanceof Enumerable) return true;
         if (obj instanceof Array) return true;
@@ -51,7 +50,7 @@
         /// <signature>
         ///   <summary>strictEqual. if "this" is Array or Enumerable then deepEqual with expected and both normalized to array.</summary>
         ///   <param name="expected" type="Object">expected value</param>
-        ///   <param name="message" type="String">Optional:assertion message</param>
+        ///   <param name="message" type="String">[Optional] assertion message</param>
         /// </signature>
         /// <signature>
         ///   <summary>collection deepEqual. argument is multiple.</summary>
@@ -60,7 +59,7 @@
         /// <signature>
         ///   <summary>ok(true). expected function pass actual. if result is true then ok.</summary>
         ///   <param name="expected" type="Function">function checker, return boolean</param>
-        ///   <param name="message" type="String">Optional:assertion message</param>
+        ///   <param name="message" type="String">[Optional] assertion message</param>
         /// </signature>
         if (isCollection(this)) {
             if (arguments.length <= 2 && isCollection(expected)) {
@@ -93,7 +92,7 @@
         /// <signature>
         ///   <summary>ok(false). expected function pass actual. if result is false then ok.</summary>
         ///   <param name="expected" type="Function">function checker, return boolean</param>
-        ///   <param name="message" type="String">Optional:assertion message</param>
+        ///   <param name="message" type="String">[Optional] assertion message</param>
         /// </signature>
         if (isCollection(this)) {
             if (arguments.length <= 2 && isCollection(expected)) {
@@ -116,7 +115,7 @@
     Enumerable.Assert.expectError = function (testAction, message) {
         /// <summary>Throw error in testCode.</summary>
         /// <param name="testCode" type="Function">action function.</param>
-        /// <param name="message" type="String">Optional:assertion message.</param>
+        /// <param name="message" type="String">[Optional] assertion message.</param>
         var error = executeCode(testAction);
 
         if (error != null) {
@@ -132,7 +131,7 @@
     defineToObject("doesNotThrow", function (testAction, message) {
         /// <summary>Does not throw error in testCode.</summary>
         /// <param name="testCode" type="Function">action function.</param>
-        /// <param name="message" type="String">Optional:assertion message.</param>
+        /// <param name="message" type="String">[Optional] assertion message.</param>
         var error = executeCode(testAction);
 
         if (error != null) {

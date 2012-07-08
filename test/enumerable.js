@@ -202,3 +202,18 @@ test("merge", function () {
             [-7, 20, 30, 100])
         .is(1, -3, -7, 2, 4, 20, 3, 30, 100);
 });
+
+test("defer", function () {
+
+    var xs = [];
+
+    var r = Enumerable.range(1, 5)
+        .doAction(function (x) { xs.push(x); });
+
+    var de = Enumerable.defer(function () { return r; });
+
+    xs.length.is(0);
+
+    de.toArray().is(1, 2, 3, 4, 5);
+    xs.is(1, 2, 3, 4, 5);
+});

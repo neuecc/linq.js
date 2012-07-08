@@ -69,6 +69,18 @@ test("distinct", function ()
     deepEqual(actual, [{ test: 1 }, { test: 0}]);
 });
 
+test("distinctUntilChanged", function () {
+    [9, 1, 3, 5, 7, 7, 7, 3, 4, 2, 2, 9].distinctUntilChanged().is(9, 1, 3, 5, 7, 3, 4, 2, 9);
+    [1, 3, 3, 3, 1, 2, 6, 3, 5, 1]
+        .select("{test:$}")
+        .distinctUntilChanged("$.test")
+        .is({ test: 1 }, { test: 3 }, { test: 1 }, { test: 2 }, { test: 6 }, { test: 3 }, { test: 5 }, { test: 1 });
+
+    [1].distinctUntilChanged().is(1);
+    [1, 1].distinctUntilChanged().is(1);
+    [1, 2].distinctUntilChanged().is(1, 2);
+});
+
 test("except", function ()
 {
     actual = Enumerable.from([1, 3, 5, 6, 6, 3, 4, 3, 2, 9])

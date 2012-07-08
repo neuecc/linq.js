@@ -5,25 +5,62 @@
     <script type="text/javascript" src="../linq.js"></script>
     <script type="text/javascript">
 
+        Enumerable.Utils.extendTo(Array);
 
 
-
-        var unbox = function (obj) {
-            if (obj instanceof Number) return obj + 0;
-            if (obj instanceof String) return obj + "";
-            if (obj instanceof Boolean) return !!obj;
-            return obj;
-        };
-        
-        
-
-        alert([] instanceof Array);
-
-      
+        var array = [1, 25, 35, 39];
+        //array.weightedSample()
+        //.take(10000)
+        //.groupBy()
+        //.select(function (g) { return { key: g.key(), count: g.count() }; })
+        //.orderByDescending("$.count")
+        //.writeLine("<br />", "$.key + ':' + $.count");
 
 
 
 
+
+
+        // TODO:weightedSample,test
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //var encountSeed = [
+        //    { mode: "nothing", rate: 85 },
+        //    { mode: "encountEnemy", rate: 10 },
+        //    { mode: "dropItem", rate: 5 },
+        //];
+
+        //var encounter = encountSeed.weightedSample("$.rate").share();
+
+        //// fieldを歩いてるとして
+        //while (true) {
+        //    var draw = encounter.first();
+        //    switch (draw.mode) {
+        //        case "nothing":
+        //            break;
+        //        case "encountEnemy":
+        //            break;
+        //        case "dropItem":
+        //            break;
+        //    }
+        //}
+
+        //// ゴミ掃除的な
+        //encounter.dispose();
+
+
+        //// var encount2 = encounter.firstOrDefault();
 
 
 

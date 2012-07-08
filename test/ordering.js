@@ -115,3 +115,16 @@ test("shuffle", function ()
     var shuffled = Enumerable.from(array).shuffle().toArray();
     notDeepEqual(shuffled, array, "random test. if failed retry");
 });
+
+
+test("weightedSample", function () {
+    var array = [1, 51, 7, 823, 85, 31, 51, 99];
+    array.weightedSample()
+        .take(10000)
+        .groupBy()
+        .select(function (g) { return { key: g.key(), count: g.count() }; });
+        //.writeLine();
+
+
+
+});
