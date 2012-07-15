@@ -27,6 +27,7 @@ ToJSON -> toJSONString
 
 following methods are changed behavior
 writeLine : document.write(value + "<br />") -> document.writeln(value), overload changed
+zip, concat allow multiple arguments
 
 add utility methods
 Enumerable.Utils.createLambda
@@ -35,11 +36,11 @@ Enumerable.Utils.createEnumerator
 Enumerable.Utils.extendTo
 
 add enumerable methods
-Enumerable.zipAll
 Enumerable.merge
 Enumerable.defer
 asEnumerable
 choose
+isEmpty
 distinctUntilChanged
 weightedSample
 log

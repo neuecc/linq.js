@@ -6,11 +6,14 @@
 module("linq.qunit");
 
 test("primitive.is", function () {
-    Math.pow(10, 2).is(100, "must be 100!!!");
+    Math.pow(10, 2).is(100, "100!!!");
     var x = 1000;
     x.is(1000);
     "hoge".is("hoge");
     (10).is(10);
+
+    (true).is(true);
+    (false).is(false);
 });
 
 test("collection.is", function () {
@@ -38,6 +41,9 @@ test("primitive.isNot", function () {
 
     var o = { a: "a", b: 100, c: true };
     o.isNot({ a: "a", b: 100, c: true });
+
+    (true).isNot(false);
+    (false).isNot(true);
 });
 
 test("collection.isNot", function () {
@@ -55,6 +61,13 @@ test("function.isNot", function () {
     "foobar".isNot(function (x) { return x.toUpperCase() == "FOoBAR" });
 });
 
+test("isTrue", function () {
+    (true).isTrue();
+});
+
+test("isFalse", function () {
+    (false).isFalse();
+});
 
 test("catch", function () {
     Enumerable.Assert.expectError(function () {

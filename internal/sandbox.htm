@@ -18,10 +18,16 @@
 
 
 
+        var result = [1, 25, 35, 39].weightedSample()
+        .take(10000)
+        .groupBy()
+        .toObject("$.key()", "$.count()");
 
 
+        var _ = Enumerable.from(result).sum(function (x) { return x.value });
+        alert(_);
 
-        // TODO:weightedSample,test
+
 
 
 

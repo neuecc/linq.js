@@ -531,78 +531,6 @@
         });
     };
 
-    // mutiple arguments, last one is selector, others are enumerable
-    Enumerable.zipAll = function () {
-        var args = arguments;
-        var selector = Utils.createLambda(arguments[arguments.length - 1]);
-
-        return new Enumerable(function () {
-            var enumerators;
-            var index = 0;
-
-            return new IEnumerator(
-                function () {
-                    var array = Enumerable.from(args)
-                        .takeExceptLast()
-                        .select(Enumerable.from)
-                        .select(function (x) { return x.getEnumerator() })
-                        .toArray();
-                    enumerators = Enumerable.from(array);
-                },
-                function () {
-                    if (enumerators.all(function (x) { return x.moveNext() })) {
-                        var array = enumerators
-                            .select(function (x) { return x.current() })
-                            .concat(Enumerable.make(index++))
-                            .toArray();
-                        return this.yieldReturn(selector.apply(null, array));
-                    }
-                    else {
-                        return this.yieldBreak();
-                    }
-                },
-                function () {
-                    Enumerable.from(enumerators).forEach(Utils.dispose);
-                });
-        });
-    };
-
-    // mutiple arguments
-    Enumerable.merge = function () {
-        var args = arguments;
-
-        return new Enumerable(function () {
-            var enumerators;
-            var index = -1;
-
-            return new IEnumerator(
-                function () {
-                    enumerators = Enumerable.from(args)
-                        .select(Enumerable.from)
-                        .select(function (x) { return x.getEnumerator() })
-                        .toArray();
-                },
-                function () {
-                    while (enumerators.length > 0) {
-                        index = (index >= enumerators.length - 1) ? 0 : index + 1;
-                        var enumerator = enumerators[index];
-
-                        if (enumerator.moveNext()) {
-                            return this.yieldReturn(enumerator.current());
-                        }
-                        else {
-                            enumerator.dispose();
-                            enumerators.splice(index--, 1);
-                        }
-                    }
-                    return this.yieldBreak();
-                },
-                function () {
-                    Enumerable.from(enumerators).forEach(Utils.dispose);
-                });
-        });
-    };
-
     Enumerable.defer = function (enumerableFactory) {
 
         return new Enumerable(function () {
@@ -968,19 +896,22 @@
             : this.where(function (x) { return typeof x === typeName; });
     };
 
-    // Overload:function(second,selector<outer,inner>)
-    // Overload:function(second,selector<outer,inner,index>)
-    Enumerable.prototype.zip = function (second, selector) {
-        selector = Utils.createLambda(selector);
+    // mutiple arguments, last one is selector, others are enumerable
+    Enumerable.prototype.zip = function () {
+        var args = arguments;
+        var selector = Utils.createLambda(arguments[arguments.length - 1]);
 
         var source = this;
+        // optimized case:argument is 2
+        if (arguments.length == 2) {
+            var second = arguments[0];
 
-        return new Enumerable(function () {
-            var firstEnumerator;
-            var secondEnumerator;
-            var index = 0;
+            return new Enumerable(function () {
+                var firstEnumerator;
+                var secondEnumerator;
+                var index = 0;
 
-            return new IEnumerator(
+                return new IEnumerator(
                 function () {
                     firstEnumerator = source.getEnumerator();
                     secondEnumerator = Enumerable.from(second).getEnumerator();
@@ -997,6 +928,74 @@
                     } finally {
                         Utils.dispose(secondEnumerator);
                     }
+                });
+            });
+        }
+        else {
+            return new Enumerable(function () {
+                var enumerators;
+                var index = 0;
+
+                return new IEnumerator(
+                function () {
+                    var array = Enumerable.make(source)
+                        .concat(Enumerable.from(args).takeExceptLast().select(Enumerable.from))
+                        .select(function (x) { return x.getEnumerator() })
+                        .toArray();
+                    enumerators = Enumerable.from(array);
+                },
+                function () {
+                    if (enumerators.all(function (x) { return x.moveNext() })) {
+                        var array = enumerators
+                            .select(function (x) { return x.current() })
+                            .toArray();
+                        array.push(index++);
+                        return this.yieldReturn(selector.apply(null, array));
+                    }
+                    else {
+                        return this.yieldBreak();
+                    }
+                },
+                function () {
+                    Enumerable.from(enumerators).forEach(Utils.dispose);
+                });
+            });
+        }
+    };
+
+    // mutiple arguments
+    Enumerable.prototype.merge = function () {
+        var args = arguments;
+        var source = this;
+
+        return new Enumerable(function () {
+            var enumerators;
+            var index = -1;
+
+            return new IEnumerator(
+                function () {
+                    enumerators = Enumerable.make(source)
+                        .concat(Enumerable.from(args).select(Enumerable.from))
+                        .select(function (x) { return x.getEnumerator() })
+                        .toArray();
+                },
+                function () {
+                    while (enumerators.length > 0) {
+                        index = (index >= enumerators.length - 1) ? 0 : index + 1;
+                        var enumerator = enumerators[index];
+
+                        if (enumerator.moveNext()) {
+                            return this.yieldReturn(enumerator.current());
+                        }
+                        else {
+                            enumerator.dispose();
+                            enumerators.splice(index--, 1);
+                        }
+                    }
+                    return this.yieldBreak();
+                },
+                function () {
+                    Enumerable.from(enumerators).forEach(Utils.dispose);
                 });
         });
     };
@@ -1111,14 +1110,22 @@
         }
     };
 
-    Enumerable.prototype.concat = function (second) {
+    Enumerable.prototype.isEmpty = function () {
+        return !this.any();
+    };
+
+    // multiple arguments
+    Enumerable.prototype.concat = function () {
         var source = this;
 
-        return new Enumerable(function () {
-            var firstEnumerator;
-            var secondEnumerator;
+        if (arguments.length == 1) {
+            var second = arguments[0];
 
-            return new IEnumerator(
+            return new Enumerable(function () {
+                var firstEnumerator;
+                var secondEnumerator;
+
+                return new IEnumerator(
                 function () { firstEnumerator = source.getEnumerator(); },
                 function () {
                     if (secondEnumerator == null) {
@@ -1136,7 +1143,40 @@
                         Utils.dispose(secondEnumerator);
                     }
                 });
-        });
+            });
+        }
+        else {
+            var args = arguments;
+
+            return new Enumerable(function () {
+                var enumerators;
+
+                return new IEnumerator(
+                    function () {
+                        enumerators = Enumerable.make(source)
+                            .concat(Enumerable.from(args).select(Enumerable.from))
+                            .select(function (x) { return x.getEnumerator() })
+                            .toArray();
+                    },
+                    function () {
+                        while (enumerators.length > 0) {
+                            var enumerator = enumerators[0];
+
+                            if (enumerator.moveNext()) {
+                                return this.yieldReturn(enumerator.current());
+                            }
+                            else {
+                                enumerator.dispose();
+                                enumerators.splice(0, 1);
+                            }
+                        }
+                        return this.yieldBreak();
+                    },
+                    function () {
+                        Enumerable.from(enumerators).forEach(Utils.dispose);
+                    });
+            });
+        }
     };
 
     Enumerable.prototype.insert = function (index, second) {

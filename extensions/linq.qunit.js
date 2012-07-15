@@ -5,6 +5,9 @@
     if (root.Enumerable == null) {
         throw new Error("can't find Enumerable. linq.qunit.js must load after linq.js");
     }
+    if ((Object.defineProperties == null)) {
+        throw new Error("linq.qunit.js supports only defined 'Object.defineProperty' browser");
+    }
 
     var Enumerable = root.Enumerable;
     Enumerable.Assert = {};
@@ -27,13 +30,6 @@
         if (obj instanceof Array) return true;
 
         return false;
-    };
-
-    var unbox = function (obj) {
-        if (obj instanceof Number) return obj + 0;
-        if (obj instanceof String) return obj + "";
-        if (obj instanceof Boolean) return !!obj;
-        return obj;
     };
 
     var executeCode = function (action) {
@@ -71,10 +67,10 @@
         }
         else {
             if (expected instanceof Function) {
-                ok(expected(unbox(this)), message);
+                ok(expected(this.valueOf()), message);
             }
             else {
-                strictEqual(unbox(this), expected, message);
+                strictEqual(this.valueOf(), expected, message);
             }
         }
     });
@@ -104,12 +100,26 @@
         }
         else {
             if (expected instanceof Function) {
-                ok(!expected(unbox(this)), message);
+                ok(!expected(this.valueOf()), message);
             }
             else {
-                notStrictEqual(unbox(this), expected, message);
+                notStrictEqual(this.valueOf(), expected, message);
             }
         }
+    });
+
+    defineToObject("isTrue", function (message) {
+        /// <summary>shorthand of is(true).</summary>
+        /// <param name="expected" type="Object">expected value.</param>
+        /// <param name="message" type="String">Optional:assertion message.</param>
+        this.is(true, message);
+    });
+
+    defineToObject("isFalse", function (message) {
+        /// <summary>shorthand of is(false).</summary>
+        /// <param name="expected" type="Object">expected value.</param>
+        /// <param name="message" type="String">Optional:assertion message.</param>
+        this.is(false, message);
     });
 
     Enumerable.Assert.expectError = function (testAction, message) {

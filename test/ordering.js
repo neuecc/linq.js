@@ -118,13 +118,23 @@ test("shuffle", function ()
 
 
 test("weightedSample", function () {
-    var array = [1, 51, 7, 823, 85, 31, 51, 99];
-    array.weightedSample()
+    var result = [1, 25, 35, 39].weightedSample()
         .take(10000)
         .groupBy()
-        .select(function (g) { return { key: g.key(), count: g.count() }; });
-        //.writeLine();
+        .toObject("$.key()", "$.count()");
 
+    result[1].is(function (x) { return 0 < x && x < 200 });
+    result[25].is(function (x) { return 2300 < x && x < 2700 });
+    result[35].is(function (x) { return 3300 < x && x < 3700 });
+    result[39].is(function (x) { return 3700 < x && x < 4100 });
 
+    Enumerable.from(result).sum(function (x) { return x.value }).is(10000);
 
+    result = [1, 99].weightedSample().take(10000).groupBy().toObject("$.key()", "$.count()");
+    result[1].is(function (x) { return 0 < x && x < 200 });
+    result[99].is(function (x) { return 9800 < x && x < 10000 });
+
+    result = [0, 1].weightedSample().take(10000).groupBy().toObject("$.key()", "$.count()");
+    (result[0] === undefined).is(true);
+    result[1].is(10000);
 });
