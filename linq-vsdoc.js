@@ -170,6 +170,8 @@
     // Enumerable constuctor
     var Enumerable = function (getEnumerator) {
         this.getEnumerator = getEnumerator;
+
+        if (intellisense) this.firstOrDefault(); // for intellisense
     };
 
     // Utility
@@ -265,6 +267,65 @@
     };
 
     Enumerable.from = function (obj) {
+        /// <signature>
+        ///   <summary>Make empty enumerable from null or undefined.</summary>
+        ///   <param name="blankObject">null or undefined</param>
+        ///   <returns type="Enumerable"></returns>
+        /// </signature>
+        /// <signature>
+        ///   <summary>Returns the same object.</summary>
+        ///   <param name="enumerable" type="Enumerable">Enumerable object</param>
+        ///   <returns type="Enumerable"></returns>
+        /// </signature>
+        /// <signature>
+        ///   <summary>Make the single enumerable.</summary>
+        ///   <param name="number" type="Number">Number primitive</param>
+        ///   <returns type="Enumerable"></returns>
+        /// </signature>
+        /// <signature>
+        ///   <summary>Make the single enumerable.</summary>
+        ///   <param name="boolean" type="Boolean">Boolean primitive</param>
+        ///   <returns type="Enumerable"></returns>
+        /// </signature>
+        /// <signature>
+        ///   <summary>
+        ///   Make charactor sequence.
+        ///   &#10;E.g. "abc" => "a", "b", "c"
+        ///   </summary>
+        ///   <param name="str" type="String">String primitive</param>
+        ///   <returns type="Enumerable"></returns>
+        /// </signature>
+        /// <signature>
+        ///   <summary>
+        ///   Make KeyValuePair sequence.
+        ///   &#10;E.g. "{a:0}" => (.key = "a", .value = 0).
+        ///   </summary>
+        ///   <param name="obj" type="Object">JavaScript object</param>
+        ///   <returns type="Enumerable"></returns>
+        /// </signature>
+        /// <signature>
+        ///   <summary>Make Enumerable sequence.</summary>
+        ///   <param name="array" type="Array">Array or ArrayLikeObject(has length)</param>
+        ///   <returns type="Enumerable"></returns>
+        /// </signature>
+        /// <signature>
+        ///   <summary>Make Enumerable using JScript's Enumerator.</summary>
+        ///   <param name="ienumerable">JScript's IEnumerable</param>
+        ///   <returns type="Enumerable"></returns>
+        /// </signature>
+        /// <summary>
+        /// Make Enumerable from obj.
+        /// &#10;1. null = Enumerable.empty().
+        /// &#10;2. Enumerable = Enumerable.
+        /// &#10;3. Number/Boolean = Enumerable.repeat(obj, 1).
+        /// &#10;4. String = to CharArray. E.g. "abc" => "a","b","c").
+        /// &#10;5. Object/Function = to KeyValuePair(except function) E.g. "{a:0}" => (.key = "a", .value = 0).
+        /// &#10;6. Array or ArrayLikeObject(has length) = to Enumerable.
+        /// &#10;7. JScript's IEnumerable = to Enumerable(using Enumerator).
+        /// </summary>
+        /// <param name="obj">object</param>
+        /// <returns type="Enumerable"></returns>
+
         if (obj == null) {
             return Enumerable.empty();
         }
@@ -2360,6 +2421,8 @@
         this.keySelector = Utils.createLambda(keySelector);
         this.descending = descending;
         this.parent = parent;
+
+        if (intellisense) this.firstOrDefault(); // for intellisense
     };
     OrderedEnumerable.prototype = new Enumerable();
 
@@ -2434,6 +2497,8 @@
     var DisposableEnumerable = function (getEnumerator, dispose) {
         this.dispose = dispose;
         Enumerable.call(this, getEnumerator);
+
+        if (intellisense) this.firstOrDefault(); // for intellisense
     };
     DisposableEnumerable.prototype = new Enumerable();
 
@@ -2441,6 +2506,8 @@
 
     var ArrayEnumerable = function (source) {
         this.getSource = function () { return source; };
+
+        if (intellisense) this.firstOrDefault(); // for intellisense
     };
     ArrayEnumerable.prototype = new Enumerable();
 
@@ -2586,6 +2653,8 @@
     var WhereEnumerable = function (source, predicate) {
         this.prevSource = source;
         this.prevPredicate = predicate; // predicate.length always <= 1
+
+        if (intellisense) this.firstOrDefault(); // for intellisense
     };
     WhereEnumerable.prototype = new Enumerable();
 
@@ -2633,6 +2702,8 @@
         this.prevSource = source;
         this.prevPredicate = predicate; // predicate.length always <= 1 or null
         this.prevSelector = selector; // selector.length always <= 1
+
+        if (intellisense) this.firstOrDefault(); // for intellisense
     };
     WhereSelectEnumerable.prototype = new Enumerable();
 

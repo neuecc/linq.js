@@ -3,83 +3,30 @@
 <head>
     <title>test page</title>
     <script type="text/javascript" src="../linq.js"></script>
+    <script type="text/javascript" src="lib/rx/rx.min.js"></script>
+    <script type="text/javascript" src="lib/jQuery/jquery-1.4.1.js"></script>
+    <script type="text/javascript" src="../extensions/linq.jquery.js"></script>
+    <script type="text/javascript" src="../extensions/linq.rx.js"></script>
     <script type="text/javascript">
 
         Enumerable.Utils.extendTo(Array);
 
 
-        var array = [1, 25, 35, 39];
-        //array.weightedSample()
-        //.take(10000)
-        //.groupBy()
-        //.select(function (g) { return { key: g.key(), count: g.count() }; })
-        //.orderByDescending("$.count")
-        //.writeLine("<br />", "$.key + ':' + $.count");
+        
+        
 
+        var o = Enumerable.range(1, 2).toObservable();
 
-
-        var result = [1, 25, 35, 39].weightedSample()
-        .take(10000)
-        .groupBy()
-        .toObject("$.key()", "$.count()");
-
-
-        var _ = Enumerable.from(result).sum(function (x) { return x.value });
-        alert(_);
+        o.subscribe(function (x) { alert(x); });
 
 
 
 
+        //$("<option>").text("test").val("3").appendTo("#day");
 
 
 
 
-
-
-
-
-
-
-
-        //var encountSeed = [
-        //    { mode: "nothing", rate: 85 },
-        //    { mode: "encountEnemy", rate: 10 },
-        //    { mode: "dropItem", rate: 5 },
-        //];
-
-        //var encounter = encountSeed.weightedSample("$.rate").share();
-
-        //// fieldを歩いてるとして
-        //while (true) {
-        //    var draw = encounter.first();
-        //    switch (draw.mode) {
-        //        case "nothing":
-        //            break;
-        //        case "encountEnemy":
-        //            break;
-        //        case "dropItem":
-        //            break;
-        //    }
-        //}
-
-        //// ゴミ掃除的な
-        //encounter.dispose();
-
-
-        //// var encount2 = encounter.firstOrDefault();
-
-
-
-
-
-
-
-
-
-
-
-
-        //.sum();
 
 
 
@@ -89,5 +36,6 @@
     </script>
 </head>
 <body>
+    <select id="day"></select>
 </body>
 </html>

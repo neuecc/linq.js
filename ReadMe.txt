@@ -19,7 +19,7 @@ CascadeDepthFirst -> traverseDepthFirst
 BufferWithCount -> buffer
 ToString -> toJoinedString
 Do -> doAction
-Let -> exchange
+Let -> letBind
 MemoizeAll -> memoize
 Catch -> catchError
 Finally -> finallyAction
@@ -48,6 +48,17 @@ log
 performance optimization
 where->select and where->where,... and select->select,...
 range, rangeDown, rangeTo
+
+add new extension
+linq.qunit.js
+
+fix extensions to latest library version
+linq.jquery.js
+linq.rx.js
+
+removed jQuery plugin version
+
+
 
 
 // TODO:Enumerable.Utils. vsdoc and reference

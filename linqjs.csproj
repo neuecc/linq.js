@@ -68,6 +68,9 @@
     <Content Include="internal\lib\AjaxMin.dll" />
     <Content Include="internal\lib\compiler.jar" />
     <Content Include="internal\lib\Ionic.Zip.dll" />
+    <Content Include="internal\lib\jQuery\jquery-1.4.1-vsdoc.js" />
+    <Content Include="internal\lib\jQuery\jquery-1.4.1.js" />
+    <Content Include="internal\lib\jQuery\jquery-1.4.1.min.js" />
     <Content Include="internal\lib\jQuery\jquery-1.7.2.intellisense.js" />
     <Content Include="internal\lib\jQuery\jquery-1.7.2.js" />
     <Content Include="internal\lib\jQuery\jquery-1.7.2.min.js" />
