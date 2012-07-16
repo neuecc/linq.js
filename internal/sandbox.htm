@@ -12,7 +12,12 @@
         Enumerable.Utils.extendTo(Array);
 
 
+        Enumerable.from(["hoge"])
         
+            
+
+        
+
         
 
         var o = Enumerable.range(1, 2).toObservable();
@@ -25,7 +30,11 @@
         //$("<option>").text("test").val("3").appendTo("#day");
 
 
+        Enumerable.repeat("hoge", 10)
+            .select(function (x, i) { return { value: x, index: i } })
+            .where(function (x) { return x.index % 2 == 0 });
 
+            
 
 
 

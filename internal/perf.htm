@@ -41,26 +41,50 @@
         });
         document.writeln("linq v3:" + ms1 + "<br />");
 
-        var ms1 = bench(function () {
-            Enumerable.from(seq)
-                .where(function (x) { return x % 2 == 0 && x % 3 == 0 && x % 5 == 0 })
-                .select(function (x) {
-                    var a = (x * x);
-                    var b = a * a;
-                    var c = b * b;
-                    return c;
-                })
-                .force();
-        });
-        document.writeln("linq v3_2:" + ms1 + "<br />");
 
-        var ms1 = bench(function () {
-            Enumerable.from(seq)
-                .where(compPred)
-                .select(compSele)
-                .force();
+
+
+
+        //var ms1 = bench(function () {
+        //    Enumerable.from(seq)
+        //        .where(function (x) { return x % 2 == 0 && x % 3 == 0 && x % 5 == 0 })
+        //        .select(function (x) {
+        //            var a = (x * x);
+        //            var b = a * a;
+        //            var c = b * b;
+        //            return c;
+        //        })
+        //        .force();
+        //});
+        //document.writeln("linq v3_2:" + ms1 + "<br />");
+
+        //var ms1 = bench(function () {
+        //    Enumerable.from(seq)
+        //        .where(compPred)
+        //        .select(compSele)
+        //        .force();
+        //});
+        //document.writeln("linq v3_3:" + ms1 + "<br />");
+    </script>
+
+
+    <script type="text/javascript" src="lib/old/linq-2.2.0.2.js"></script>
+
+    <script type="text/javascript">
+
+        var ms2 = bench(function () {
+            Enumerable.From(seq)
+                .Where(pred1)
+                .Where(pred2)
+                .Where(pred3)
+                .Select(sele1)
+                .Select(sele1)
+                .Select(sele1)
+                .Force();
         });
-        document.writeln("linq v3_3:" + ms1 + "<br />");
+        document.writeln("linq v2:" + ms2 + "<br />");
+
+
     </script>
 </head>
 <body>

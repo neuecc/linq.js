@@ -179,6 +179,37 @@
     Enumerable.Utils = {}; // container
 
     Enumerable.Utils.createLambda = function (expression) {
+        /// <signature>
+        ///   <summary>Returns the identity function such as function(x){ return x; }</summary>
+        ///   <param name="expression">null or undefined</param>
+        ///   <returns type="Function"></returns>
+        /// </signature>
+        /// <signature>
+        ///   <summary>Returns the same function.</summary>
+        ///   <param name="expression" type="Function">function</param>
+        ///   <returns type="Function"></returns>
+        /// </signature>
+        /// <signature>
+        ///   <summary>
+        ///    Make function from string.
+        ///    &#10;1. "" as function(x) { return x; }
+        ///    &#10;2. "arg1, arg2,...,=> body" as lambda expression
+        ///    &#10;3. "$ $$ $$$..." as lambda expression($ is default iterator variable)
+        ///   </summary>
+        ///   <param name="expression" type="String">lambda expression</param>
+        ///   <returns type="Function"></returns>
+        /// </signature>
+        /// <summary>
+        /// Make function from string.
+        /// &#10;1. null = function(x){ return x; }.
+        /// &#10;2. Function = Function.
+        /// &#10;3. "" = function(x){ return x; }.
+        /// &#10;4. "arg1, arg2,...,=> body" as lambda expression
+        /// &#10;5. "$ $$ $$$..." as lambda expression($ is default iterator variable)
+        /// </summary>
+        /// <param name="expression" type="String">lambda expression</param>
+        /// <returns type="Function"></returns>
+
         return Utils.createLambda(expression);
     };
 

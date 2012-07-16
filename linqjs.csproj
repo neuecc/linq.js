@@ -74,6 +74,8 @@
     <Content Include="internal\lib\jQuery\jquery-1.7.2.intellisense.js" />
     <Content Include="internal\lib\jQuery\jquery-1.7.2.js" />
     <Content Include="internal\lib\jQuery\jquery-1.7.2.min.js" />
+    <Content Include="internal\lib\old\linq-2.2.0.2-vsdoc.js" />
+    <Content Include="internal\lib\old\linq-2.2.0.2.js" />
     <Content Include="internal\lib\rx\rx-vsdoc.js" />
     <Content Include="internal\lib\rx\rx.aggregates-vsdoc.js" />
     <Content Include="internal\lib\rx\rx.aggregates.min.js" />
@@ -118,6 +120,7 @@
     <Content Include="test\qunit.js" />
     <Content Include="test\set.js" />
     <Content Include="test\testrunner.htm" />
+    <Content Include="linq-vsdoc.js" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="sample\LinqJS.cs" />
