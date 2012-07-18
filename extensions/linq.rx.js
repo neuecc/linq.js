@@ -13,7 +13,7 @@
 
     Enumerable.prototype.toObservable = function (scheduler) {
         /// <summary>Converts an enumerable sequence to an observable sequence.</summary>
-        /// <param type="Optional:Rx.Scheduler" name="scheduler">Rx.Scheduler. Default is CurrentThread.</param>
+        /// <param type="Scheduler" name="scheduler" optional="true">Rx.Scheduler. Default is CurrentThread.</param>
         var source = this;
         if (scheduler == null) scheduler = Rx.Scheduler.CurrentThread;
 
@@ -44,8 +44,7 @@
 
             return disposable;
         });
-    }
-
+    };
 
     Rx.Observable.prototype.toEnumerable = function () {
         /// <summary>Converts an observable sequence to an enumerable sequence. Notice:cold observable only.</summary>
@@ -55,5 +54,5 @@
             obs.subscribe(function (x) { array.push(x) }).dispose();
             return array;
         });
-    }
+    };
 })(this);

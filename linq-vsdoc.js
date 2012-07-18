@@ -214,14 +214,37 @@
     };
 
     Enumerable.Utils.createEnumerable = function (getEnumerator) {
+        /// <summary>
+        /// Create anonymous enumerable.
+        /// </summary>
+        /// <param name="getEnumerator" type="Function">getEnumerator factory</param>
+        /// <returns type="Enumerable"></returns>
         return new Enumerable(getEnumerator);
     };
 
     Enumerable.Utils.createEnumerator = function (initialize, tryGetNext, dispose) {
+        /// <summary>
+        /// Create anonymous enumerator.
+        /// </summary>
+        /// <param name="initialize" type="Function">Invoke when enumerator called moveNext at first.</param>
+        /// <param name="tryGetNext" type="Function">
+        /// Invoke when enumerator called moveNext.
+        /// &#10;return this.yieldReturn(x); then moveNext success and set current() on x.
+        /// &#10;return this.yieldBreak(); then moveNext fail.
+        /// &#10;Usage: return (enumerator.moveNext()) ? this.yieldReturn(enumerator.current()) : this.yieldBreak();
+        /// </param>
+        /// <param name="dispose" type="Function">Invoke when enumerator called dispose.</param>
         return new IEnumerator(initialize, tryGetNext, dispose);
     };
 
     Enumerable.Utils.extendTo = function (type) {
+        /// <summary>
+        /// Extend all enumerable methods to prototype of type.
+        /// &#10;If execution environment(e.g. browser) supports Object.defineProperty then use defineProperty and option "enumerable:false".
+        /// &#10;Otherwise extends type.prototype directly.
+        /// &#10;Usage: Enumerable.Utils.extendTo(Array);
+        /// </summary>
+        /// <param name="type" type="Function">Type Constructor.</param>
         var typeProto = type.prototype;
         var enumerableProto;
 
@@ -258,8 +281,14 @@
 
     // Generator
 
-    Enumerable.choice = function () // variable argument
+    Enumerable.choice = function (elements) // variable argument
     {
+        /// <summary>
+        /// Random choice from arguments.
+        /// &#10;Usage: choice(1,2,3) => 1,3,2,3,3,2,1...
+        /// </summary>
+        /// <param type="params T[]" name="elements">Array or variable elements</param>
+        /// <returns type="Enumerable"></returns>
         var args = (arguments[0] instanceof Array) ? arguments[0] : arguments;
 
         return new Enumerable(function () {
@@ -272,8 +301,14 @@
         });
     };
 
-    Enumerable.cycle = function () // variable argument
+    Enumerable.cycle = function (elements) // variable argument
     {
+        /// <summary>
+        /// Cycle repeat from arguments.
+        /// &#10;Usage: cycle(1,2,3) => 1,2,3,1,2,3,1,2,3...
+        /// </summary>
+        /// <param type="params T[]" name="elements">Array or variable elements</param>
+        /// <returns type="Enumerable"></returns>
         var args = (arguments[0] instanceof Array) ? arguments[0] : arguments;
 
         return new Enumerable(function () {
@@ -289,6 +324,8 @@
     };
 
     Enumerable.empty = function () {
+        /// <summary>Returns an empty Enumerable.</summary>
+        /// <returns type="Enumerable"></returns>
         return new Enumerable(function () {
             return new IEnumerator(
                 Functions.Blank,
@@ -321,7 +358,7 @@
         /// <signature>
         ///   <summary>
         ///   Make charactor sequence.
-        ///   &#10;E.g. "abc" => "a", "b", "c"
+        ///   &#10;Usage: "abc" => "a", "b", "c"
         ///   </summary>
         ///   <param name="str" type="String">String primitive</param>
         ///   <returns type="Enumerable"></returns>
@@ -329,7 +366,7 @@
         /// <signature>
         ///   <summary>
         ///   Make KeyValuePair sequence.
-        ///   &#10;E.g. "{a:0}" => (.key = "a", .value = 0).
+        ///   &#10;Usage: "{a:0}" => (.key = "a", .value = 0).
         ///   </summary>
         ///   <param name="obj" type="Object">JavaScript object</param>
         ///   <returns type="Enumerable"></returns>
@@ -349,8 +386,8 @@
         /// &#10;1. null = Enumerable.empty().
         /// &#10;2. Enumerable = Enumerable.
         /// &#10;3. Number/Boolean = Enumerable.repeat(obj, 1).
-        /// &#10;4. String = to CharArray. E.g. "abc" => "a","b","c").
-        /// &#10;5. Object/Function = to KeyValuePair(except function) E.g. "{a:0}" => (.key = "a", .value = 0).
+        /// &#10;4. String = to CharArray. Usage: "abc" => "a","b","c").
+        /// &#10;5. Object/Function = to KeyValuePair(except function) Usage: "{a:0}" => (.key = "a", .value = 0).
         /// &#10;6. Array or ArrayLikeObject(has length) = to Enumerable.
         /// &#10;7. JScript's IEnumerable = to Enumerable(using Enumerator).
         /// </summary>
@@ -424,12 +461,23 @@
     },
 
     Enumerable.make = function (element) {
+        /// <summary>Make one sequence. This equals repeat(element, 1)</summary>
+        /// <param name="element">element</param>
+        /// <returns type="Enumerable"></returns>
         return Enumerable.repeat(element, 1);
     };
 
     // Overload:function(input, pattern)
     // Overload:function(input, pattern, flags)
     Enumerable.matches = function (input, pattern, flags) {
+        /// <summary>
+        /// Global regex match and send regexp object.
+        /// &#10;Usage: matches((.)z,"0z1z2z") => $[1] = 0,1,2
+        /// </summary>
+        /// <param type="String" name="input">input string</param>
+        /// <param type="RegExp/String" name="pattern">RegExp or Pattern string</param>
+        /// <param type="String" name="flags" optional="true">If pattern is String then can use regexp flags "i"(ignoreCase) or "m"(multiLine) or "im"(both)</param>
+        /// <returns type="Enumerable"></returns>
         if (flags == null) flags = "";
         if (pattern instanceof RegExp) {
             flags += (pattern.ignoreCase) ? "i" : "";
@@ -453,6 +501,14 @@
     // Overload:function(start, count)
     // Overload:function(start, count, step)
     Enumerable.range = function (start, count, step) {
+        /// <summary>
+        /// Generates a sequence of integral numbers within a specified range.
+        /// &#10;Usage: range(1,5) => 1,2,3,4,5
+        /// </summary>
+        /// <param type="Number" integer="true" name="start">The value of the first integer in the sequence.</param>
+        /// <param type="Number" integer="true" name="count">The number of sequential integers to generate.</param>
+        /// <param type="Number" integer="true" name="step" optional="true">Step of generate number. Usage: range(0,3,5) => 0,5,10</param>
+        /// <returns type="Enumerable"></returns>
         if (step == null) step = 1;
 
         return new Enumerable(function () {
@@ -473,6 +529,14 @@
     // Overload:function(start, count)
     // Overload:function(start, count, step)
     Enumerable.rangeDown = function (start, count, step) {
+        /// <summary>
+        /// Generates a sequence of integral numbers within a specified range.
+        /// &#10;Usage: rangeDown(5,5) => 5,4,3,2,1
+        /// </summary>
+        /// <param type="Number" integer="true" name="start">The value of the first integer in the sequence.</param>
+        /// <param type="Number" integer="true" name="count">The number of sequential integers to generate.</param>
+        /// <param type="Number" integer="true" name="step" optional="true">Step of generate number. Usage: rangeDown(0,3,5) => 0,-5,-10</param>
+        /// <returns type="Enumerable"></returns>
         if (step == null) step = 1;
 
         return new Enumerable(function () {

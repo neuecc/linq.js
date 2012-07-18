@@ -46,16 +46,16 @@
         /// <signature>
         ///   <summary>strictEqual. if "this" is Array or Enumerable then deepEqual with expected and both normalized to array.</summary>
         ///   <param name="expected" type="Object">expected value</param>
-        ///   <param name="message" type="String">[Optional] assertion message</param>
+        ///   <param name="message" type="String" optional="true">assertion message</param>
         /// </signature>
         /// <signature>
-        ///   <summary>collection deepEqual. argument is multiple.</summary>
-        ///   <param name="multipleExpected" type="Object">mulitple arguments. ex:[1,2,3].is(1,2,3).</param>
+        ///   <summary>collection deepEqual. argument is variable.</summary>
+        ///   <param name="variableExpected" type="params Object[]">mulitple arguments. Usage: [1,2,3].is(1,2,3).</param>
         /// </signature>
         /// <signature>
         ///   <summary>ok(true). expected function pass actual. if result is true then ok.</summary>
         ///   <param name="expected" type="Function">function checker, return boolean</param>
-        ///   <param name="message" type="String">[Optional] assertion message</param>
+        ///   <param name="message" type="String" optional="true">assertion message</param>
         /// </signature>
         if (isCollection(this)) {
             if (arguments.length <= 2 && isCollection(expected)) {
@@ -79,16 +79,16 @@
         /// <signature>
         ///   <summary>notStrictEqual. if "this" is Array or Enumerable then notDeepEqual with expected and both normalized to array.</summary>
         ///   <param name="expected" type="Object">expected value.</param>
-        ///   <param name="message" type="String">Optional:assertion message.</param>
+        ///   <param name="message" type="String" optional="true">assertion message.</param>
         /// </signature>
         /// <signature>
-        ///   <summary>collection notDeepEqual. argument is multiple.</summary>
-        ///   <param name="multipleExpected" type="Object">mulitple arguments. ex:[1,2,3].isNot(-1,2,3).</param>
+        ///   <summary>collection notDeepEqual. argument is variable.</summary>
+        ///   <param name="variableExpected" type="params Object[]">variable arguments. Usage: [1,2,3].isNot(-1,2,3).</param>
         /// </signature>
         /// <signature>
         ///   <summary>ok(false). expected function pass actual. if result is false then ok.</summary>
         ///   <param name="expected" type="Function">function checker, return boolean</param>
-        ///   <param name="message" type="String">[Optional] assertion message</param>
+        ///   <param name="message" type="String" optional="true">assertion message</param>
         /// </signature>
         if (isCollection(this)) {
             if (arguments.length <= 2 && isCollection(expected)) {
@@ -111,21 +111,21 @@
     defineToObject("isTrue", function (message) {
         /// <summary>shorthand of is(true).</summary>
         /// <param name="expected" type="Object">expected value.</param>
-        /// <param name="message" type="String">Optional:assertion message.</param>
+        /// <param name="message" type="String" optional="true">assertion message.</param>
         this.is(true, message);
     });
 
     defineToObject("isFalse", function (message) {
         /// <summary>shorthand of is(false).</summary>
         /// <param name="expected" type="Object">expected value.</param>
-        /// <param name="message" type="String">Optional:assertion message.</param>
+        /// <param name="message" type="String" optional="true">assertion message.</param>
         this.is(false, message);
     });
 
     Enumerable.Assert.expectError = function (testAction, message) {
         /// <summary>Throw error in testCode.</summary>
         /// <param name="testCode" type="Function">action function.</param>
-        /// <param name="message" type="String">[Optional] assertion message.</param>
+        /// <param name="message" type="String" optional="true">assertion message.</param>
         var error = executeCode(testAction);
 
         if (error != null) {
@@ -141,7 +141,7 @@
     defineToObject("doesNotThrow", function (testAction, message) {
         /// <summary>Does not throw error in testCode.</summary>
         /// <param name="testCode" type="Function">action function.</param>
-        /// <param name="message" type="String">[Optional] assertion message.</param>
+        /// <param name="message" type="String" optional="true">assertion message.</param>
         var error = executeCode(testAction);
 
         if (error != null) {

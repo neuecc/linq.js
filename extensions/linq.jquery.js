@@ -14,15 +14,15 @@
     $.fn.toEnumerable = function () {
         /// <summary>each contains elements. to Enumerable&lt;jQuery&gt;.</summary>
         return Enumerable.from(this).select(function (e) { return $(e) });
-    }
+    };
 
     Enumerable.prototype.tojQuery = function () {
         /// <summary>Enumerable to jQuery. All elements add to blank jQuery object.</summary>
         return this.aggregate($(), function (j, x) { return j.add(x); });
-    }
+    };
 
     Enumerable.prototype.tojQueryRaw = function () {
         /// <summary>Enumerable to jQuery. This behavior is $(this.toArray()).</summary>
         return $(this.toArray());
-    }
+    };
 })(this);
