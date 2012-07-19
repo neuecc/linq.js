@@ -1,23 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
-        <id>linq.js-jQuery</id>
+        <id>linq.js-QUnit</id>
         <version>3.0.0-beta</version>
-        <title>linq.js - jQuery Binding</title>
+        <title>linq.js - QUnit Binding</title>
         <authors>neuecc</authors>
         <owners>neuecc</owners>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>linq.js binding for jQuery.</description>
+        <description>Method chaining style unit testing extension for QUnit.</description>
         <language>en-US</language>
         <licenseUrl>http://linqjs.codeplex.com/license</licenseUrl>
         <projectUrl>http://linqjs.codeplex.com/</projectUrl>
-        <tags>linq javascript jquery</tags>
+        <tags>linq javascript qunit test</tags>
         <dependencies>
             <dependency id="linq.js" version="3.0.0-beta"></dependency>
-            <dependency id="jQuery" version="[1.3.1,]"></dependency>
+            <dependency id="QUnit-MVC" version="[1.6.2.0,]"></dependency>
         </dependencies>
     </metadata>
     <files>
-        <file src="..\..\extensions\linq.jquery.js" target="Content\Scripts" />
+        <file src="..\..\extensions\linq.qunit.js" target="Content\Scripts" />
     </files>
 </package>
