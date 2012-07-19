@@ -97,7 +97,6 @@
     <Content Include="internal\sandbox.htm" />
     <Content Include="internal\perf.htm" />
     <Content Include="test\linq.qunit-test.js" />
-    <Content Include="___linq-vsdoc.js" />
     <Content Include="linq.js" />
     <Content Include="ReadMe.txt" />
     <Content Include="reference.htm" />

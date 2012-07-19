@@ -1,11 +1,11 @@
 ﻿/*--------------------------------------------------------------------------
-* linq.js - LINQ for JavaScript
-* ver 3.0.0 (---. --th, 2012)
-*
-* created and maintained by neuecc <ils@neue.cc>
-* licensed under Microsoft Public License(Ms-PL)
-* http://linqjs.codeplex.com/
-*--------------------------------------------------------------------------*/
+ * linq.js - LINQ for JavaScript
+ * ver 3.0.0 Beta (July. 19th, 2012)
+ *
+ * created and maintained by neuecc <ils@neue.cc>
+ * licensed under MIT License
+ * http://linqjs.codeplex.com/
+ *------------------------------------------------------------------------*/
 
 (function (root, undefined) {
     // ReadOnly Function

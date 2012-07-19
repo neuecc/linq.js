@@ -9,14 +9,14 @@
             Enumerable.from(arguments).forEach("textStack.push($)");
         };
         document.writeln = function () {
-            Enumerable.from(arguments).forEach("textStack.push($ + '<br />')");
+            Enumerable.from(arguments).forEach("textStack.push($)");
         };
 
         function evaluate(code) {
             textStack.length = 0;
             var value;
             try {
-                eval(code + '.take(1001).writeLine()');
+                eval(code + '.take(1001).writeLine("<br>")');
                 value = textStack.join("");
             } catch (e) {
                 textStack.length = 0;
@@ -85,7 +85,7 @@
     <h1>
         linq.js Reference</h1>
     <p>
-        <a href="http://neue.cc/">http://neue.cc/</a><br />
+        Notice:currently under working for v3.0. lack of some methods(choose, merge, defer, etc...)<br />
         <a href="http://linqjs.codeplex.com/">http://linqjs.codeplex.com/</a>
     </p>
     <h2>
@@ -93,7 +93,7 @@
     <table>
         <tr>
             <td style="width: 50%; vertical-align: top">
-                <textarea cols="10" rows="10" id="codeInput" style="width: 100%">Enumerable.range(0, 20)&#13;.where("$ % 3 == 0")&#13;.select("value, index => {index:index, value:value * 10}")&#13;.writeLine("$.index + ':' + $.value")</textarea>
+                <textarea cols="10" rows="10" id="codeInput" style="width: 100%">Enumerable.range(0, 20)&#13;.where("x => x % 3 == 0")&#13;.select("$ * 2")</textarea>
             </td>
             <td style="vertical-align: top">
                 <p id="codeResult" style="padding-left: 20px">
@@ -2763,7 +2763,7 @@ grouping.where("$.x % 10 == 0").select("$.id + ':' + $.x")</pre>
         </thead>
     </table>
     <h2>
-        jQuery plugin</h2>
+        jQuery Binding</h2>
     <table>
         <thead>
             <tr>
@@ -2784,7 +2784,7 @@ grouping.where("$.x % 10 == 0").select("$.id + ':' + $.x")</pre>
         <tbody>
             <tr>
                 <td>
-                    TojQuery
+                    tojQuery
                 </td>
                 <td>
                     jQuery
@@ -2793,7 +2793,7 @@ grouping.where("$.x % 10 == 0").select("$.id + ':' + $.x")</pre>
                     ()
                 </td>
                 <td>
-                    <pre>// Enumerable.repeat("foo",10).TojQuery()</pre>
+                    <pre>// Enumerable.repeat("foo",10).tojQuery()</pre>
                 </td>
             </tr>
             <tr>
@@ -2834,7 +2834,7 @@ grouping.where("$.x % 10 == 0").select("$.id + ':' + $.x")</pre>
         <tbody>
             <tr>
                 <td>
-                    ToObservable
+                    toObservable
                 </td>
                 <td>
                     Rx.Observable
@@ -2843,7 +2843,7 @@ grouping.where("$.x % 10 == 0").select("$.id + ':' + $.x")</pre>
                     ()
                 </td>
                 <td>
-                    <pre>// Enumerable.range(1,10).ToObservable()</pre>
+                    <pre>// Enumerable.range(1,10).toObservable()</pre>
                 </td>
             </tr>
             <tr>

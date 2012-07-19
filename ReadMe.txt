@@ -1,14 +1,13 @@
 /*--------------------------------------------------------------------------
-* linq.js - LINQ for JavaScript
-* ver 2.2.0.2 (Jan. 21th, 2011)
-*
-* created and maintained by neuecc <ils@neue.cc>
-* licensed under Microsoft Public License(Ms-PL)
-* http://neue.cc/
-* http://linqjs.codeplex.com/
-*--------------------------------------------------------------------------*/
+ * linq.js - LINQ for JavaScript
+ * ver 3.0.0 Beta (July. 19th, 2012)
+ *
+ * created and maintained by neuecc <ils@neue.cc>
+ * licensed under MIT License
+ * http://linqjs.codeplex.com/
+ *------------------------------------------------------------------------*/
 
-v3 Beta::Notice
+2012-07-19 v3 Beta::Notice
 
 all methods rename UpperCamelCase to lowerCamelCase
 
@@ -58,27 +57,9 @@ linq.rx.js
 
 removed jQuery plugin version
 
-
-
-
-// TODO:Enumerable.Utils. vsdoc and reference
-// TODO:Reference...
-// TODO:IntelliSense and vsdoc for Visual Studio 2012
-
-
-// TODO:Change License, MIT??
-
-
-
-
-
-        if (intellisense) this.firstOrDefault();
+licence changed Ms-PL to MIT
 
 --
-
-
-
-
 
 //
 
