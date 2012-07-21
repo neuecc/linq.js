@@ -9,7 +9,7 @@
             Enumerable.from(arguments).forEach("textStack.push($)");
         };
         document.writeln = function () {
-            Enumerable.from(arguments).forEach("textStack.push($ + '<br />')");
+            Enumerable.from(arguments).forEach("textStack.push($)");
         };
 
         window.onload = function ()
@@ -31,13 +31,13 @@
         First step of Lambda Expression</h2>
     <pre>
     // Anonymous function
-    Enumerable.range(1, 3).select(function(value, index) { return index + ':' + value }).writeLine();
+    Enumerable.range(1, 3).select(function(value, index) { return index + ':' + value }).writeLine("&lt;br />");
     // String like Lambda Expression (arguments => expression)
-    Enumerable.range(1, 3).select("value,index=>index+':'+value").writeLine();
+    Enumerable.range(1, 3).select("value,index=>index+':'+value").writeLine("&lt;br />");
     
     // If the number of arguments is one , can use default iterator variable '$'
-    Enumerable.range(1, 3).select("i=>i*2").writeLine();
-    Enumerable.range(1, 3).select("$*2").writeLine(); // same
+    Enumerable.range(1, 3).select("i=>i*2").writeLine("&lt;br />");
+    Enumerable.range(1, 3).select("$*2").writeLine("&lt;br />"); // same
     
     // "" is shortcut of "x => x" (identity function)
     Enumerable.range(4, 7).join(Enumerable.range(8, 5), "", "", "outer,inner=>outer*inner").writeLine();
@@ -171,7 +171,7 @@
         .where("Math.abs($.smith - $.fletcher) != 1")
         .where("Math.abs($.fletcher - $.cooper) != 1");
 
-    answers.selectMany("").writeLine("$.key + ':' + $.value");
+    answers.selectMany("").writeLine("&lt;br />", "$.key + ':' + $.value");
     </pre>
 </body>
 </html>

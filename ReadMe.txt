@@ -35,8 +35,8 @@ Enumerable.Utils.createEnumerator
 Enumerable.Utils.extendTo
 
 add enumerable methods
-Enumerable.merge
 Enumerable.defer
+merge
 asEnumerable
 choose
 isEmpty

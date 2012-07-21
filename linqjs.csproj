@@ -96,6 +96,7 @@
     <Content Include="internal\nuget-package\NuGet.exe" />
     <Content Include="internal\sandbox.htm" />
     <Content Include="internal\perf.htm" />
+    <Content Include="linq.min.js" />
     <Content Include="test\linq.qunit-test.js" />
     <Content Include="linq.js" />
     <Content Include="ReadMe.txt" />
@@ -131,10 +132,13 @@
     <None Include="internal\nuget-package\linq.js.nuspec">
       <SubType>Designer</SubType>
     </None>
+    <None Include="internal\nuget-package\pack.bat" />
     <None Include="internal\nuget-package\package.bat" />
     <Content Include="internal\zippack.fsx" />
     <Content Include="internal\closure.fsx" />
-    <None Include="internal\nuget-package\linq.js-bindings.nuspec" />
+    <None Include="internal\nuget-package\linq.js-rxjs.nuspec" />
+    <None Include="internal\nuget-package\linq.js-qunit.nuspec" />
+    <None Include="internal\nuget-package\push.bat" />
     <None Include="snippets\Action0.snippet" />
     <None Include="snippets\Action1.snippet" />
     <None Include="snippets\Action2.snippet" />

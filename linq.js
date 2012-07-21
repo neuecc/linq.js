@@ -2011,7 +2011,7 @@
         this.forEach(function (x, i) {
             if (x === item) {
                 found = i;
-                return true;
+                return false;
             }
         });
 
