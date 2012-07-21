@@ -141,6 +141,9 @@ test("indexOf", function ()
 {
     actual = Enumerable.range(1, 10).indexOf(3);
     equal(actual, 2);
+
+
+    [1, 10, 100, 1000, 100, 100].asEnumerable().indexOf(100).is(2);
 });
 
 test("lastIndexOf", function ()
