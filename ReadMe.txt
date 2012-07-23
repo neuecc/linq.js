@@ -11,8 +11,8 @@ v3 Beta2::
 
 fix bug indexOf
 writeLine overload back to v2 
+fixed extendTo(Array) isn't optimized for Array
 improvement all code snippets
-
 
 
 

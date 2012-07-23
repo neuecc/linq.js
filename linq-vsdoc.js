@@ -80,21 +80,18 @@
         },
 
         // IE8's defineProperty is defined but cannot use, therefore check defineProperties
-        isSupportDefineProperty: (Object.defineProperties != null),
-
-        defineProperty: function (target, methodName, value) {
-            if (Utils.isSupportDefineProperty) {
+        defineProperty: (Object.defineProperties != null)
+            ? function (target, methodName, value) {
                 Object.defineProperty(target, methodName, {
                     enumerable: false,
                     configurable: true,
                     writable: true,
                     value: value
-                });
+                })
             }
-            else {
+            : function (target, methodName, value) {
                 target[methodName] = value;
-            }
-        },
+            },
 
         compare: function (a, b) {
             return (a === b) ? 0
@@ -257,7 +254,7 @@
         var typeProto = type.prototype;
         var enumerableProto;
 
-        if (type instanceof Array) {
+        if (type === Array) {
             enumerableProto = ArrayEnumerable.prototype;
             Utils.defineProperty(typeProto, "getSource", function () {
                 return this;
@@ -2802,7 +2799,7 @@
                 console.log(selector(item));
             }
         });
-    }
+    };
 
     // Overload:function()
     // Overload:function(message)
@@ -2820,7 +2817,7 @@
                 console.log(message, selector(item));
             }
         });
-    }
+    };
 
     // private
 
@@ -2926,27 +2923,18 @@
     ArrayEnumerable.prototype = new Enumerable();
 
     ArrayEnumerable.prototype.any = function (predicate) {
-        /// <summary>Determines whether a sequence contains any elements or any element of a sequence satisfies a condition.</summary>
-        /// <param name="predicate" type="Optional:Func&lt;T,bool>" optional="true">A function to test each element for a condition.</param>
-        /// <returns type="Boolean"></returns>
         return (predicate == null)
             ? (this.getSource().length > 0)
             : Enumerable.prototype.any.apply(this, arguments);
     };
 
     ArrayEnumerable.prototype.count = function (predicate) {
-        /// <summary>Returns the number of elements in a sequence.</summary>
-        /// <param name="predicate" type="Optional:Func&lt;T,Boolean>" optional="true">A function to test each element for a condition.</param>
-        /// <returns type="Number"></returns>
         return (predicate == null)
             ? this.getSource().length
             : Enumerable.prototype.count.apply(this, arguments);
     };
 
     ArrayEnumerable.prototype.elementAt = function (index) {
-        /// <summary>Returns the element at a specified index in a sequence.</summary>
-        /// <param name="index" type="Number" integer="true">The zero-based index of the element to retrieve.</param>
-        /// <returns type="T"></returns>
         var source = this.getSource();
         return (0 <= index && index < source.length)
             ? source[index]
@@ -2954,10 +2942,6 @@
     };
 
     ArrayEnumerable.prototype.elementAtOrDefault = function (index, defaultValue) {
-        /// <summary>Returns the element at a specified index in a sequence or a default value if the index is out of range.</summary>
-        /// <param name="index" type="Number" integer="true">The zero-based index of the element to retrieve.</param>
-        /// <param name="defaultValue" type="T">The value if the index is outside the bounds then send.</param>
-        /// <returns type="T"></returns>
         var source = this.getSource();
         return (0 <= index && index < source.length)
             ? source[index]
@@ -2965,9 +2949,6 @@
     };
 
     ArrayEnumerable.prototype.first = function (predicate) {
-        /// <summary>Returns the first element of a sequence.</summary>
-        /// <param name="predicate" type="Optional:Func&lt;T,Boolean>">A function to test each element for a condition.</param>
-        /// <returns type="T"></returns>
         var source = this.getSource();
         return (predicate == null && source.length > 0)
             ? source[0]
@@ -2975,10 +2956,6 @@
     };
 
     ArrayEnumerable.prototype.firstOrDefault = function (defaultValue, predicate) {
-        /// <summary>Returns the first element of a sequence, or a default value.</summary>
-        /// <param name="defaultValue" type="T">The value if not found then send.</param>
-        /// <param name="predicate" type="Optional:Func&lt;T,Boolean>">A function to test each element for a condition.</param>
-        /// <returns type="T"></returns>
         if (predicate != null) {
             return Enumerable.prototype.firstOrDefault.apply(this, arguments);
         }
@@ -2988,9 +2965,6 @@
     };
 
     ArrayEnumerable.prototype.last = function (predicate) {
-        /// <summary>Returns the last element of a sequence.</summary>
-        /// <param name="predicate" type="Optional:Func&lt;T,Boolean>">A function to test each element for a condition.</param>
-        /// <returns type="T"></returns>
         var source = this.getSource();
         return (predicate == null && source.length > 0)
             ? source[source.length - 1]
@@ -2998,10 +2972,6 @@
     };
 
     ArrayEnumerable.prototype.lastOrDefault = function (defaultValue, predicate) {
-        /// <summary>Returns the last element of a sequence, or a default value.</summary>
-        /// <param name="defaultValue" type="T">The value if not found then send.</param>
-        /// <param name="predicate" type="Optional:Func&lt;T,Boolean>">A function to test each element for a condition.</param>
-        /// <returns type="T"></returns>
         if (predicate != null) {
             return Enumerable.prototype.lastOrDefault.apply(this, arguments);
         }
@@ -3011,9 +2981,6 @@
     };
 
     ArrayEnumerable.prototype.skip = function (count) {
-        /// <summary>Bypasses a specified number of elements in a sequence and then returns the remaining elements.</summary>
-        /// <param name="count" type="Number" integer="true">The number of elements to skip before returning the remaining elements.</param>
-        /// <returns type="Enumerable"></returns>
         var source = this.getSource();
 
         return new Enumerable(function () {
@@ -3031,23 +2998,15 @@
     };
 
     ArrayEnumerable.prototype.takeExceptLast = function (count) {
-        /// <summary>Take a sequence except last count.</summary>
-        /// <param name="count" type="Optional:Number" integer="true">The number of skip count.</param>
-        /// <returns type="Enumerable"></returns>
         if (count == null) count = 1;
         return this.take(this.getSource().length - count);
     };
 
     ArrayEnumerable.prototype.takeFromLast = function (count) {
-        /// <summary>Take a sequence from last count.</summary>
-        /// <param name="count" type="Number" integer="true">The number of take count.</param>
-        /// <returns type="Enumerable"></returns>
         return this.skip(this.getSource().length - count);
     };
 
     ArrayEnumerable.prototype.reverse = function () {
-        /// <summary>Inverts the order of the elements in a sequence.</summary>
-        /// <returns type="Enumerable"></returns>
         var source = this.getSource();
 
         return new Enumerable(function () {
@@ -3067,24 +3026,16 @@
     };
 
     ArrayEnumerable.prototype.sequenceEqual = function (second, compareSelector) {
-        /// <summary>Determines whether two sequences are equal by comparing the elements.</summary>
-        /// <param name="second" type="T[]">An T[] to compare to the first sequence.</param>
-        /// <param name="compareSelector" type="Optional:Func&lt;T,TKey>" optional="true">An equality comparer to compare values.</param>
-        /// <returns type="Enumerable"></returns>
         if ((second instanceof ArrayEnumerable || second instanceof Array)
             && compareSelector == null
             && Enumerable.from(second).count() != this.count()) {
-                return false;
-            }
+            return false;
+        }
 
         return Enumerable.prototype.sequenceEqual.apply(this, arguments);
     };
 
     ArrayEnumerable.prototype.toJoinedString = function (separator, selector) {
-        /// <summary>Creates Joined string from this sequence.</summary>
-        /// <param name="separator" type="Optional:String">A String.</param>
-        /// <param name="selector" type="Optional:Func&lt;T,String>">A transform function to apply to each source element.</param>
-        /// <returns type="String"></returns>
         var source = this.getSource();
         if (selector != null || !(source instanceof Array)) {
             return Enumerable.prototype.toJoinedString.apply(this, arguments);
@@ -3095,7 +3046,6 @@
     };
 
     ArrayEnumerable.prototype.getEnumerator = function () {
-        /// <summary>Returns an enumerator that iterates through the collection.</summary>
         var source = this.getSource();
         var index = -1;
 
@@ -3120,9 +3070,6 @@
     WhereEnumerable.prototype = new Enumerable();
 
     WhereEnumerable.prototype.where = function (predicate) {
-        /// <summary>Filters a sequence of values based on a predicate.</summary>
-        /// <param name="predicate" type="Func&lt;T,bool>_or_Func&lt;T,int,bool>">A function to test each source element for a condition; Optional:the second parameter of the function represents the index of the source element.</param>
-        /// <returns type="Enumerable"></returns>
         predicate = Utils.createLambda(predicate);
 
         if (predicate.length <= 1) {
@@ -3137,9 +3084,6 @@
     };
 
     WhereEnumerable.prototype.select = function (selector) {
-        /// <summary>Projects each element of a sequence into a new form.</summary>
-        /// <param name="selector" type="Func&lt;T,T>_or_Func&lt;T,int,T>">A transform function to apply to each source element; Optional:the second parameter of the function represents the index of the source element.</param>
-        /// <returns type="Enumerable"></returns>
         selector = Utils.createLambda(selector);
 
         return (selector.length <= 1)
@@ -3148,7 +3092,6 @@
     };
 
     WhereEnumerable.prototype.getEnumerator = function () {
-        /// <summary>Returns an enumerator that iterates through the collection.</summary>
         var predicate = this.prevPredicate;
         var source = this.prevSource;
         var enumerator;
@@ -3176,9 +3119,6 @@
     WhereSelectEnumerable.prototype = new Enumerable();
 
     WhereSelectEnumerable.prototype.where = function (predicate) {
-        /// <summary>Filters a sequence of values based on a predicate.</summary>
-        /// <param name="predicate" type="Func&lt;T,bool>_or_Func&lt;T,int,bool>">A function to test each source element for a condition; Optional:the second parameter of the function represents the index of the source element.</param>
-        /// <returns type="Enumerable"></returns>
         predicate = Utils.createLambda(predicate);
 
         return (predicate.length <= 1)
@@ -3187,9 +3127,6 @@
     };
 
     WhereSelectEnumerable.prototype.select = function (selector) {
-        /// <summary>Projects each element of a sequence into a new form.</summary>
-        /// <param name="selector" type="Func&lt;T,T>_or_Func&lt;T,int,T>">A transform function to apply to each source element; Optional:the second parameter of the function represents the index of the source element.</param>
-        /// <returns type="Enumerable"></returns>
         selector = Utils.createLambda(selector);
 
         if (selector.length <= 1) {
@@ -3204,7 +3141,6 @@
     };
 
     WhereSelectEnumerable.prototype.getEnumerator = function () {
-        /// <summary>Returns an enumerator that iterates through the collection.</summary>
         var predicate = this.prevPredicate;
         var selector = this.prevSelector;
         var source = this.prevSource;
@@ -3466,4 +3402,24 @@
     else {
         root.Enumerable = Enumerable;
     }
+
+    // vsdoc helper for VS2012
+    var redirectDefinition;
+    if(intellisense){
+        redirectDefinition = function (from, redirectTo) {
+            for (var methodName in from) {
+                if (redirectTo[methodName] !== undefined) {
+                    intellisense.redirectDefinition(from[methodName], redirectTo[methodName]);
+                }
+            }
+        };
+    }
+    else{
+        redirectDefinition = Functions.Identity;
+    }
+        
+    redirectDefinition(ArrayEnumerable.prototype, Enumerable.prototype);
+    redirectDefinition(WhereEnumerable.prototype, Enumerable.prototype);
+    redirectDefinition(WhereSelectEnumerable.prototype, Enumerable.prototype);
+
 })(this);

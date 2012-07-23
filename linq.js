@@ -80,21 +80,18 @@
         },
 
         // IE8's defineProperty is defined but cannot use, therefore check defineProperties
-        isSupportDefineProperty: (Object.defineProperties != null),
-
-        defineProperty: function (target, methodName, value) {
-            if (Utils.isSupportDefineProperty) {
+        defineProperty: (Object.defineProperties != null)
+            ? function (target, methodName, value) {
                 Object.defineProperty(target, methodName, {
                     enumerable: false,
                     configurable: true,
                     writable: true,
                     value: value
-                });
+                })
             }
-            else {
+            : function (target, methodName, value) {
                 target[methodName] = value;
-            }
-        },
+            },
 
         compare: function (a, b) {
             return (a === b) ? 0
@@ -192,7 +189,7 @@
         var typeProto = type.prototype;
         var enumerableProto;
 
-        if (type instanceof Array) {
+        if (type === Array) {
             enumerableProto = ArrayEnumerable.prototype;
             Utils.defineProperty(typeProto, "getSource", function () {
                 return this;
@@ -2332,7 +2329,7 @@
                 console.log(selector(item));
             }
         });
-    }
+    };
 
     // Overload:function()
     // Overload:function(message)
@@ -2346,7 +2343,7 @@
                 console.log(message, selector(item));
             }
         });
-    }
+    };
 
     // private
 
@@ -2546,8 +2543,8 @@
         if ((second instanceof ArrayEnumerable || second instanceof Array)
             && compareSelector == null
             && Enumerable.from(second).count() != this.count()) {
-                return false;
-            }
+            return false;
+        }
 
         return Enumerable.prototype.sequenceEqual.apply(this, arguments);
     };
