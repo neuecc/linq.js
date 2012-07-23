@@ -6,6 +6,17 @@
  * licensed under MIT License
  * http://linqjs.codeplex.com/
  *------------------------------------------------------------------------*/
+ 
+v3 Beta2::
+
+fix bug indexOf
+writeLine overload back to v2 
+improvement all code snippets
+
+
+
+
+//
 
 2012-07-19 v3 Beta::Notice
 

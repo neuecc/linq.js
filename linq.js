@@ -2164,17 +2164,12 @@
     };
 
     // Overload:function()
-    // Overload:function(separator)
-    // Overload:function(separator,selector)
-    Enumerable.prototype.writeLine = function (separator, selector) {
-        if (separator == null) separator = "";
+    // Overload:function(selector)
+    Enumerable.prototype.writeLine = function (selector) {
         selector = Utils.createLambda(selector);
 
-        var isFirst = true;
         this.forEach(function (item) {
-            if (isFirst) isFirst = false;
-            else document.writeln(separator);
-            document.writeln(selector(item));
+            document.writeln(selector(item) + "<br />");
         });
     };
 

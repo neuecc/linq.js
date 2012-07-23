@@ -2613,21 +2613,15 @@
     };
 
     // Overload:function()
-    // Overload:function(separator)
-    // Overload:function(separator,selector)
-    Enumerable.prototype.writeLine = function (separator, selector) {
-        /// <summary>Do document.writeln.</summary>
-        /// <param name="separator" type="Optional:String">A String.</param>
+    // Overload:function(selector)
+    Enumerable.prototype.writeLine = function (selector) {
+        /// <summary>Do document.writeln + br.</summary>
         /// <param name="selector" type="Optional:Func&lt;T,String>">A transform function to apply to each source element.</param>
         /// <returns type="void"></returns>
-        if (separator == null) separator = "";
         selector = Utils.createLambda(selector);
 
-        var isFirst = true;
         this.forEach(function (item) {
-            if (isFirst) isFirst = false;
-            else document.writeln(separator);
-            document.writeln(selector(item));
+            document.writeln(selector(item) + "<br />");
         });
     };
 

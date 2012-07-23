@@ -16,7 +16,7 @@
             textStack.length = 0;
             var value;
             try {
-                eval(code + '.take(1001).writeLine("<br>")');
+                eval(code + '.take(1001).writeLine()');
                 value = textStack.join("");
             } catch (e) {
                 textStack.length = 0;

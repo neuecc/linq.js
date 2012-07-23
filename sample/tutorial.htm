@@ -31,13 +31,13 @@
         First step of Lambda Expression</h2>
     <pre>
     // Anonymous function
-    Enumerable.range(1, 3).select(function(value, index) { return index + ':' + value }).writeLine("&lt;br />");
+    Enumerable.range(1, 3).select(function(value, index) { return index + ':' + value }).writeLine();
     // String like Lambda Expression (arguments => expression)
-    Enumerable.range(1, 3).select("value,index=>index+':'+value").writeLine("&lt;br />");
+    Enumerable.range(1, 3).select("value,index=>index+':'+value").writeLine();
     
     // If the number of arguments is one , can use default iterator variable '$'
-    Enumerable.range(1, 3).select("i=>i*2").writeLine("&lt;br />");
-    Enumerable.range(1, 3).select("$*2").writeLine("&lt;br />"); // same
+    Enumerable.range(1, 3).select("i=>i*2").writeLine();
+    Enumerable.range(1, 3).select("$*2").writeLine(); // same
     
     // "" is shortcut of "x => x" (identity function)
     Enumerable.range(4, 7).join(Enumerable.range(8, 5), "", "", "outer,inner=>outer*inner").writeLine();
@@ -163,7 +163,7 @@
         .selectMany(function(miller){ return apart
         .select(function(smith){ return {
             baker: baker, cooper: cooper, fletcher: fletcher, miller: miller, smith: smith}})})})})})
-        .where("Enumerable.from($).distinct('$.value').count() == 5")
+        .where(function(x){ return Enumerable.from(x).distinct("$.value").count() == 5 })
         .where("$.baker != 5")
         .where("$.cooper != 1")
         .where("$.fletcher != 1 && $.fletcher != 5")
@@ -171,7 +171,7 @@
         .where("Math.abs($.smith - $.fletcher) != 1")
         .where("Math.abs($.fletcher - $.cooper) != 1");
 
-    answers.selectMany("").writeLine("&lt;br />", "$.key + ':' + $.value");
+    answers.selectMany().writeLine("$.key + ':' + $.value");
     </pre>
 </body>
 </html>

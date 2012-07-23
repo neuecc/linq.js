@@ -13,11 +13,12 @@
 
 
         Enumerable.range(1, 100)
-        .select(function (x) { return x % 2 == 0; })
-        .select(function (x) { return x * x; })
-        .select(function (x) { return x * x; })
-        .select(function (x) { return x * x; })
-        .writeLine();
+            .where(function (x) { return x % 2 == 0; })
+            .select(function (x) { return x * x; })
+            .writeLine();
+        
+
+
 
 
 
