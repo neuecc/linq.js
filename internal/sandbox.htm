@@ -18,29 +18,27 @@
         var a = a.indexOfByLinq(100);
 
 
-        alert(a);
+        document.writeln(a);
 
 
 
 
 
+        var div = document.createElement("html");
+        var body = document.createElement("body");
+        var p = document.createElement("p");
+        body.appendChild(p);
+        p.appendChild(document.createTextNode("test"));
+        div.appendChild(body);
+        var seq = Enumerable.from(div.getElementsByTagName("body"));
 
 
-
-
-
-
-
-
-
-
-
+        var tst = 0;
 
 
 
     </script>
 </head>
 <body>
-    <select id="day"></select>
 </body>
 </html>

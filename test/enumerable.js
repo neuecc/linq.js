@@ -40,16 +40,16 @@ test("from", function () {
     actual = Enumerable.from({ foo: "bar", func: function () { } }).toArray();
     deepEqual(actual, [{ key: "foo", value: "bar" }]);
 
-    var div = document.createElement("html");
-    var last = document.createElement("div");
-    last.appendChild(document.createTextNode("test"));
-    div.appendChild(document.createElement("div"));
-    div.appendChild(document.createElement("div"));
-    div.appendChild(last);
-    var seq = Enumerable.from(div.getElementsByTagName("div"));
-    equal(seq.count(), 3);
-    equal(seq.elementAt(2), last);
-    equal(seq.elementAt(2).firstChild.nodeValue, "test");
+    //var div = document.createElement("html");
+    //var last = document.createElement("div");
+    //last.appendChild(document.createTextNode("test"));
+    //div.appendChild(document.createElement("div"));
+    //div.appendChild(document.createElement("div"));
+    //div.appendChild(last);
+    //var seq = Enumerable.from(div.getElementsByTagName("div"));
+    //equal(seq.count(), 3);
+    //equal(seq.elementAt(2), last);
+    //equal(seq.elementAt(2).firstChild.nodeValue, "test");
 });
 
 test("make", function () {

@@ -9,3 +9,4 @@ glob:_ReSharper.*
 glob:_UpgradeReport_Files/*
 syntax: glob
 Backup/*
+TestResults/*
