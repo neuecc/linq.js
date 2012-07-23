@@ -2,13 +2,19 @@
   <Header>
     <Title>zero args function</Title>
     <Author>neuecc</Author>
-    <Shortcut>func0</Shortcut>
+    <Shortcut>funcZ</Shortcut>
     <Description>one line zero args function</Description>
     <SnippetTypes>
       <SnippetType>Expansion</SnippetType>
     </SnippetTypes>
   </Header>
   <Snippet>
-    <Code Language="jscript"><![CDATA[function () { return $end$ }]]></Code>
+    <Declarations>
+      <Literal>
+        <ID>body</ID>
+        <Default>body</Default>
+      </Literal>
+    </Declarations>
+    <Code Language="JavaScript"><![CDATA[function () { return $body$; }$end$]]></Code>
   </Snippet>
 </CodeSnippet>

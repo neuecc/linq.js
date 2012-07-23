@@ -12,28 +12,12 @@
         Enumerable.Utils.extendTo(Array);
 
 
-        var a = [1, 10, 100, 1000, 100, 100];
-
-
-        var a = a.indexOfByLinq(100);
-
-
-        document.writeln(a);
-
-
-
-
-
-        var div = document.createElement("html");
-        var body = document.createElement("body");
-        var p = document.createElement("p");
-        body.appendChild(p);
-        p.appendChild(document.createTextNode("test"));
-        div.appendChild(body);
-        var seq = Enumerable.from(div.getElementsByTagName("body"));
-
-
-        var tst = 0;
+        Enumerable.range(1, 100)
+        .select(function (x) { return x % 2 == 0; })
+        .select(function (x) { return x * x; })
+        .select(function (x) { return x * x; })
+        .select(function (x) { return x * x; })
+        .writeLine();
 
 
 

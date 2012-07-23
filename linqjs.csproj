@@ -139,15 +139,17 @@
     <None Include="internal\nuget-package\linq.js-rxjs.nuspec" />
     <None Include="internal\nuget-package\linq.js-qunit.nuspec" />
     <None Include="internal\nuget-package\push.bat" />
-    <None Include="snippets\Action0.snippet" />
+    <None Include="snippets\ActionZ.snippet" />
     <None Include="snippets\Action1.snippet" />
     <None Include="snippets\Action2.snippet" />
     <None Include="snippets\EnumerableFrom.snippet" />
     <None Include="snippets\EnumerableRange.snippet" />
-    <None Include="snippets\Func0.snippet" />
+    <None Include="snippets\FuncZ.snippet" />
     <None Include="snippets\Func1.snippet" />
     <None Include="snippets\Func2.snippet" />
     <Content Include="web.config" />
+    <Content Include="snippets\DocumentWriteLine.snippet" />
+    <Content Include="snippets\EnumerableRangeTo.snippet" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

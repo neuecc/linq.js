@@ -1,9 +1,9 @@
 ﻿<CodeSnippet Format="1.1.0" xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
   <Header>
-    <Title>two args function</Title>
+    <Title>document.writeln and br</Title>
     <Author>neuecc</Author>
-    <Shortcut>func2</Shortcut>
-    <Description>one line two args function</Description>
+    <Shortcut>dw</Shortcut>
+    <Description>output use document.writeln and end br</Description>
     <SnippetTypes>
       <SnippetType>Expansion</SnippetType>
     </SnippetTypes>
@@ -11,18 +11,10 @@
   <Snippet>
     <Declarations>
       <Literal>
-        <ID>arg1</ID>
-        <Default>x</Default>
-      </Literal>
-      <Literal>
-        <ID>arg2</ID>
-        <Default>y</Default>
-      </Literal>
-      <Literal>
         <ID>body</ID>
         <Default>body</Default>
       </Literal>
     </Declarations>
-    <Code Language="JavaScript"><![CDATA[function ($arg1$, $arg2$) { return $body$; }$end$]]></Code>
+    <Code Language="JavaScript"><![CDATA[document.writeln($body$ + '<br />');$end$]]></Code>
   </Snippet>
 </CodeSnippet>

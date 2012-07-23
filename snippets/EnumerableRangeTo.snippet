@@ -1,9 +1,9 @@
 ﻿<CodeSnippet Format="1.1.0" xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
   <Header>
-    <Title>one args function</Title>
+    <Title>linq.js - Enumerable.rangeTo</Title>
     <Author>neuecc</Author>
-    <Shortcut>func1</Shortcut>
-    <Description>one line one args function</Description>
+    <Shortcut>eRangeTo</Shortcut>
+    <Description>Enumerable.rangeTo</Description>
     <SnippetTypes>
       <SnippetType>Expansion</SnippetType>
     </SnippetTypes>
@@ -11,14 +11,14 @@
   <Snippet>
     <Declarations>
       <Literal>
-        <ID>arg1</ID>
-        <Default>x</Default>
+        <ID>start</ID>
+        <Default>start</Default>
       </Literal>
       <Literal>
-        <ID>body</ID>
-        <Default>body</Default>
+        <ID>to</ID>
+        <Default>to</Default>
       </Literal>
     </Declarations>
-    <Code Language="JavaScript"><![CDATA[function ($arg1$) { return $body$; }$end$]]></Code>
+    <Code Language="JavaScript"><![CDATA[Enumerable.rangeTo($start$, $to$)$end$]]></Code>
   </Snippet>
 </CodeSnippet>
