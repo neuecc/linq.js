@@ -150,6 +150,7 @@
     <Content Include="web.config" />
     <Content Include="snippets\DocumentWriteLine.snippet" />
     <Content Include="snippets\EnumerableRangeTo.snippet" />
+    <Content Include="snippets\signature.snippet" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

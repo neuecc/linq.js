@@ -741,7 +741,7 @@
         /// <returns type="Enumerable"></returns>
 
         return new Enumerable(function () {
-            var enuerator;
+            var enumerator;
 
             return new IEnumerator(
                 function () { enumerator = Enumerable.from(enumerableFactory()).getEnumerator(); },

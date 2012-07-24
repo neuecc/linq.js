@@ -14,6 +14,20 @@
         Enumerable.Utils.extendTo(Array);
 
         
+    
+        var xs = [];
+
+        var r = Enumerable.range(1, 5)
+            .doAction(function (x) { xs.push(x); });
+
+        var de = Enumerable.defer(function () { return r; });
+
+        //xs.length.is(0);
+
+        var xss = de.toArray();
+       
+        alert(xss);
+        
         
         
         

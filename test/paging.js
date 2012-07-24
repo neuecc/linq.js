@@ -4,30 +4,26 @@
 
 module("Paging");
 
-test("elementAt", function ()
-{
+test("elementAt", function () {
     actual = Enumerable.range(1, 10).elementAt(5);
     equal(actual, 6);
 });
 
-test("elementAtOrDefault", function ()
-{
+test("elementAtOrDefault", function () {
     actual = Enumerable.range(1, 10).elementAtOrDefault(3, "foo");
     equal(actual, 4);
     actual = Enumerable.range(1, 10).elementAtOrDefault(31, "foo");
     equal(actual, "foo");
 });
 
-test("first", function ()
-{
+test("first", function () {
     actual = Enumerable.range(1, 10).first();
     equal(actual, 1);
     actual = Enumerable.range(1, 10).first("i=>i*3==6");
     equal(actual, 2);
 });
 
-test("firstOrDefault", function ()
-{
+test("firstOrDefault", function () {
     actual = Enumerable.range(1, 10).firstOrDefault(4);
     equal(actual, 1);
     actual = Enumerable.range(1, 10).skip(11).firstOrDefault(4);
@@ -39,8 +35,7 @@ test("firstOrDefault", function ()
     equal(actual, 40);
 });
 
-test("last", function ()
-{
+test("last", function () {
     actual = Enumerable.range(1, 10).last();
     equal(actual, 10);
 
@@ -48,8 +43,7 @@ test("last", function ()
     equal(actual, 5);
 });
 
-test("lastOrDefault", function ()
-{
+test("lastOrDefault", function () {
     actual = Enumerable.range(1, 10).lastOrDefault(34);
     equal(actual, 10);
     actual = Enumerable.range(1, 10).skip(11).lastOrDefault(34);
@@ -61,8 +55,7 @@ test("lastOrDefault", function ()
     equal(actual, 40);
 });
 
-test("single", function ()
-{
+test("single", function () {
     actual = Enumerable.range(1, 1).single();
     equal(actual, 1);
 
@@ -70,8 +63,7 @@ test("single", function ()
     equal(actual, 6);
 });
 
-test("singleOrDefault", function ()
-{
+test("singleOrDefault", function () {
     actual = Enumerable.range(1, 1).singleOrDefault(34);
     equal(actual, 1);
     actual = Enumerable.range(1, 10).skip(11).singleOrDefault(34);
@@ -83,14 +75,12 @@ test("singleOrDefault", function ()
     equal(actual, 40);
 });
 
-test("skip", function ()
-{
+test("skip", function () {
     actual = Enumerable.range(1, 10).skip(4).toArray();
     deepEqual(actual, [5, 6, 7, 8, 9, 10]);
 });
 
-test("skipWhile", function ()
-{
+test("skipWhile", function () {
     actual = Enumerable.range(1, 10).skipWhile("i=>i<8").toArray();
     deepEqual(actual, [8, 9, 10]);
 
@@ -98,14 +88,12 @@ test("skipWhile", function ()
     deepEqual(actual, [9, 10]);
 });
 
-test("take", function ()
-{
+test("take", function () {
     actual = Enumerable.range(1, 10).take(4).toArray();
     deepEqual(actual, [1, 2, 3, 4]);
 });
 
-test("takeWhile", function ()
-{
+test("takeWhile", function () {
     actual = Enumerable.range(1, 10).takeWhile("i=>i<8").toArray();
     deepEqual(actual, [1, 2, 3, 4, 5, 6, 7]);
 
@@ -113,8 +101,7 @@ test("takeWhile", function ()
     deepEqual(actual, [1, 2, 3, 4, 5, 6, 7, 8]);
 });
 
-test("takeExceptLast", function ()
-{
+test("takeExceptLast", function () {
     actual = Enumerable.range(1, 10).takeExceptLast().toArray();
     deepEqual(actual, [1, 2, 3, 4, 5, 6, 7, 8, 9]);
     actual = Enumerable.range(1, 10).takeExceptLast(3).toArray();
@@ -125,8 +112,7 @@ test("takeExceptLast", function ()
     deepEqual(actual, []);
 });
 
-test("takeFromLast", function ()
-{
+test("takeFromLast", function () {
     actual = Enumerable.range(1, 10).takeFromLast(3).toArray();
     deepEqual(actual, [8, 9, 10]);
     actual = Enumerable.range(1, 10).takeFromLast(100).toArray();
@@ -137,17 +123,20 @@ test("takeFromLast", function ()
     deepEqual(actual, []);
 });
 
-test("indexOf", function ()
-{
+test("indexOf", function () {
     actual = Enumerable.range(1, 10).indexOf(3);
     equal(actual, 2);
 
-
     [1, 10, 100, 1000, 100, 100].asEnumerable().indexOf(100).is(2);
+
+    [1, 2, 3, 3, 3, 4, 5].indexOf(3).is(2);
+    [1, 2, 3, 3, 3, 4, 5].indexOf(function (x) { return x == 3; }).is(2);
 });
 
-test("lastIndexOf", function ()
-{
+test("lastIndexOf", function () {
     actual = Enumerable.from([1, 2, 3, 2, 5]).lastIndexOf(2)
     equal(actual, 3);
+
+    [1, 2, 3, 3, 3, 4, 5].lastIndexOf(3).is(4);
+    [1, 2, 3, 3, 3, 4, 5].lastIndexOf(function (x) { return x == 3; }).is(4);
 });

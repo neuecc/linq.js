@@ -222,7 +222,7 @@
 
     // Generator
 
-    Enumerable.choice = function (elements) // variable argument
+    Enumerable.choice = function () // variable argument
     {
         var args = (arguments[0] instanceof Array) ? arguments[0] : arguments;
 
@@ -236,7 +236,7 @@
         });
     };
 
-    Enumerable.cycle = function (elements) // variable argument
+    Enumerable.cycle = function () // variable argument
     {
         var args = (arguments[0] instanceof Array) ? arguments[0] : arguments;
 
@@ -533,7 +533,7 @@
     Enumerable.defer = function (enumerableFactory) {
 
         return new Enumerable(function () {
-            var enuerator;
+            var enumerator;
 
             return new IEnumerator(
                 function () { enumerator = Enumerable.from(enumerableFactory()).getEnumerator(); },
