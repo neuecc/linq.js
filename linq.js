@@ -314,8 +314,9 @@
             return new IEnumerator(
                 function () {
                     for (var key in obj) {
-                        if (!(obj[key] instanceof Function)) {
-                            array.push({ key: key, value: obj[key] });
+                        var value = obj[key];
+                        if (!(value instanceof Function) && Object.prototype.hasOwnProperty.call(obj, key)) {
+                            array.push({ key: key, value: value });
                         }
                     }
                 },

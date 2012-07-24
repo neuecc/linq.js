@@ -371,7 +371,7 @@
         /// </signature>
         /// <signature>
         ///   <summary>
-        ///   Make KeyValuePair sequence.
+        ///   Make own property to KeyValuePair sequence.
         ///   &#10;Usage: "{a:0}" => (.key = "a", .value = 0).
         ///   </summary>
         ///   <param name="obj" type="Object">JavaScript object</param>
@@ -393,7 +393,7 @@
         /// &#10;2. Enumerable = Enumerable.
         /// &#10;3. Number/Boolean = Enumerable.repeat(obj, 1).
         /// &#10;4. String = to CharArray. Usage: "abc" => "a","b","c").
-        /// &#10;5. Object/Function = to KeyValuePair(except function) Usage: "{a:0}" => (.key = "a", .value = 0).
+        /// &#10;5. Object/Function = own property to KeyValuePairs. Usage: "{a:0}" => (.key = "a", .value = 0).
         /// &#10;6. Array or ArrayLikeObject(has length) = to Enumerable.
         /// &#10;7. JScript's IEnumerable = to Enumerable(using Enumerator).
         /// </summary>
@@ -452,8 +452,9 @@
             return new IEnumerator(
                 function () {
                     for (var key in obj) {
-                        if (!(obj[key] instanceof Function)) {
-                            array.push({ key: key, value: obj[key] });
+                        var value = obj[key];
+                        if (!(value instanceof Function) && Object.prototype.hasOwnProperty.call(obj, key)) {
+                            array.push({ key: key, value: value });
                         }
                     }
                 },

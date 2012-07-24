@@ -14,6 +14,24 @@ test("letBind", function ()
         .select("$.a + $.b")
         .sum();
     equal(sum, 110);
+
+    var l1 = Enumerable.from([1, 2, 3, 4, 5]).letBind(function (a) {
+        return Enumerable.from(a).zip(Enumerable.from(a).skip(1), function (x, y) {
+            return x + ':' + y;
+        });
+    }).toArray();
+    
+    l1.is(['1:2', '2:3', '3:4', '4:5']);
+
+    var l2 = Enumerable.range(1, 5).letBind(function (a) {
+        return Enumerable.from(a).zip(Enumerable.from(a).skip(1), function (x, y) {
+            return x + ':' + y;
+        });
+    }).toArray();
+     
+    l2.is(['1:2', '2:3', '3:4', '4:5']);
+
+    l1.is(l2);
 });
 
 test("share", function ()
