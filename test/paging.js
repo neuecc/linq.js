@@ -129,14 +129,14 @@ test("indexOf", function () {
 
     [1, 10, 100, 1000, 100, 100].asEnumerable().indexOf(100).is(2);
 
-    [1, 2, 3, 3, 3, 4, 5].indexOf(3).is(2);
-    [1, 2, 3, 3, 3, 4, 5].indexOf(function (x) { return x == 3; }).is(2);
+    [1, 2, 3, 3, 3, 4, 5].asEnumerable().indexOf(3).is(2);
+    [1, 2, 3, 3, 3, 4, 5].asEnumerable().indexOf(function (x) { return x == 3; }).is(2);
 });
 
 test("lastIndexOf", function () {
     actual = Enumerable.from([1, 2, 3, 2, 5]).lastIndexOf(2)
     equal(actual, 3);
 
-    [1, 2, 3, 3, 3, 4, 5].lastIndexOf(3).is(4);
-    [1, 2, 3, 3, 3, 4, 5].lastIndexOf(function (x) { return x == 3; }).is(4);
+    [1, 2, 3, 3, 3, 4, 5].asEnumerable().lastIndexOf(3).is(4);
+    [1, 2, 3, 3, 3, 4, 5].asEnumerable().lastIndexOf(function (x) { return x == 3; }).is(4);
 });

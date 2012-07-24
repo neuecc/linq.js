@@ -14,22 +14,11 @@
         Enumerable.Utils.extendTo(Array);
 
         
-    
-        var xs = [];
-
-        var r = Enumerable.range(1, 5)
-            .doAction(function (x) { xs.push(x); });
-
-        var de = Enumerable.defer(function () { return r; });
-
-        //xs.length.is(0);
-
-        var xss = de.toArray();
-       
-        alert(xss);
+        var tes = [1, 2, 3, 3, 3, 4, 5].indexOf(function (x) { return x == 3; });
         
         
-        
+
+        alert(tes);
         
         // .any(
 

@@ -2003,23 +2003,48 @@
         });
     };
 
+    // Overload:function(item)
+    // Overload:function(predicate)
     Enumerable.prototype.indexOf = function (item) {
         var found = null;
-        this.forEach(function (x, i) {
-            if (x === item) {
-                found = i;
-                return false;
-            }
-        });
+
+        // item as predicate
+        if (typeof (item) === Types.Function) {
+            this.forEach(function (x, i) {
+                if (item(x, i)) {
+                    found = i;
+                    return false;
+                }
+            });
+        }
+        else {
+            this.forEach(function (x, i) {
+                if (x === item) {
+                    found = i;
+                    return false;
+                }
+            });
+        }
 
         return (found !== null) ? found : -1;
     };
 
+    // Overload:function(item)
+    // Overload:function(predicate)
     Enumerable.prototype.lastIndexOf = function (item) {
         var result = -1;
-        this.forEach(function (x, i) {
-            if (x === item) result = i;
-        });
+
+        // item as predicate
+        if (typeof (item) === Types.Function) {
+            this.forEach(function (x, i) {
+                if (item(x, i)) result = i;
+            });
+        }
+        else {
+            this.forEach(function (x, i) {
+                if (x === item) result = i;
+            });
+        }
 
         return result;
     };

@@ -10,11 +10,11 @@
 v3 Beta2::
 
 fix bug indexOf
-writeLine overload back to v2 
-fixed extendTo(Array) isn't optimized for Array
+writeLine overload back to v2
+fixed bug, extendTo(Array) isn't optimized for Array
+fixed bug, defer define "enumerator" to global
+indexOf, lastIndexOf allow predicate
 improvement all code snippets
-
-
 
 //
 
