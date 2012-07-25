@@ -1,8 +1,10 @@
-﻿/// <reference path="testrunner.htm"/>
-/// <reference path="~/linq.js" />
-/// <reference path="qunit.js"/>
+﻿/// <reference path="qunit.js"/>
+/// <reference path="../linq.js" />
+/// <reference path="../extensions/linq.qunit.js" />
 
 module("Ordering");
+
+var expected, actual; // will be removed
 
 var list = [
     { a: 2, b: 4, c: 1 },

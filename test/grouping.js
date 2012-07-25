@@ -1,8 +1,10 @@
-﻿/// <reference path="testrunner.htm"/>
-/// <reference path="~/linq.js" />
-/// <reference path="qunit.js"/>
+﻿/// <reference path="qunit.js"/>
+/// <reference path="../linq.js" />
+/// <reference path="../extensions/linq.qunit.js" />
 
 module("Grouping");
+
+var expected, actual; // will be removed
 
 var fileList = ["temp.xls", "temp2.xls", "temp.pdf", "temp.jpg", "temp2.pdf", "temp3.xls"];
 

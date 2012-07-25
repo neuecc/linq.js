@@ -1,9 +1,10 @@
-﻿/// <reference path="testrunner.htm"/>
-/// <reference path="qunit.js"/>
+﻿/// <reference path="qunit.js"/>
 /// <reference path="../linq.js" />
 /// <reference path="../extensions/linq.qunit.js" />
 
 module("Enumerable");
+
+var expected, actual; // will be removed
 
 test("choice", function () {
     actual = Enumerable.choice(1, 10, 31, 42).take(10).toArray();
@@ -20,6 +21,8 @@ test("cycle", function () {
     deepEqual(actual, [1, 10, 31, 42, 1, 10, 31, 42, 1, 10]);
     actual = Enumerable.cycle([1, 2, 3, 4, 5]).take(10).toArray();
     deepEqual(actual, [1, 2, 3, 4, 5, 1, 2, 3, 4, 5]);
+
+    Enumerable.cycle(1, 2, 3).take(5).is(1, 2, 3, 1, 2);
 });
 
 test("empty", function () {

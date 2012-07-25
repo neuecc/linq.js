@@ -1,8 +1,10 @@
-﻿/// <reference path="testrunner.htm"/>
-/// <reference path="~/linq.js" />
-/// <reference path="qunit.js"/>
+﻿/// <reference path="qunit.js"/>
+/// <reference path="../linq.js" />
+/// <reference path="../extensions/linq.qunit.js" />
 
 module("Paging");
+
+var expected, actual; // will be removed
 
 test("elementAt", function () {
     actual = Enumerable.range(1, 10).elementAt(5);

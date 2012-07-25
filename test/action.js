@@ -1,7 +1,10 @@
-﻿/// <reference path="~/linq.js" />
-/// <reference path="qunit.js"/>
+﻿/// <reference path="qunit.js"/>
+/// <reference path="../linq.js" />
+/// <reference path="../extensions/linq.qunit.js" />
 
 module("Action");
+
+var expected, actual; // will be removed
 
 test("doAction", function ()
 {

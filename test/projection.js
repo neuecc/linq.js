@@ -1,8 +1,10 @@
-﻿/// <reference path="testrunner.htm"/>
-/// <reference path="~/linq.js" />
-/// <reference path="qunit.js"/>
+﻿/// <reference path="qunit.js"/>
+/// <reference path="../linq.js" />
+/// <reference path="../extensions/linq.qunit.js" />
 
 module("Projection");
+
+var expected, actual; // will be removed
 
 test("traverseDepthFirst", function () {
     actual = Enumerable.make(1).traverseDepthFirst("$+$").take(7).toArray();

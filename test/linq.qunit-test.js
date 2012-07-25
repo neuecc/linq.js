@@ -1,7 +1,6 @@
-﻿/// <reference path="testrunner.htm"/>
-/// <reference path="~/linq.js" />
-/// <reference path="qunit.js"/>
-/// <reference path="~/extensions/linq.qunit.js" />
+﻿/// <reference path="qunit.js"/>
+/// <reference path="../linq.js" />
+/// <reference path="../extensions/linq.qunit.js" />
 
 module("linq.qunit");
 
@@ -15,14 +14,13 @@ test("primitive.is", function () {
     (true).is(true);
     (false).is(false);
 
+    // example
 
+    Math.pow(10, 2).is(100); // strictEqual(Math.pow(10, 2), 100)
 
-Math.pow(10, 2).is(100); // strictEqual(Math.pow(10, 2), 100)
+    Enumerable.rangeTo(10, 15, 2).is(10, 12, 14); // deepEqual(Enumerable.rangeTo(10, 15, 2).toArray(), [10, 12, 14])
 
-Enumerable.rangeTo(10, 15, 2).is(10, 12, 14); // deepEqual(Enumerable.rangeTo(10, 15, 2).toArray(), [10, 12, 14])
-
-[1, 5, 10].all("$<12").isTrue(); // collection assertion with linq.js!
-
+    [1, 5, 10].all("$<12").isTrue(); // collection assertion with linq.js!
 });
 
 test("collection.is", function () {
@@ -37,7 +35,7 @@ test("collection.is", function () {
 test("function.is", function () {
     var o = { a: "a", b: 100, c: true };
     o.is(function (x) { return x.a == "a" && x.b == 100 && x.c == true; });
-    
+
     "foobar".is(function (x) { return x.toUpperCase() == "FOOBAR" });
 });
 

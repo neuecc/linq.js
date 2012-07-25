@@ -1,9 +1,10 @@
-﻿/// <reference path="testrunner.htm"/>
-/// <reference path="~/linq.js" />
-/// <reference path="qunit.js"/>
-/// <reference path="~/bindings/linq.qunit.js" />
+﻿/// <reference path="qunit.js"/>
+/// <reference path="../linq.js" />
+/// <reference path="../extensions/linq.qunit.js" />
 
 module("Aggregate");
+
+var expected, actual; // will be removed
 
 test("aggregate", function () {
     Enumerable.range(1, 10).aggregate("a,b=>a+b").is(55);
