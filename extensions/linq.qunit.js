@@ -53,7 +53,7 @@
         ///   <param name="variableExpected" type="params Object[]">mulitple arguments. Usage: [1,2,3].is(1,2,3).</param>
         /// </signature>
         /// <signature>
-        ///   <summary>ok(true). expected function pass actual. if result is true then ok.</summary>
+        ///   <summary>ok(true). expected function is passed actual. if result is true then ok.</summary>
         ///   <param name="expected" type="Function">function checker, return boolean</param>
         ///   <param name="message" type="String" optional="true">assertion message</param>
         /// </signature>
@@ -106,6 +106,13 @@
                 notStrictEqual(this.valueOf(), expected, message);
             }
         }
+    });
+
+    defineToObject("isExpr", function (expression, message) {
+        /// <summary>ok(true). string expression is converted lambda. lambda is passed actual. if result is true then ok.</summary>
+        /// <param name="expression" type="String">expression string converted to function checker, lambda return boolean</param>
+        /// <param name="message" type="String" optional="true">assertion message</param>
+        ok(Enumerable.Utils.createLambda(expression)(this.valueOf()), message);
     });
 
     defineToObject("isTrue", function (message) {

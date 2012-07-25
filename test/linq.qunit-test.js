@@ -39,6 +39,13 @@ test("function.is", function () {
     "foobar".is(function (x) { return x.toUpperCase() == "FOOBAR" });
 });
 
+test("function.expression", function () {
+
+    Math.abs(-100).is(function (x) { return x < 200; });
+
+    Math.abs(-100).isExpr("$ < 200");
+});
+
 test("primitive.isNot", function () {
     Math.pow(10, 2).isNot(1000, "must not be 100!!!");
     var x = 1000;
