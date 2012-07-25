@@ -14,6 +14,7 @@ writeLine overload back to v2
 fixed bug, extendTo(Array) isn't optimized for Array
 fixed bug, defer define "enumerator" to global
 indexOf, lastIndexOf allow predicate
+changed Enumerable.from(object) enumerate only own property
 improvement all code snippets
 
 //

@@ -474,8 +474,6 @@
         return Enumerable.repeat(element, 1);
     };
 
-    // Overload:function(input, pattern)
-    // Overload:function(input, pattern, flags)
     Enumerable.matches = function (input, pattern, flags) {
         /// <summary>
         /// Global regex match and send regexp object.
@@ -505,8 +503,6 @@
         });
     };
 
-    // Overload:function(start, count)
-    // Overload:function(start, count, step)
     Enumerable.range = function (start, count, step) {
         /// <summary>
         /// Generates a sequence of integral numbers within a specified range.
@@ -533,8 +529,6 @@
         });
     };
 
-    // Overload:function(start, count)
-    // Overload:function(start, count, step)
     Enumerable.rangeDown = function (start, count, step) {
         /// <summary>
         /// Generates a sequence of integral numbers within a specified range.
@@ -561,14 +555,12 @@
         });
     };
 
-    // Overload:function(start, to)
-    // Overload:function(start, to, step)
     Enumerable.rangeTo = function (start, to, step) {
         /// <summary>Generates a sequence of integral numbers.
-        /// Ex: rangeTo(10,12) - 10,11,12 rangeTo(0,-2) - 0, -1, -2</summary>
+        /// &#10;Usage: rangeTo(10, 12) => 10,11,12 | rangeTo(0, -2) => 0, -1, -2</summary>
         /// <param type="Number" integer="true" name="start">start integer</param>
         /// <param type="Number" integer="true" name="to">to integer</param>
-        /// <param type="Optional:Number" integer="true" name="step" optional="true">Step of generate number.(Ex:rangeTo(0,7,3) - 0,3,6)</param>
+        /// <param type="Number" integer="true" name="step" optional="true">Step of generate number. Usage: rangeTo(0, 7, 3) => 0,3,6</param>
         /// <returns type="Enumerable"></returns>
 
         if (step == null) step = 1;
@@ -605,27 +597,27 @@
         }
     };
 
-    // Overload:function(obj)
-    // Overload:function(obj, num)
-    Enumerable.repeat = function (obj, num) {
-        /// <summary>Generates a sequence that contains one repeated value.
-        /// If omit count then generate to infinity.
-        /// Ex: repeat("foo",3) - "foo","foo","foo"</summary>
-        /// <param type="TResult" name="obj">The value to be repeated.</param>
-        /// <param type="Optional:Number" integer="true" name="count" optional="true">The number of times to repeat the value in the generated sequence.</param>
+    Enumerable.repeat = function (element, count) {
+        /// <summary>
+        /// Generates a sequence that contains one repeated value.
+        /// &#10;If omit count then generate to infinity.
+        /// &#10;Usage: repeat("foo", 3) => "foo","foo","foo"
+        /// </summary>
+        /// <param type="Object" name="element">The value to be repeated.</param>
+        /// <param type="Number" integer="true" name="count" optional="true">The number of times to repeat the value in the generated sequence.</param>
         /// <returns type="Enumerable"></returns>
-        if (num != null) return Enumerable.repeat(obj).take(num);
+        if (count != null) return Enumerable.repeat(element).take(count);
 
         return new Enumerable(function () {
             return new IEnumerator(
                 Functions.Blank,
-                function () { return this.yieldReturn(obj); },
+                function () { return this.yieldReturn(element); },
                 Functions.Blank);
         });
     };
 
     Enumerable.repeatWithFinalize = function (initializer, finalizer) {
-        /// <summary>Lazy Generates one value by initializer's result and do finalize when enumerate end</summary>
+        /// <summary>Lazy Generates one value by initializer's result and do finalize when enumerate end.</summary>
         /// <param type="Func&lt;T>" name="initializer">value factory.</param>
         /// <param type="Action&lt;T>" name="finalizer">execute when finalize.</param>
         /// <returns type="Enumerable"></returns>
@@ -646,14 +638,14 @@
         });
     };
 
-    // Overload:function(func)
-    // Overload:function(func, count)
     Enumerable.generate = function (func, count) {
-        /// <summary>Generates a sequence that execute func value.
-        /// If omit count then generate to infinity.
-        /// Ex: generate("Math.random()", 5) - 0.131341,0.95425252,...</summary>
+        /// <summary>
+        /// Generates a sequence that execute func value.
+        /// &#10;If omit count then generate to infinity.
+        /// &#10;Usage: generate("Math.random()", 5) => 0.131341,0.95425252,...
+        /// </summary>
         /// <param type="Func&lt;T>" name="func">The value of execute func to be repeated.</param>
-        /// <param type="Optional:Number" integer="true" name="count" optional="true">The number of times to repeat the value in the generated sequence.</param>
+        /// <param type="Number" integer="true" name="count" optional="true">The number of times to repeat the value in the generated sequence.</param>
         /// <returns type="Enumerable"></returns>
         if (count != null) return Enumerable.generate(func).take(count);
         func = Utils.createLambda(func);
@@ -666,14 +658,13 @@
         });
     };
 
-    // Overload:function()
-    // Overload:function(start)
-    // Overload:function(start, step)
     Enumerable.toInfinity = function (start, step) {
-        /// <summary>Generates a sequence of integral numbers to infinity.
-        /// Ex: toInfinity() - 0,1,2,3...</summary>
-        /// <param type="Optional:Number" integer="true" name="start" optional="true">start integer</param>
-        /// <param type="Optional:Number" integer="true" name="step" optional="true">Step of generate number.(Ex:toInfinity(10,3) - 10,13,16,19,...)</param>
+        /// <summary>
+        /// Generates a sequence of integral numbers to infinity.
+        /// &#10;Usage: toInfinity() => 0,1,2,3...
+        /// </summary>
+        /// <param type="Number" integer="true" name="start" optional="true">start integer.</param>
+        /// <param type="Number" integer="true" name="step" optional="true">Step of generate number. Usage: toInfinity(10,3) => 10,13,16,19,...</param>
         /// <returns type="Enumerable"></returns>
         if (start == null) start = 0;
         if (step == null) step = 1;
@@ -687,14 +678,13 @@
         });
     };
 
-    // Overload:function()
-    // Overload:function(start)
-    // Overload:function(start, step)
     Enumerable.toNegativeInfinity = function (start, step) {
-        /// <summary>Generates a sequence of integral numbers to negative infinity.
-        /// Ex: toNegativeInfinity() - 0,-1,-2,-3...</summary>
-        /// <param type="Optional:Number" integer="true" name="start" optional="true">start integer</param>
-        /// <param type="Optional:Number" integer="true" name="step" optional="true">Step of generate number.(Ex:toNegativeInfinity(10,3) - 10,7,4,1,...)</param>
+        /// <summary>
+        /// Generates a sequence of integral numbers to negative infinity.
+        /// &#10;Usage: toNegativeInfinity() => 0,-1,-2,-3...
+        /// </summary>
+        /// <param type="Number" integer="true" name="start" optional="true">start integer.</param>
+        /// <param type="Number" integer="true" name="step" optional="true">Step of generate number. Usage: toNegativeInfinity(10,3) => 10,7,4,1,...</param>
         /// <returns type="Enumerable"></returns>
         if (start == null) start = 0;
         if (step == null) step = 1;

@@ -151,6 +151,7 @@
     <Content Include="snippets\DocumentWriteLine.snippet" />
     <Content Include="snippets\EnumerableRangeTo.snippet" />
     <Content Include="snippets\signature.snippet" />
+    <Content Include="snippets\nl.snippet" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

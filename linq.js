@@ -433,15 +433,15 @@
         }
     };
 
-    // Overload:function(obj)
-    // Overload:function(obj, num)
-    Enumerable.repeat = function (obj, num) {
-        if (num != null) return Enumerable.repeat(obj).take(num);
+    // Overload:function(element)
+    // Overload:function(element, count)
+    Enumerable.repeat = function (element, count) {
+        if (count != null) return Enumerable.repeat(element).take(count);
 
         return new Enumerable(function () {
             return new IEnumerator(
                 Functions.Blank,
-                function () { return this.yieldReturn(obj); },
+                function () { return this.yieldReturn(element); },
                 Functions.Blank);
         });
     };
