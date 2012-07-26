@@ -603,7 +603,7 @@
         /// &#10;If omit count then generate to infinity.
         /// &#10;Usage: repeat("foo", 3) => "foo","foo","foo"
         /// </summary>
-        /// <param type="Object" name="element">The value to be repeated.</param>
+        /// <param type="T" name="element">The value to be repeated.</param>
         /// <param type="Number" integer="true" name="count" optional="true">The number of times to repeat the value in the generated sequence.</param>
         /// <returns type="Enumerable"></returns>
         if (count != null) return Enumerable.repeat(element).take(count);
@@ -699,8 +699,9 @@
     };
 
     Enumerable.unfold = function (seed, func) {
-        /// <summary>Applies function and generates a infinity sequence.
-        /// Ex: unfold(3,"$+10") - 3,13,23,...</summary>
+        /// <summary>
+        /// Applies function and generates a infinity sequence.
+        /// &#10;Usage: unfold(3, "$+10") => 3,13,23,...</summary>
         /// <param type="T" name="seed">The initial accumulator value.</param>
         /// <param type="Func&lt;T,T>" name="func">An accumulator function to be invoked on each element.</param>
         /// <returns type="Enumerable"></returns>
@@ -751,13 +752,10 @@
 
     /* Projection and Filtering Methods */
 
-    // Overload:function(func)
-    // Overload:function(func, resultSelector<element>)
-    // Overload:function(func, resultSelector<element, nestLevel>)
     Enumerable.prototype.traverseBreadthFirst = function (func, resultSelector) {
         /// <summary>Projects each element of sequence and flattens the resulting sequences into one sequence use breadth first search.</summary>
-        /// <param name="func" type="Func&lt;T,T[]>">Select child sequence.</param>
-        /// <param name="resultSelector" type="Optional:Func&lt;T>_or_Func&lt;T,int>" optional="true">Optional:the second parameter of the function represents the nestlevel of the source sequence.</param>
+        /// <param name="func" type="Func&lt;T, T[]>">Select child sequence.</param>
+        /// <param name="resultSelector" type="Func&lt;T,int>" optional="true">the second parameter of the function represents the nestlevel of the source sequence.</param>
         /// <returns type="Enumerable"></returns>
         var source = this;
         func = Utils.createLambda(func);
@@ -793,13 +791,10 @@
         });
     };
 
-    // Overload:function(func)
-    // Overload:function(func, resultSelector<element>)
-    // Overload:function(func, resultSelector<element, nestLevel>)
     Enumerable.prototype.traverseDepthFirst = function (func, resultSelector) {
         /// <summary>Projects each element of sequence and flattens the resulting sequences into one sequence use depth first search.</summary>
         /// <param name="func" type="Func&lt;T,T[]>">Select child sequence.</param>
-        /// <param name="resultSelector" type="Optional:Func&lt;T>_or_Func&lt;T,int>" optional="true">Optional:the second parameter of the function represents the nestlevel of the source sequence.</param>
+        /// <param name="resultSelector" type="Func&lt;T,int>" optional="true">the second parameter of the function represents the nestlevel of the source sequence.</param>
         /// <returns type="Enumerable"></returns>
         var source = this;
         func = Utils.createLambda(func);
@@ -911,12 +906,19 @@
         });
     };
 
-    // Overload:function(func)
-    // Overload:function(seed,func<value,element>)
-    // Overload:function(seed,func<value,element>,resultSelector)
     Enumerable.prototype.scan = function (seed, func, resultSelector) {
+        /// <signature>
+        ///   <summary>Applies an accumulator function over a sequence.</summary>
+        ///   <param name="func" type="Func&lt;TAccumulate,TSource,TAccumulate>">An accumulator function to be invoked on each element.</param>
+        /// </signature>
+        /// <signature>
+        ///   <summary>Applies an accumulator function over a sequence.</summary>
+        ///   <param name="seed" type="TAccumulate">the initial accumulator value.</param>
+        ///   <param name="func" type="Func&lt;TAccumulate,TSource,TAccumulate>">An accumulator function to be invoked on each element.</param>
+        ///   <param name="resultSelector" type="Func&lt;TAccumulate,TResult>" optional="true">A function to transform the final accumulator value into the result value.</param>
+        /// </signature>
         /// <summary>Applies an accumulator function over a sequence.</summary>
-        /// <param name="func_or_seed" type="Func&lt;T,T,T>_or_TAccumulate">Func is an accumulator function to be invoked on each element. Seed is the initial accumulator value.</param>
+        /// <param name="seed" type="Func&lt;T,T,T>_or_TAccumulate">Func is an accumulator function to be invoked on each element. Seed is the initial accumulator value.</param>
         /// <param name="func" type="Optional:Func&lt;TAccumulate,T,TAccumulate>" optional="true">An accumulator function to be invoked on each element.</param>
         /// <param name="resultSelector" type="Optional:Func&lt;TAccumulate,TResult>" optional="true">A function to transform the final accumulator value into the result value.</param>
         /// <returns type="Enumerable"></returns>

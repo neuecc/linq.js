@@ -14,9 +14,14 @@
 
         
 
-
+        var f = function (x, y) {
+            return 100;
+        }
         
-
+        var seq = Enumerable.range(1, 10);
+        seq.scan("hoge", function (x, y) { return "hoge"; })
+        
+        
 
 
 

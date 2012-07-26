@@ -1,13 +1,13 @@
 /*--------------------------------------------------------------------------
  * linq.js - LINQ for JavaScript
- * ver 3.0.0 Beta (July. 19th, 2012)
+ * ver 3.0.1-Beta2 (July. 26th, 2012)
  *
  * created and maintained by neuecc <ils@neue.cc>
  * licensed under MIT License
  * http://linqjs.codeplex.com/
  *------------------------------------------------------------------------*/
  
-v3 Beta2::
+2012-07-19 v3.0.1-Beta2::Notice
 
 fix bug indexOf
 writeLine overload back to v2
