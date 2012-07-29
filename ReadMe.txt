@@ -7,7 +7,12 @@
  * http://linqjs.codeplex.com/
  *------------------------------------------------------------------------*/
  
-2012-07-19 v3.0.1-Beta2::Notice
+ fix orderByDescending to stable sort
+
+
+ //
+
+2012-07-26 v3.0.1-Beta2::Notice
 
 fix bug indexOf
 writeLine overload back to v2

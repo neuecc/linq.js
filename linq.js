@@ -2443,7 +2443,7 @@
 
         if (comparison == 0) {
             if (this.child != null) return this.child.compare(index1, index2);
-            comparison = Utils.compare(index1, index2);
+            return Utils.compare(index1, index2);
         }
 
         return (this.descending) ? -comparison : comparison;

@@ -23,24 +23,25 @@ var strlist = [
     { a: "n", b: "d", c: "o" }
 ];
 
-test("orderBy", function ()
-{
+test("orderBy", function () {
     actual = Enumerable.from([1, 51, 7, 823, 85, 31, 51, 99])
         .orderBy("i=>i")
         .toArray();
     deepEqual(actual, [1, 7, 31, 51, 51, 85, 99, 823]);
+
+    Enumerable.rangeTo(10, 1).orderBy("$%5").is(10, 5, 6, 1, 7, 2, 8, 3, 9, 4);
 });
 
-test("orderByDescending", function ()
-{
+test("orderByDescending", function () {
     actual = Enumerable.from([1, 51, 7, 823, 85, 31, 51, 99])
         .orderByDescending("i=>i")
         .toArray();
     deepEqual(actual, [823, 99, 85, 51, 51, 31, 7, 1]);
+
+    Enumerable.rangeTo(1, 10).orderByDescending("$%5").is(4, 9, 3, 8, 2, 7, 1, 6, 5, 10);
 });
 
-test("thenBy", function ()
-{
+test("thenBy", function () {
     actual = Enumerable.from(list)
         .orderBy("l=>l.a")
         .thenBy("l=>l.b")
@@ -71,8 +72,7 @@ test("thenBy", function ()
     deepEqual(actual, expected);
 });
 
-test("thenByDescending", function ()
-{
+test("thenByDescending", function () {
     actual = Enumerable.from(list)
         .orderByDescending("l=>l.a")
         .thenByDescending("l=>l.b")
@@ -103,21 +103,18 @@ test("thenByDescending", function ()
     deepEqual(actual, expected);
 });
 
-test("reverse", function ()
-{
+test("reverse", function () {
     actual = Enumerable.from([1, 51, 7, 823, 85, 31, 51, 99])
         .reverse()
         .toArray();
     deepEqual(actual, [99, 51, 31, 85, 823, 7, 51, 1]);
 });
 
-test("shuffle", function ()
-{
+test("shuffle", function () {
     var array = [1, 51, 7, 823, 85, 31, 51, 99];
     var shuffled = Enumerable.from(array).shuffle().toArray();
     notDeepEqual(shuffled, array, "random test. if failed retry");
 });
-
 
 test("weightedSample", function () {
     var result = [1, 25, 35, 39].weightedSample()

@@ -12,16 +12,11 @@
 
         Enumerable.Utils.extendTo(Array);
 
-        
 
-        var f = function (x, y) {
-            return 100;
-        }
-        
-        var seq = Enumerable.range(1, 10);
-        seq.scan("hoge", function (x, y) { return "hoge"; })
-        
-        
+        [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        .orderByDescending("$%5")
+        .writeLine();
+
 
 
 
