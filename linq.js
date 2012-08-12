@@ -2906,7 +2906,10 @@
     Grouping.prototype = new ArrayEnumerable();
 
     // module export
-    if (typeof module !== Types.Undefined && module.exports) {
+    if (typeof define === Types.Function && define.amd) { // AMD
+        define("linqjs", [], function () { return Enumerable; });
+    }
+    else if (typeof module !== Types.Undefined && module.exports) { // Node
         module.exports = Enumerable;
     }
     else {
