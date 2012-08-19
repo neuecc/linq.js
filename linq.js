@@ -1218,11 +1218,60 @@
         });
     };
 
-    Enumerable.prototype.alternate = function (value) {
-        value = Enumerable.make(value);
-        return this.selectMany(function (elem) {
-            return Enumerable.make(elem).concat(value);
-        }).takeExceptLast();
+    Enumerable.prototype.alternate = function (alternateValueOrSequence) {
+        var source = this;
+
+        return new Enumerable(function () {
+            var buffer;
+            var enumerator;
+            var alternateSequence;
+            var alternateEnumerator;
+
+            return new IEnumerator(
+                function () {
+                    if (alternateValueOrSequence instanceof Array || alternateValueOrSequence.getEnumerator != null) {
+                        alternateSequence = Enumerable.from(Enumerable.from(alternateValueOrSequence).toArray()); // freeze
+                    }
+                    else {
+                        alternateSequence = Enumerable.make(alternateValueOrSequence);
+                    }
+                    enumerator = source.getEnumerator();
+                    if (enumerator.moveNext()) buffer = enumerator.current();
+                },
+                function () {
+                    while (true) {
+                        if (alternateEnumerator != null) {
+                            if (alternateEnumerator.moveNext()) {
+                                return this.yieldReturn(alternateEnumerator.current());
+                            }
+                            else {
+                                alternateEnumerator = null;
+                            }
+                        }
+
+                        if (buffer == null && enumerator.moveNext()) {
+                            buffer = enumerator.current(); // hasNext
+                            alternateEnumerator = alternateSequence.getEnumerator();
+                            continue; // GOTO
+                        }
+                        else if (buffer != null) {
+                            var retVal = buffer;
+                            buffer = null;
+                            return this.yieldReturn(retVal);
+                        }
+
+                        return this.yieldBreak();
+                    }
+                },
+                function () {
+                    try {
+                        Utils.dispose(enumerator);
+                    }
+                    finally {
+                        Utils.dispose(alternateEnumerator);
+                    }
+                });
+        });
     };
 
     // Overload:function(value)

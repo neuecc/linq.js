@@ -9,16 +9,12 @@
     <script type="text/javascript" src="../extensions/linq.rx.js"></script>
     <script type="text/javascript">
 
+        var seq = Enumerable.range(1, 10);
 
-        Enumerable.Utils.extendTo(Array);
-
-
-        [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        .orderByDescending("$%5")
-        .writeLine();
-
-
-
+        Enumerable.empty().alternate(-1).writeLine();
+        
+        
+        
 
     </script>
 </head>

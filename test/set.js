@@ -23,7 +23,7 @@ test("any", function () {
 
 test("isEmpty", function () {
     var _ = Enumerable.range(1, 10).isEmpty();
-    
+
     _.is(false);
     Enumerable.empty().isEmpty().is(true);
 
@@ -37,7 +37,7 @@ test("concat", function () {
 
     Enumerable.range(1, 3).concat([]).is(1, 2, 3);
     Enumerable.range(1, 3).concat([2, 3], [4, 5]).is(1, 2, 3, 2, 3, 4, 5);
-    var range = Enumerable.rangeTo(3,5);
+    var range = Enumerable.rangeTo(3, 5);
     range.concat(range, range, range, range).is(Enumerable.repeat(range, 5).selectMany());
 });
 
@@ -47,10 +47,27 @@ test("insert", function () {
 });
 
 test("alternate", function () {
-    actual = Enumerable.range(1, 5).alternate(2).toArray();
-    deepEqual(actual, [1, 2, 2, 2, 3, 2, 4, 2, 5]);
-    deepEqual(Enumerable.empty().alternate(2).toArray(), []);
-    deepEqual(Enumerable.make(1).alternate(2).toArray(), [1]);
+    // single value
+    Enumerable.empty().alternate(-1).is([]);
+    [1].alternate(-1).is(1);
+    [1, 2].alternate(-1).is(1, -1, 2);
+    Enumerable.range(1, 5).alternate(-1).is(1, -1, 2, -1, 3, -1, 4, -1, 5);
+    Enumerable.range(1, 6).alternate(-1).is(1, -1, 2, -1, 3, -1, 4, -1, 5, -1, 6);
+
+    // multiple, array
+    Enumerable.empty().alternate([-1, -2]).is([]);
+    [1].alternate([-1, -2]).is(1);
+    [1, 2].alternate([-1, -2]).is(1, -1, -2, 2);
+    Enumerable.range(1, 5).alternate([-1, -2]).is(1, -1, -2, 2, -1, -2, 3, -1, -2, 4, -1, -2, 5);
+    Enumerable.range(1, 6).alternate([-1, -2]).is(1, -1, -2, 2, -1, -2, 3, -1, -2, 4, -1, -2, 5, -1, -2, 6);
+
+    // multiple, enumerable
+    var seq = Enumerable.rangeTo(-1, -2);
+    Enumerable.empty().alternate(seq).is([]);
+    [1].alternate(seq).is(1);
+    [1, 2].alternate(seq).is(1, -1, -2, 2);
+    Enumerable.range(1, 5).alternate(seq).is(1, -1, -2, 2, -1, -2, 3, -1, -2, 4, -1, -2, 5);
+    Enumerable.range(1, 6).alternate(seq).is(1, -1, -2, 2, -1, -2, 3, -1, -2, 4, -1, -2, 5, -1, -2, 6);
 });
 
 test("contains", function () {
