@@ -224,7 +224,9 @@
 
     Enumerable.choice = function () // variable argument
     {
-        var args = (arguments[0] instanceof Array) ? arguments[0] : arguments;
+        var args = (arguments[0] instanceof Array) ? arguments[0]
+                 : (arguments[0].getEnumerator != null) ? arguments[0].toArray()
+                 : arguments;
 
         return new Enumerable(function () {
             return new IEnumerator(
@@ -238,7 +240,9 @@
 
     Enumerable.cycle = function () // variable argument
     {
-        var args = (arguments[0] instanceof Array) ? arguments[0] : arguments;
+        var args = (arguments[0] instanceof Array) ? arguments[0]
+                 : (arguments[0].getEnumerator != null) ? arguments[0].toArray()
+                 : arguments;
 
         return new Enumerable(function () {
             var index = 0;
