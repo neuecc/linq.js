@@ -143,7 +143,7 @@
 
         this.dispose = function () {
             /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
-            /// <returns type="Void"></returns>
+            /// <returns type="void"></returns>
             if (state != State.Running) return;
 
             try {
@@ -164,10 +164,14 @@
             return current;
         };
         this.yieldReturn = function (value) {
+            /// <summary>Set the value to enumerator and return true.</summary>
+            /// <returns type="Boolean"></returns>
             current = value;
             return true;
         };
         this.yieldBreak = function () {
+            /// <summary>return false.</summary>
+            /// <returns type="Boolean"></returns>
             return false;
         };
     };
@@ -240,6 +244,7 @@
         /// &#10;Usage: return (enumerator.moveNext()) ? this.yieldReturn(enumerator.current()) : this.yieldBreak();
         /// </param>
         /// <param name="dispose" type="Function">Invoke when enumerator called dispose.</param>
+        /// <returns type="IEnumerator"></returns>
         return new IEnumerator(initialize, tryGetNext, dispose);
     };
 
@@ -251,6 +256,7 @@
         /// &#10;Usage: Enumerable.Utils.extendTo(Array);
         /// </summary>
         /// <param name="type" type="Function">Type Constructor.</param>
+        /// <returns type="void"></returns>
         var typeProto = type.prototype;
         var enumerableProto;
 
@@ -1846,12 +1852,22 @@
     /* Ordering Methods */
 
     Enumerable.prototype.orderBy = function (keySelector) {
+        /// <signature>
+        /// <summary>Sorts the elements of a sequence in ascending order according to a key.</summary>
+        /// <param name="keySelector" type="Func&lt;T,TKey>" optional="true">A function to extract a key from an element.</param>
+        /// <returns type="OrderedEnumerable"></returns>
+        /// </signature>
         /// <summary>Sorts the elements of a sequence in ascending order according to a key.</summary>
         /// <param name="keySelector" type="Func&lt;T,TKey>" optional="true">A function to extract a key from an element.</param>
         return new OrderedEnumerable(this, keySelector, false);
     };
 
     Enumerable.prototype.orderByDescending = function (keySelector) {
+        /// <signature>
+        /// <summary>Sorts the elements of a sequence in descending order according to a key.</summary>
+        /// <param name="keySelector" type="Func&lt;T,TKey>" optional="true">A function to extract a key from an element.</param>
+        /// <returns type="OrderedEnumerable"></returns>
+        /// </signature>
         /// <summary>Sorts the elements of a sequence in descending order according to a key.</summary>
         /// <param name="keySelector" type="Func&lt;T,TKey>" optional="true">A function to extract a key from an element.</param>
         return new OrderedEnumerable(this, keySelector, true);
@@ -2212,7 +2228,7 @@
         /// <summary>Returns the element at a specified index in a sequence or a default value if the index is out of range.
         /// &#10;default of defautValue is null.</summary>
         /// <param name="index" type="Number" integer="true">The zero-based index of the element to retrieve.</param>
-        /// <param name="defaultValue" type="T" optinal="true">The value if the index is outside the bounds then send.</param>
+        /// <param name="defaultValue" type="T" optional="true">The value if the index is outside the bounds then send.</param>
         /// <returns type="T"></returns>
         if (defaultValue === undefined) defaultValue = null;
         var value;
@@ -2232,7 +2248,7 @@
     // Overload:function(predicate)
     Enumerable.prototype.first = function (predicate) {
         /// <summary>Returns the first element of a sequence.</summary>
-        /// <param name="predicate" type="Optional:Func&lt;T,Boolean>">A function to test each element for a condition.</param>
+        /// <param name="predicate" type="Func&lt;T,Boolean>" optional="true">A function to test each element for a condition.</param>
         /// <returns type="T"></returns>
         if (predicate != null) return this.where(predicate).first();
 
@@ -2251,8 +2267,8 @@
     Enumerable.prototype.firstOrDefault = function (predicate, defaultValue) {
         /// <summary>Returns the first element of a sequence, or a default value.
         /// &#10;default of defautValue is null.</summary>
+        /// <param name="predicate" type="Func&lt;T,Boolean>" optional="true">A function to test each element for a condition. If null then no use predicate.</param>
         /// <param name="defaultValue" type="T" optional="true">The value if not found then send.</param>
-        /// <param name="predicate" type="Optional:Func&lt;T,Boolean>">A function to test each element for a condition.</param>
         /// <returns type="T"></returns>
         if (defaultValue === undefined) defaultValue = null;
         if (predicate != null) return this.where(predicate).firstOrDefault(null, defaultValue);
@@ -2271,7 +2287,7 @@
     // Overload:function(predicate)
     Enumerable.prototype.last = function (predicate) {
         /// <summary>Returns the last element of a sequence.</summary>
-        /// <param name="predicate" type="Optional:Func&lt;T,Boolean>">A function to test each element for a condition.</param>
+        /// <param name="predicate" type="Func&lt;T,Boolean>" optional="true">A function to test each element for a condition.</param>
         /// <returns type="T"></returns>
         if (predicate != null) return this.where(predicate).last();
 
@@ -2289,8 +2305,8 @@
     Enumerable.prototype.lastOrDefault = function (predicate, defaultValue) {
         /// <summary>Returns the last element of a sequence, or a default value.
         /// &#10;default of defautValue is null.</summary>
+        /// <param name="predicate" type="Func&lt;T,Boolean>" optional="true">A function to test each element for a condition. If null then no use predicate.</param>
         /// <param name="defaultValue" type="T" optional="true">The value if not found then send.</param>
-        /// <param name="predicate" type="Optional:Func&lt;T,Boolean>">A function to test each element for a condition.</param>
         /// <returns type="T"></returns>
         if (defaultValue === undefined) defaultValue = null;
         if (predicate != null) return this.where(predicate).lastOrDefault(null, defaultValue);
@@ -2308,7 +2324,7 @@
     // Overload:function(predicate)
     Enumerable.prototype.single = function (predicate) {
         /// <summary>Returns the only element of a sequence that satisfies a specified condition, and throws an exception if more than one such element exists.</summary>
-        /// <param name="predicate" type="Optional:Func&lt;T,Boolean>">A function to test each element for a condition.</param>
+        /// <param name="predicate" type="Func&lt;T,Boolean>" optional="true">A function to test each element for a condition.</param>
         /// <returns type="T"></returns>
         if (predicate != null) return this.where(predicate).single();
 
@@ -2330,8 +2346,8 @@
     Enumerable.prototype.singleOrDefault = function (predicate, defaultValue) {
         /// <summary>Returns a single, specific element of a sequence of values, or a default value if no such element is found.
         /// &#10;default of defautValue is null.</summary>
+        /// <param name="predicate" type="Func&lt;T,Boolean>" optional="true">A function to test each element for a condition. If null then no use predicate.</param>
         /// <param name="defaultValue" type="T" optional="true">The value if not found then send.</param>
-        /// <param name="predicate" type="Optional:Func&lt;T,Boolean>">A function to test each element for a condition.</param>
         /// <returns type="T"></returns>
         if (defaultValue === undefined) defaultValue = null;
         if (predicate != null) return this.where(predicate).singleOrDefault(null, defaultValue);
@@ -2378,7 +2394,7 @@
     // Overload:function(predicate<element,index>)
     Enumerable.prototype.skipWhile = function (predicate) {
         /// <summary>Bypasses elements in a sequence as long as a specified condition is true and then returns the remaining elements.</summary>
-        /// <param name="predicate" type="Func&lt;T,Boolean>_or_Func&lt;T,int,Boolean>">A function to test each source element for a condition; Optional:the second parameter of the function represents the index of the source element.</param>
+        /// <param name="predicate" type="Func&lt;T,int,Boolean>">A function to test each source element for a condition; Optional:the second parameter of the function represents the index of the source element.</param>
         /// <returns type="Enumerable"></returns>
         predicate = Utils.createLambda(predicate);
         var source = this;
@@ -2436,7 +2452,7 @@
     // Overload:function(predicate<element,index>)
     Enumerable.prototype.takeWhile = function (predicate) {
         /// <summary>Returns elements from a sequence as long as a specified condition is true, and then skips the remaining elements.</summary>
-        /// <param name="predicate" type="Func&lt;T,Boolean>_or_Func&lt;T,int,Boolean>">A function to test each source element for a condition; Optional:the second parameter of the function represents the index of the source element.</param>
+        /// <param name="predicate" type="Func&lt;T,int,Boolean>">A function to test each source element for a condition; Optional:the second parameter of the function represents the index of the source element.</param>
         /// <returns type="Enumerable"></returns>
         predicate = Utils.createLambda(predicate);
         var source = this;
@@ -2459,8 +2475,8 @@
     // Overload:function()
     // Overload:function(count)
     Enumerable.prototype.takeExceptLast = function (count) {
-        /// <summary>Take a sequence except last count.</summary>
-        /// <param name="count" type="Optional:Number" integer="true">The number of skip count.</param>
+        /// <summary>Take a sequence except last count. The default count is 1.</summary>
+        /// <param name="count" type="Number" integer="true" optional="true">The number of skip count.</param>
         /// <returns type="Enumerable"></returns>
         if (count == null) count = 1;
         var source = this;
@@ -2569,7 +2585,7 @@
 
     Enumerable.prototype.asEnumerable = function () {
         /// <summary>Convert sequence as enumerable. This same as Enumerable.from(seq).</summary>
-        /// <returns type="Array"></returns>
+        /// <returns type="Enumerable"></returns>
         return Enumerable.from(this);
     };
 
@@ -2586,9 +2602,9 @@
     // Overload:function(keySelector, elementSelector, compareSelector)
     Enumerable.prototype.toLookup = function (keySelector, elementSelector, compareSelector) {
         /// <summary>Creates a Lookup from this sequence.</summary>
-        /// <param name="keySelector" type="Func&lt;T,TKey>">A function to extract a key from each element.</param>
-        /// <param name="elementSelector" type="Optional:Func&lt;T,TElement>">A transform function to produce a result element value from each element.</param>
-        /// <param name="compareSelector" type="Optional:Func&lt;TKey,TCompare>" optional="true">An equality comparer to compare values.</param>
+        /// <param name="keySelector" type="Func&lt;T,TKey>" optional="true">A function to extract a key from each element.</param>
+        /// <param name="elementSelector" type="Func&lt;T,TElement>" optional="true">A transform function to produce a result element value from each element.</param>
+        /// <param name="compareSelector" type="Func&lt;TKey,TCompare>" optional="true">An equality comparer to compare values.</param>
         keySelector = Utils.createLambda(keySelector);
         elementSelector = Utils.createLambda(elementSelector);
         compareSelector = Utils.createLambda(compareSelector);
@@ -2607,8 +2623,8 @@
 
     Enumerable.prototype.toObject = function (keySelector, elementSelector) {
         /// <summary>Creates a Object from this sequence.</summary>
-        /// <param name="keySelector" type="Func&lt;T,String>">A function to extract a key from each element.</param>
-        /// <param name="elementSelector" type="Func&lt;T,TElement>">A transform function to produce a result element value from each element.</param>
+        /// <param name="keySelector" type="Func&lt;T,String>" optional="true">A function to extract a key from each element.</param>
+        /// <param name="elementSelector" type="Func&lt;T,TElement>" optional="true">A transform function to produce a result element value from each element.</param>
         /// <returns type="Object"></returns>
         keySelector = Utils.createLambda(keySelector);
         elementSelector = Utils.createLambda(elementSelector);
@@ -2624,9 +2640,9 @@
     // Overload:function(keySelector, elementSelector, compareSelector)
     Enumerable.prototype.toDictionary = function (keySelector, elementSelector, compareSelector) {
         /// <summary>Creates a Dictionary from this sequence.</summary>
-        /// <param name="keySelector" type="Func&lt;T,TKey>">A function to extract a key from each element.</param>
-        /// <param name="elementSelector" type="Func&lt;T,TElement>">A transform function to produce a result element value from each element.</param>
-        /// <param name="compareSelector" type="Optional:Func&lt;TKey,TCompare>" optional="true">An equality comparer to compare values.</param>
+        /// <param name="keySelector" type="Func&lt;T,TKey>" optional="true">A function to extract a key from each element.</param>
+        /// <param name="elementSelector" type="Func&lt;T,TElement>" optional="true">A transform function to produce a result element value from each element.</param>
+        /// <param name="compareSelector" type="Func&lt;TKey,TCompare>" optional="true">An equality comparer to compare values.</param>
         keySelector = Utils.createLambda(keySelector);
         elementSelector = Utils.createLambda(elementSelector);
         compareSelector = Utils.createLambda(compareSelector);
@@ -2643,8 +2659,8 @@
     // Overload:function(replacer, space)
     Enumerable.prototype.toJSONString = function (replacer, space) {
         /// <summary>Creates a JSON String from sequence, performed only native JSON support browser or included json2.js.</summary>
-        /// <param name="replacer" type="Optional:Func">a replacer.</param>
-        /// <param name="space" type="Optional:Number">indent spaces.</param>
+        /// <param name="replacer" type="Function" optional="true">a replacer.</param>
+        /// <param name="space" type="Number" optional="true">indent spaces.</param>
         /// <returns type="String"></returns>
         if (typeof JSON === Types.Undefined || JSON.stringify == null) {
             throw new Error("toJSONString can't find JSON.stringify. This works native JSON support Browser or include json2.js");
@@ -2656,9 +2672,9 @@
     // Overload:function(separator)
     // Overload:function(separator,selector)
     Enumerable.prototype.toJoinedString = function (separator, selector) {
-        /// <summary>Creates Joined string from this sequence.</summary>
-        /// <param name="separator" type="Optional:String">A String.</param>
-        /// <param name="selector" type="Optional:Func&lt;T,String>">A transform function to apply to each source element.</param>
+        /// <summary>Creates Joined string from this sequence. The default separator is "".</summary>
+        /// <param name="separator" type="String" optional="true">A String.</param>
+        /// <param name="selector" type="Func&lt;T,String>" optional="true">A transform function to apply to each source element.</param>
         /// <returns type="String"></returns>
         if (separator == null) separator = "";
         if (selector == null) selector = Functions.Identity;
@@ -2673,7 +2689,7 @@
     // Overload:function(action<element,index>)
     Enumerable.prototype.doAction = function (action) {
         /// <summary>Performs the specified action on each element of the sequence.</summary>
-        /// <param name="action" type="Action&lt;T>_or_Action&lt;T,int>">Optional:the second parameter of the function represents the index of the source element.</param>
+        /// <param name="action" type="Action&lt;T,int>">action on each element. Optional:the second parameter of the function represents the index of the source element.</param>
         /// <returns type="Enumerable"></returns>
         var source = this;
         action = Utils.createLambda(action);
@@ -2701,7 +2717,7 @@
     // Overload:function(func<element,index,bool>)
     Enumerable.prototype.forEach = function (action) {
         /// <summary>Performs the specified action on each element of the sequence.</summary>
-        /// <param name="action" type="Action&lt;T>_or_Action&lt;T,int>">[return true;]continue iteration.[return false;]break iteration. Optional:the second parameter of the function represents the index of the source element.</param>
+        /// <param name="action" type="Action&lt;T,int>">[return true;]continue iteration.[return false;]break iteration. Optional:the second parameter of the function represents the index of the source element.</param>
         /// <returns type="void"></returns>
         action = Utils.createLambda(action);
 
@@ -2721,8 +2737,8 @@
     // Overload:function(separator,selector)
     Enumerable.prototype.write = function (separator, selector) {
         /// <summary>Do document.write.</summary>
-        /// <param name="separator" type="Optional:String">A String.</param>
-        /// <param name="selector" type="Optional:Func&lt;T,String>">A transform function to apply to each source element.</param>
+        /// <param name="separator" type="String" optional="true">A String.</param>
+        /// <param name="selector" type="Func&lt;T,String>" optional="true">A transform function to apply to each source element.</param>
         /// <returns type="void"></returns>
         if (separator == null) separator = "";
         selector = Utils.createLambda(selector);
@@ -2739,7 +2755,7 @@
     // Overload:function(selector)
     Enumerable.prototype.writeLine = function (selector) {
         /// <summary>Do document.writeln + br.</summary>
-        /// <param name="selector" type="Optional:Func&lt;T,String>">A transform function to apply to each source element.</param>
+        /// <param name="selector" type="Func&lt;T,String>" optional="true">A transform function to apply to each source element.</param>
         /// <returns type="void"></returns>
         selector = Utils.createLambda(selector);
 
@@ -2788,6 +2804,10 @@
     };
 
     Enumerable.prototype.share = function () {
+        /// <signature>
+        /// <summary>Shares cursor of all enumerators to the sequence.</summary>
+        /// <returns type="DisposableEnumerable"></returns>
+        /// </signature>
         /// <summary>Shares cursor of all enumerators to the sequence.</summary>
         /// <returns type="Enumerable"></returns>
         var source = this;
@@ -2817,6 +2837,10 @@
     };
 
     Enumerable.prototype.memoize = function () {
+        /// <signature>
+        /// <summary>Creates an enumerable that enumerates the original enumerable only once and caches its results.</summary>
+        /// <returns type="DisposableEnumerable"></returns>
+        /// </signature>
         /// <summary>Creates an enumerable that enumerates the original enumerable only once and caches its results.</summary>
         /// <returns type="Enumerable"></returns>
         var source = this;
@@ -2885,7 +2909,7 @@
 
     Enumerable.prototype.finallyAction = function (finallyAction) {
         /// <summary>do action if enumerate end or disposed or error occured.</summary>
-        /// <param name="handler" type="Action">finally execute.</param>
+        /// <param name="finallyAction" type="Action">finally execute.</param>
         /// <returns type="Enumerable"></returns>
         finallyAction = Utils.createLambda(finallyAction);
         var source = this;
@@ -2916,7 +2940,7 @@
     // Overload:function(selector)
     Enumerable.prototype.log = function (selector) {
         /// <summary>log object use console.log.</summary>
-        /// <param name="selector" type="Optional:Func&lt;T,String>">A transform function to apply to each source element.</param>
+        /// <param name="selector" type="Func&lt;T,String>" optional="true">A transform function to apply to each source element.</param>
         /// <returns type="Enumerable"></returns>
         selector = Utils.createLambda(selector);
 
@@ -2932,8 +2956,8 @@
     // Overload:function(message,selector)
     Enumerable.prototype.trace = function (message, selector) {
         /// <summary>Trace object use console.log.</summary>
-        /// <param name="message" type="Optional:String">Default is 'Trace'.</param>
-        /// <param name="selector" type="Optional:Func&lt;T,String>">A transform function to apply to each source element.</param>
+        /// <param name="message" type="String" optional="true">Default is 'Trace'.</param>
+        /// <param name="selector" type="Func&lt;T,String>" optional="true">A transform function to apply to each source element.</param>
         /// <returns type="Enumerable"></returns>
         if (message == null) message = "Trace";
         selector = Utils.createLambda(selector);
@@ -2961,17 +2985,28 @@
         return new OrderedEnumerable(this.source, keySelector, descending, this);
     };
     OrderedEnumerable.prototype.thenBy = function (keySelector) {
+        /// <signature>
+        /// <summary>Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.</summary>
+        /// <param name="keySelector" type="Func&lt;T,TKey>">A function to extract a key from each element.</param>
+        /// <returns type="OrderedEnumerable"></returns>
+        /// </signature>
         /// <summary>Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.</summary>
         /// <param name="keySelector" type="Func&lt;T,TKey>">A function to extract a key from each element.</param>
         return this.createOrderedEnumerable(keySelector, false);
     };
     OrderedEnumerable.prototype.thenByDescending = function (keySelector) {
+        /// <signature>
+        /// <summary>Performs a subsequent ordering of the elements in a sequence in descending order, according to a key.</summary>
+        /// <param name="keySelector" type="Func&lt;T,TKey>">A function to extract a key from each element.</param>
+        /// <returns type="OrderedEnumerable"></returns>
+        /// </signature>
         /// <summary>Performs a subsequent ordering of the elements in a sequence in descending order, according to a key.</summary>
         /// <param name="keySelector" type="Func&lt;T,TKey>">A function to extract a key from each element.</param>
         return this.createOrderedEnumerable(keySelector, true);
     };
     OrderedEnumerable.prototype.getEnumerator = function () {
         /// <summary>Returns an enumerator that iterates through the collection.</summary>
+        /// <returns type="IEnumerator"></returns>
         var self = this;
         var buffer;
         var indexes;
