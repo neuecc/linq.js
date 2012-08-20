@@ -2093,11 +2093,20 @@
     // Overload:function(seed,func)
     // Overload:function(seed,func,resultSelector)
     Enumerable.prototype.aggregate = function (seed, func, resultSelector) {
+        /// <signature>
+        ///   <summary>Applies an accumulator function over a sequence.</summary>
+        ///   <param name="func" type="Func&lt;TAccumulate,TSource,TAccumulate>">An accumulator function to be invoked on each element.</param>
+        /// </signature>
+        /// <signature>
+        ///   <summary>Applies an accumulator function over a sequence.</summary>
+        ///   <param name="seed" type="TAccumulate">the initial accumulator value.</param>
+        ///   <param name="func" type="Func&lt;TAccumulate,TSource,TAccumulate>">An accumulator function to be invoked on each element.</param>
+        ///   <param name="resultSelector" type="Func&lt;TAccumulate,TResult>" optional="true">A function to transform the final accumulator value into the result value.</param>
+        /// </signature>
         /// <summary>Applies an accumulator function over a sequence.</summary>
-        /// <param name="func_or_seed" type="Func&lt;T,T,T>_or_TAccumulate">Func is an accumulator function to be invoked on each element. Seed is the initial accumulator value.</param>
+        /// <param name="seed" type="Func&lt;T,T,T>_or_TAccumulate">Func is an accumulator function to be invoked on each element. Seed is the initial accumulator value.</param>
         /// <param name="func" type="Optional:Func&lt;TAccumulate,T,TAccumulate>" optional="true">An accumulator function to be invoked on each element.</param>
         /// <param name="resultSelector" type="Optional:Func&lt;TAccumulate,TResult>" optional="true">A function to transform the final accumulator value into the result value.</param>
-        /// <returns type="TResult"></returns>
         return this.scan(seed, func, resultSelector).last();
     };
 
@@ -2105,7 +2114,7 @@
     // Overload:function(selector)
     Enumerable.prototype.average = function (selector) {
         /// <summary>Computes the average of a sequence.</summary>
-        /// <param name="selector" type="Optional:Func&lt;T,Number>" optional="true">A transform function to apply to each element.</param>
+        /// <param name="selector" type="Func&lt;T,Number>" optional="true">A transform function to apply to each element.</param>
         /// <returns type="Number"></returns>
         selector = Utils.createLambda(selector);
 
@@ -2123,7 +2132,7 @@
     // Overload:function(predicate)
     Enumerable.prototype.count = function (predicate) {
         /// <summary>Returns the number of elements in a sequence.</summary>
-        /// <param name="predicate" type="Optional:Func&lt;T,Boolean>" optional="true">A function to test each element for a condition.</param>
+        /// <param name="predicate" type="Func&lt;T,Boolean>" optional="true">A function to test each element for a condition.</param>
         /// <returns type="Number"></returns>
         predicate = (predicate == null) ? Functions.True : Utils.createLambda(predicate);
 
@@ -2138,7 +2147,7 @@
     // Overload:function(selector)
     Enumerable.prototype.max = function (selector) {
         /// <summary>Returns the maximum value in a sequence</summary>
-        /// <param name="selector" type="Optional:Func&lt;T,TKey>" optional="true">A transform function to apply to each element.</param>
+        /// <param name="selector" type="Func&lt;T,TKey>" optional="true">A transform function to apply to each element.</param>
         /// <returns type="Number"></returns>
         if (selector == null) selector = Functions.Identity;
         return this.select(selector).aggregate(function (a, b) { return (a > b) ? a : b; });
@@ -2148,7 +2157,7 @@
     // Overload:function(selector)
     Enumerable.prototype.min = function (selector) {
         /// <summary>Returns the minimum value in a sequence</summary>
-        /// <param name="selector" type="Optional:Func&lt;T,TKey>" optional="true">A transform function to apply to each element.</param>
+        /// <param name="selector" type="Func&lt;T,TKey>" optional="true">A transform function to apply to each element.</param>
         /// <returns type="Number"></returns>
         if (selector == null) selector = Functions.Identity;
         return this.select(selector).aggregate(function (a, b) { return (a < b) ? a : b; });
@@ -2174,7 +2183,7 @@
     // Overload:function(selector)
     Enumerable.prototype.sum = function (selector) {
         /// <summary>Computes the sum of a sequence of values.</summary>
-        /// <param name="selector" type="Optional:Func&lt;T,TKey>" optional="true">A transform function to apply to each element.</param>
+        /// <param name="selector" type="Func&lt;T,TKey>" optional="true">A transform function to apply to each element.</param>
         /// <returns type="Number"></returns>
         if (selector == null) selector = Functions.Identity;
         return this.select(selector).aggregate(0, function (a, b) { return a + b; });
