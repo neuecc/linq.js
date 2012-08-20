@@ -10,6 +10,8 @@ test("aggregate", function () {
     Enumerable.range(1, 10).aggregate("a,b=>a+b").is(55);
     Enumerable.range(1, 10).aggregate(10, "a,b=>a+b").is(65);
     Enumerable.range(1, 10).aggregate(10, "a,b=>a+b", "val=>val*10").is(650);
+
+    Enumerable.range(1, 10).aggregate("", "s,x=>s+x", "'hoge' + $").is("hoge12345678910");
 });
 
 test("average", function () {

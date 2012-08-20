@@ -912,26 +912,22 @@
         });
     };
 
-    Enumerable.prototype.scan = function (seed, func, resultSelector) {
+    Enumerable.prototype.scan = function (seed, func) {
         /// <signature>
         ///   <summary>Applies an accumulator function over a sequence.</summary>
-        ///   <param name="func" type="Func&lt;TAccumulate,TSource,TAccumulate>">An accumulator function to be invoked on each element.</param>
+        ///   <param name="func" type="Func&lt;TSource,TSource,TSource>">An accumulator function to be invoked on each element.</param>
         ///   <returns type="Enumerable"></returns>
         /// </signature>
         /// <signature>
         ///   <summary>Applies an accumulator function over a sequence.</summary>
         ///   <param name="seed" type="TAccumulate">the initial accumulator value.</param>
         ///   <param name="func" type="Func&lt;TAccumulate,TSource,TAccumulate>">An accumulator function to be invoked on each element.</param>
-        ///   <param name="resultSelector" type="Func&lt;TAccumulate,TResult>" optional="true">A function to transform the final accumulator value into the result value.</param>
         ///   <returns type="Enumerable"></returns>
         /// </signature>
         /// <summary>Applies an accumulator function over a sequence.</summary>
         /// <param name="seed" type="Func&lt;T,T,T>_or_TAccumulate">Func is an accumulator function to be invoked on each element. Seed is the initial accumulator value.</param>
         /// <param name="func" type="Optional:Func&lt;TAccumulate,T,TAccumulate>" optional="true">An accumulator function to be invoked on each element.</param>
-        /// <param name="resultSelector" type="Optional:Func&lt;TAccumulate,TResult>" optional="true">A function to transform the final accumulator value into the result value.</param>
         /// <returns type="Enumerable"></returns>
-        if (resultSelector != null) return this.scan(seed, func).select(resultSelector);
-
         var isUseSeed;
         if (func == null) {
             func = Utils.createLambda(seed); // arguments[0]
@@ -2095,19 +2091,22 @@
     Enumerable.prototype.aggregate = function (seed, func, resultSelector) {
         /// <signature>
         ///   <summary>Applies an accumulator function over a sequence.</summary>
-        ///   <param name="func" type="Func&lt;TAccumulate,TSource,TAccumulate>">An accumulator function to be invoked on each element.</param>
+        ///   <param name="func" type="Func&lt;TSource,TSource,TSource>">An accumulator function to be invoked on each element.</param>
+        ///   <returns type="TAccumulate"></returns>
         /// </signature>
         /// <signature>
         ///   <summary>Applies an accumulator function over a sequence.</summary>
         ///   <param name="seed" type="TAccumulate">the initial accumulator value.</param>
         ///   <param name="func" type="Func&lt;TAccumulate,TSource,TAccumulate>">An accumulator function to be invoked on each element.</param>
         ///   <param name="resultSelector" type="Func&lt;TAccumulate,TResult>" optional="true">A function to transform the final accumulator value into the result value.</param>
+        ///   <returns type="TResult"></returns>
         /// </signature>
         /// <summary>Applies an accumulator function over a sequence.</summary>
         /// <param name="seed" type="Func&lt;T,T,T>_or_TAccumulate">Func is an accumulator function to be invoked on each element. Seed is the initial accumulator value.</param>
         /// <param name="func" type="Optional:Func&lt;TAccumulate,T,TAccumulate>" optional="true">An accumulator function to be invoked on each element.</param>
         /// <param name="resultSelector" type="Optional:Func&lt;TAccumulate,TResult>" optional="true">A function to transform the final accumulator value into the result value.</param>
-        return this.scan(seed, func, resultSelector).last();
+        resultSelector = Utils.createLambda(resultSelector);
+        return resultSelector(this.scan(seed, func, resultSelector).last());
     };
 
     // Overload:function()

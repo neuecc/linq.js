@@ -11,9 +11,14 @@
     <script type="text/javascript">
 
         
-        var seq = Enumerable.range(1, 10);
-        seq.average(
-        
+
+        var teko = Enumerable.range(1, 10).aggregate("", "s,x=>s+x", "'hoge' + $");
+
+        var zz = Enumerable.range(1, 10).scan("", "s,x=>s+x").select(
+            function (x) {
+                return 'hoge' + x;
+            }).toArray();
+        alert(zz);
 
 
     </script>

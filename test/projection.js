@@ -37,8 +37,6 @@ test("scan", function () {
     var seed = 100;
     actual = Enumerable.range(1, 10).scan(seed, "a,b=>a+b").toArray();
     deepEqual(actual, [100, 101, 103, 106, 110, 115, 121, 128, 136, 145, 155]);
-    actual = Enumerable.range(1, 10).scan(seed, "a,b=>a+b", "val=>val*10").toArray();
-    deepEqual(actual, [1000, 1010, 1030, 1060, 1100, 1150, 1210, 1280, 1360, 1450, 1550]);
 });
 
 test("select", function () {

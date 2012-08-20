@@ -706,10 +706,7 @@
 
     // Overload:function(func)
     // Overload:function(seed,func<value,element>)
-    // Overload:function(seed,func<value,element>,resultSelector)
-    Enumerable.prototype.scan = function (seed, func, resultSelector) {
-        if (resultSelector != null) return this.scan(seed, func).select(resultSelector);
-
+    Enumerable.prototype.scan = function (seed, func) {
         var isUseSeed;
         if (func == null) {
             func = Utils.createLambda(seed); // arguments[0]
@@ -1719,7 +1716,8 @@
     // Overload:function(seed,func)
     // Overload:function(seed,func,resultSelector)
     Enumerable.prototype.aggregate = function (seed, func, resultSelector) {
-        return this.scan(seed, func, resultSelector).last();
+        resultSelector = Utils.createLambda(resultSelector);
+        return resultSelector(this.scan(seed, func, resultSelector).last());
     };
 
     // Overload:function()
