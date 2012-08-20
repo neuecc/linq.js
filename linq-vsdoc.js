@@ -1650,14 +1650,14 @@
     // Overload:function(compareSelector)
     Enumerable.prototype.distinct = function (compareSelector) {
         /// <summary>Returns distinct elements from a sequence.</summary>
-        /// <param name="compareSelector" type="Optional:Func&lt;T,TKey>" optional="true">An equality comparer to compare values.</param>
+        /// <param name="compareSelector" type="Func&lt;T,TKey>" optional="true">An equality comparer to compare values.</param>
         /// <returns type="Enumerable"></returns>
         return this.except(Enumerable.empty(), compareSelector);
     };
 
     Enumerable.prototype.distinctUntilChanged = function (compareSelector) {
         /// <summary>Returns distinct continuous elements from a sequence.</summary>
-        /// <param name="compareSelector" type="Optional:Func&lt;T,TKey>" optional="true">An equality comparer to compare values.</param>
+        /// <param name="compareSelector" type="Func&lt;T,TKey>" optional="true">An equality comparer to compare values.</param>
         /// <returns type="Enumerable"></returns>
         compareSelector = Utils.createLambda(compareSelector);
         var source = this;
@@ -1698,8 +1698,8 @@
     // Overload:function(second, compareSelector)
     Enumerable.prototype.except = function (second, compareSelector) {
         /// <summary>Produces the set difference of two sequences.</summary>
-        /// <param name="second" type="T[]">An T[] whose Elements that also occur in the first sequence will cause those elements to be removed from the returned sequence.</param>
-        /// <param name="compareSelector" type="Optional:Func&lt;T,TKey>" optional="true">An equality comparer to compare values.</param>
+        /// <param name="second" type="Enumerable&lt;T>">An Enumerable&lt;T> whose Elements that also occur in the first sequence will cause those elements to be removed from the returned sequence.</param>
+        /// <param name="compareSelector" type="Func&lt;T,TKey>" optional="true">An equality comparer to compare values.</param>
         /// <returns type="Enumerable"></returns>
         compareSelector = Utils.createLambda(compareSelector);
         var source = this;
@@ -1732,8 +1732,8 @@
     // Overload:function(second, compareSelector)
     Enumerable.prototype.intersect = function (second, compareSelector) {
         /// <summary>Produces the set difference of two sequences.</summary>
-        /// <param name="second" type="T[]">An T[] whose distinct elements that also appear in the first sequence will be returned.</param>
-        /// <param name="compareSelector" type="Optional:Func&lt;T,TKey>" optional="true">An equality comparer to compare values.</param>
+        /// <param name="second" type="Enumerable&lt;T>">An Enumerable&lt;T> whose distinct elements that also appear in the first sequence will be returned.</param>
+        /// <param name="compareSelector" type="Func&lt;T,TKey>" optional="true">An equality comparer to compare values.</param>
         /// <returns type="Enumerable"></returns>
         compareSelector = Utils.createLambda(compareSelector);
         var source = this;
@@ -1769,8 +1769,8 @@
     // Overload:function(second, compareSelector)
     Enumerable.prototype.sequenceEqual = function (second, compareSelector) {
         /// <summary>Determines whether two sequences are equal by comparing the elements.</summary>
-        /// <param name="second" type="T[]">An T[] to compare to the first sequence.</param>
-        /// <param name="compareSelector" type="Optional:Func&lt;T,TKey>" optional="true">An equality comparer to compare values.</param>
+        /// <param name="second" type="Enumerable&lt;T>">An Enumerable&lt;T> to compare to the first sequence.</param>
+        /// <param name="compareSelector" type="Func&lt;T,TKey>" optional="true">An equality comparer to compare values.</param>
         /// <returns type="Enumerable"></returns>
         compareSelector = Utils.createLambda(compareSelector);
 
@@ -1799,8 +1799,8 @@
 
     Enumerable.prototype.union = function (second, compareSelector) {
         /// <summary>Produces the union of two sequences.</summary>
-        /// <param name="second" type="T[]">An T[] whose distinct elements form the second set for the union.</param>
-        /// <param name="compareSelector" type="Optional:Func&lt;T,TKey>" optional="true">An equality comparer to compare values.</param>
+        /// <param name="second" type="Enumerable&lt;T>">An Enumerable&lt;T> whose distinct elements form the second set for the union.</param>
+        /// <param name="compareSelector" type="Func&lt;T,TKey>" optional="true">An equality comparer to compare values.</param>
         /// <returns type="Enumerable"></returns>
         compareSelector = Utils.createLambda(compareSelector);
         var source = this;
