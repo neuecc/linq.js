@@ -1851,13 +1851,13 @@
 
     Enumerable.prototype.orderBy = function (keySelector) {
         /// <summary>Sorts the elements of a sequence in ascending order according to a key.</summary>
-        /// <param name="keySelector" type="Optional:Func&lt;T,TKey>">A function to extract a key from an element.</param>
+        /// <param name="keySelector" type="Func&lt;T,TKey>" optional="true">A function to extract a key from an element.</param>
         return new OrderedEnumerable(this, keySelector, false);
     };
 
     Enumerable.prototype.orderByDescending = function (keySelector) {
         /// <summary>Sorts the elements of a sequence in descending order according to a key.</summary>
-        /// <param name="keySelector" type="Optional:Func&lt;T,TKey>">A function to extract a key from an element.</param>
+        /// <param name="keySelector" type="Func&lt;T,TKey>" optional="true">A function to extract a key from an element.</param>
         return new OrderedEnumerable(this, keySelector, true);
     };
 
@@ -1907,7 +1907,7 @@
 
     Enumerable.prototype.weightedSample = function (weightSelector) {
         /// <summary>Weighted sampling sequence by weightSelector. The result is infinite sequence.</summary>
-        /// <param name="weightSelector" type="Optional:Func&lt;T,TKey>">A function to select a weight from an element.</param>
+        /// <param name="weightSelector" type="Func&lt;T,TKey>" optional="true">A function to select a weight from an element.</param>
         /// <returns type="Enumerable"></returns>
         weightSelector = Utils.createLambda(weightSelector);
         var source = this;
@@ -1961,10 +1961,10 @@
     // Overload:function(keySelector,elementSelector,resultSelector,compareSelector)
     Enumerable.prototype.groupBy = function (keySelector, elementSelector, resultSelector, compareSelector) {
         /// <summary>Groups the elements of a sequence according to a specified key selector function.</summary>
-        /// <param name="keySelector" type="Func&lt;T,TKey>">A function to extract the key for each element.</param>
-        /// <param name="elementSelector" type="Optional:Func&lt;T,TElement>">A function to map each source element to an element in an Grouping&lt;TKey, TElement>.</param>
-        /// <param name="resultSelector" type="Optional:Func&lt;TKey,Enumerable&lt;TElement>,TResult>">A function to create a result value from each group.</param>
-        /// <param name="compareSelector" type="Optional:Func&lt;TKey,TCompare>" optional="true">An equality comparer to compare values.</param>
+        /// <param name="keySelector" type="Func&lt;T,TKey>" optional="true">A function to extract the key for each element.</param>
+        /// <param name="elementSelector" type="Func&lt;T,TElement>" optional="true">A function to map each source element to an element in an Grouping&lt;TKey, TElement>.</param>
+        /// <param name="resultSelector" type="Func&lt;TKey,Enumerable&lt;TElement>,TResult>" optional="true">A function to create a result value from each group.</param>
+        /// <param name="compareSelector" type="Func&lt;TKey,TCompare>" optional="true">An equality comparer to compare values.</param>
         /// <returns type="Enumerable"></returns>
         var source = this;
         keySelector = Utils.createLambda(keySelector);
@@ -1999,10 +1999,10 @@
     // Overload:function(keySelector,elementSelector,resultSelector,compareSelector)
     Enumerable.prototype.partitionBy = function (keySelector, elementSelector, resultSelector, compareSelector) {
         /// <summary>Create Group by continuation key.</summary>
-        /// <param name="keySelector" type="Func&lt;T,TKey>">A function to extract the key for each element.</param>
-        /// <param name="elementSelector" type="Optional:Func&lt;T,TElement>">A function to map each source element to an element in an Grouping&lt;TKey, TElement>.</param>
-        /// <param name="resultSelector" type="Optional:Func&lt;TKey,Enumerable&lt;TElement>,TResult>">A function to create a result value from each group.</param>
-        /// <param name="compareSelector" type="Optional:Func&lt;TKey,TCompare>" optional="true">An equality comparer to compare values.</param>
+        /// <param name="keySelector" type="Func&lt;T,TKey>" optional="true">A function to extract the key for each element.</param>
+        /// <param name="elementSelector" type="Func&lt;T,TElement>" optional="true">A function to map each source element to an element in an Grouping&lt;TKey, TElement>.</param>
+        /// <param name="resultSelector" type="Func&lt;TKey,Enumerable&lt;TElement>,TResult>" optional="true">A function to create a result value from each group.</param>
+        /// <param name="compareSelector" type="Func&lt;TKey,TCompare>" optional="true">An equality comparer to compare values.</param>
         /// <returns type="Enumerable"></returns>
         var source = this;
         keySelector = Utils.createLambda(keySelector);
