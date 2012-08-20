@@ -1602,7 +1602,7 @@
     Enumerable.prototype.contains = function (value, compareSelector) {
         /// <summary>Determines whether a sequence contains a specified element.</summary>
         /// <param name="value" type="T">The value to locate in the sequence.</param>
-        /// <param name="compareSelector" type="Optional:Func&lt;T,TKey>" optional="true">An equality comparer to compare values.</param>
+        /// <param name="compareSelector" type="Func&lt;T,TKey>" optional="true">An equality comparer to compare values.</param>
         /// <returns type="Boolean"></returns>
         compareSelector = Utils.createLambda(compareSelector);
         var enumerator = this.getEnumerator();
@@ -1618,10 +1618,12 @@
     };
 
     Enumerable.prototype.defaultIfEmpty = function (defaultValue) {
-        /// <summary>Returns the elements of the specified sequence or the specified value in a singleton collection if the sequence is empty.</summary>
-        /// <param name="defaultValue" type="T">The value to return if the sequence is empty.</param>
+        /// <summary>Returns the elements of the specified sequence or the specified value in a singleton collection if the sequence is empty.
+        /// &#10;default of defautValue is null.</summary>
+        /// <param name="defaultValue" type="T" optional="true">The value to return if the sequence is empty.</param>
         /// <returns type="Enumerable"></returns>
         var source = this;
+        if (defaultValue === undefined) defaultValue = null;
 
         return new Enumerable(function () {
             var enumerator;
@@ -1633,7 +1635,8 @@
                     if (enumerator.moveNext()) {
                         isFirst = false;
                         return this.yieldReturn(enumerator.current());
-                    } else if (isFirst) {
+                    }
+                    else if (isFirst) {
                         isFirst = false;
                         return this.yieldReturn(defaultValue);
                     }
@@ -2198,10 +2201,12 @@
     };
 
     Enumerable.prototype.elementAtOrDefault = function (index, defaultValue) {
-        /// <summary>Returns the element at a specified index in a sequence or a default value if the index is out of range.</summary>
+        /// <summary>Returns the element at a specified index in a sequence or a default value if the index is out of range.
+        /// &#10;default of defautValue is null.</summary>
         /// <param name="index" type="Number" integer="true">The zero-based index of the element to retrieve.</param>
-        /// <param name="defaultValue" type="T">The value if the index is outside the bounds then send.</param>
+        /// <param name="defaultValue" type="T" optinal="true">The value if the index is outside the bounds then send.</param>
         /// <returns type="T"></returns>
+        if (defaultValue === undefined) defaultValue = null;
         var value;
         var found = false;
         this.forEach(function (x, i) {
@@ -2238,10 +2243,12 @@
     // Overload:function(defaultValue)
     // Overload:function(defaultValue,predicate)
     Enumerable.prototype.firstOrDefault = function (defaultValue, predicate) {
-        /// <summary>Returns the first element of a sequence, or a default value.</summary>
-        /// <param name="defaultValue" type="T">The value if not found then send.</param>
+        /// <summary>Returns the first element of a sequence, or a default value.
+        /// &#10;default of defautValue is null.</summary>
+        /// <param name="defaultValue" type="T" optional="true">The value if not found then send.</param>
         /// <param name="predicate" type="Optional:Func&lt;T,Boolean>">A function to test each element for a condition.</param>
         /// <returns type="T"></returns>
+        if (defaultValue === undefined) defaultValue = null;
         if (predicate != null) return this.where(predicate).firstOrDefault(defaultValue);
 
         var value;
@@ -2276,10 +2283,12 @@
     // Overload:function(defaultValue)
     // Overload:function(defaultValue,predicate)
     Enumerable.prototype.lastOrDefault = function (defaultValue, predicate) {
-        /// <summary>Returns the last element of a sequence, or a default value.</summary>
-        /// <param name="defaultValue" type="T">The value if not found then send.</param>
+        /// <summary>Returns the last element of a sequence, or a default value.
+        /// &#10;default of defautValue is null.</summary>
+        /// <param name="defaultValue" type="T" optional="true">The value if not found then send.</param>
         /// <param name="predicate" type="Optional:Func&lt;T,Boolean>">A function to test each element for a condition.</param>
         /// <returns type="T"></returns>
+        if (defaultValue === undefined) defaultValue = null;
         if (predicate != null) return this.where(predicate).lastOrDefault(defaultValue);
 
         var value;
@@ -2315,10 +2324,12 @@
     // Overload:function(defaultValue)
     // Overload:function(defaultValue,predicate)
     Enumerable.prototype.singleOrDefault = function (defaultValue, predicate) {
-        /// <summary>Returns a single, specific element of a sequence of values, or a default value if no such element is found.</summary>
-        /// <param name="defaultValue" type="T">The value if not found then send.</param>
+        /// <summary>Returns a single, specific element of a sequence of values, or a default value if no such element is found.
+        /// &#10;default of defautValue is null.</summary>
+        /// <param name="defaultValue" type="T" optional="true">The value if not found then send.</param>
         /// <param name="predicate" type="Optional:Func&lt;T,Boolean>">A function to test each element for a condition.</param>
         /// <returns type="T"></returns>
+        if (defaultValue === undefined) defaultValue = null;
         if (predicate != null) return this.where(predicate).singleOrDefault(defaultValue);
 
         var value;
@@ -3053,6 +3064,7 @@
     };
 
     ArrayEnumerable.prototype.elementAtOrDefault = function (index, defaultValue) {
+        if (defaultValue === undefined) defaultValue = null;
         var source = this.getSource();
         return (0 <= index && index < source.length)
             ? source[index]
@@ -3067,6 +3079,7 @@
     };
 
     ArrayEnumerable.prototype.firstOrDefault = function (defaultValue, predicate) {
+        if (defaultValue === undefined) defaultValue = null;
         if (predicate != null) {
             return Enumerable.prototype.firstOrDefault.apply(this, arguments);
         }
@@ -3083,6 +3096,7 @@
     };
 
     ArrayEnumerable.prototype.lastOrDefault = function (defaultValue, predicate) {
+        if (defaultValue === undefined) defaultValue = null;
         if (predicate != null) {
             return Enumerable.prototype.lastOrDefault.apply(this, arguments);
         }

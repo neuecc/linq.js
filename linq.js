@@ -1296,6 +1296,7 @@
 
     Enumerable.prototype.defaultIfEmpty = function (defaultValue) {
         var source = this;
+        if (defaultValue === undefined) defaultValue = null;
 
         return new Enumerable(function () {
             var enumerator;
@@ -1307,7 +1308,8 @@
                     if (enumerator.moveNext()) {
                         isFirst = false;
                         return this.yieldReturn(enumerator.current());
-                    } else if (isFirst) {
+                    }
+                    else if (isFirst) {
                         isFirst = false;
                         return this.yieldReturn(defaultValue);
                     }
@@ -1796,6 +1798,7 @@
     };
 
     Enumerable.prototype.elementAtOrDefault = function (index, defaultValue) {
+        if (defaultValue === undefined) defaultValue = null;
         var value;
         var found = false;
         this.forEach(function (x, i) {
@@ -1829,6 +1832,7 @@
     // Overload:function(defaultValue)
     // Overload:function(defaultValue,predicate)
     Enumerable.prototype.firstOrDefault = function (defaultValue, predicate) {
+        if (defaultValue === undefined) defaultValue = null;
         if (predicate != null) return this.where(predicate).firstOrDefault(defaultValue);
 
         var value;
@@ -1860,6 +1864,7 @@
     // Overload:function(defaultValue)
     // Overload:function(defaultValue,predicate)
     Enumerable.prototype.lastOrDefault = function (defaultValue, predicate) {
+        if (defaultValue === undefined) defaultValue = null;
         if (predicate != null) return this.where(predicate).lastOrDefault(defaultValue);
 
         var value;
@@ -1892,6 +1897,7 @@
     // Overload:function(defaultValue)
     // Overload:function(defaultValue,predicate)
     Enumerable.prototype.singleOrDefault = function (defaultValue, predicate) {
+        if (defaultValue === undefined) defaultValue = null;
         if (predicate != null) return this.where(predicate).singleOrDefault(defaultValue);
 
         var value;
@@ -2535,6 +2541,7 @@
     };
 
     ArrayEnumerable.prototype.elementAtOrDefault = function (index, defaultValue) {
+        if (defaultValue === undefined) defaultValue = null;
         var source = this.getSource();
         return (0 <= index && index < source.length)
             ? source[index]
@@ -2549,6 +2556,7 @@
     };
 
     ArrayEnumerable.prototype.firstOrDefault = function (defaultValue, predicate) {
+        if (defaultValue === undefined) defaultValue = null;
         if (predicate != null) {
             return Enumerable.prototype.firstOrDefault.apply(this, arguments);
         }
@@ -2565,6 +2573,7 @@
     };
 
     ArrayEnumerable.prototype.lastOrDefault = function (defaultValue, predicate) {
+        if (defaultValue === undefined) defaultValue = null;
         if (predicate != null) {
             return Enumerable.prototype.lastOrDefault.apply(this, arguments);
         }
