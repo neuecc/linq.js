@@ -66,6 +66,7 @@
     <Content Include="extensions\linq.jquery.js" />
     <Content Include="extensions\linq.qunit.js" />
     <Content Include="internal\lib\AjaxMin.dll" />
+    <Content Include="internal\lib\benchmark.js" />
     <Content Include="internal\lib\compiler.jar" />
     <Content Include="internal\lib\Ionic.Zip.dll" />
     <Content Include="internal\lib\jQuery\jquery-1.4.1-vsdoc.js" />

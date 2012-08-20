@@ -26,15 +26,18 @@ test("first", function () {
 });
 
 test("firstOrDefault", function () {
-    actual = Enumerable.range(1, 10).firstOrDefault(4);
+    actual = Enumerable.range(1, 10).firstOrDefault(null, 4);
     equal(actual, 1);
-    actual = Enumerable.range(1, 10).skip(11).firstOrDefault(4);
+    actual = Enumerable.range(1, 10).skip(11).firstOrDefault(null, 4);
     equal(actual, 4);
 
-    actual = Enumerable.range(1, 10).firstOrDefault(4, "i=>i*3==6");
+    actual = Enumerable.range(1, 10).firstOrDefault("i=>i*3==6", 4);
     equal(actual, 2);
-    actual = Enumerable.range(1, 10).firstOrDefault(40, "i=>i>13");
+    actual = Enumerable.range(1, 10).firstOrDefault("i=>i>13", 40);
     equal(actual, 40);
+
+    Enumerable.range(1, 10).firstOrDefault().is(1);
+    (Enumerable.empty().firstOrDefault() === null).isTrue();
 });
 
 test("last", function () {
@@ -46,15 +49,18 @@ test("last", function () {
 });
 
 test("lastOrDefault", function () {
-    actual = Enumerable.range(1, 10).lastOrDefault(34);
+    actual = Enumerable.range(1, 10).lastOrDefault(null, 34);
     equal(actual, 10);
-    actual = Enumerable.range(1, 10).skip(11).lastOrDefault(34);
+    actual = Enumerable.range(1, 10).skip(11).lastOrDefault(null, 34);
     equal(actual, 34);
 
-    actual = Enumerable.range(1, 10).lastOrDefault(4, "i=>i*3<=6");
+    actual = Enumerable.range(1, 10).lastOrDefault("i=>i*3<=6", 4);
     equal(actual, 2);
-    actual = Enumerable.range(1, 10).lastOrDefault(40, "i=>i>13");
+    actual = Enumerable.range(1, 10).lastOrDefault("i=>i>13", 40);
     equal(actual, 40);
+
+    Enumerable.range(1, 10).lastOrDefault().is(10);
+    (Enumerable.empty().lastOrDefault() === null).isTrue();
 });
 
 test("single", function () {
@@ -66,15 +72,20 @@ test("single", function () {
 });
 
 test("singleOrDefault", function () {
-    actual = Enumerable.range(1, 1).singleOrDefault(34);
+    actual = Enumerable.range(1, 1).singleOrDefault(null, 34);
     equal(actual, 1);
-    actual = Enumerable.range(1, 10).skip(11).singleOrDefault(34);
+    actual = Enumerable.range(1, 10).skip(11).singleOrDefault(null, 34);
     equal(actual, 34);
 
-    actual = Enumerable.range(1, 10).singleOrDefault(4, "i=>i*3==6");
+    actual = Enumerable.range(1, 10).singleOrDefault("i=>i*3==6", 4);
     equal(actual, 2);
-    actual = Enumerable.range(1, 10).singleOrDefault(40, "i=>i>13");
+    actual = Enumerable.range(1, 10).singleOrDefault("i=>i>13", 40);
     equal(actual, 40);
+
+    Enumerable.range(1, 1).singleOrDefault().is(1);
+    Enumerable.range(1, 10).singleOrDefault("i=>i*3==6").is(2);
+    (Enumerable.range(1, 10).singleOrDefault("i=>i>13") === null).isTrue();
+    (Enumerable.empty().singleOrDefault() === null).isTrue();
 });
 
 test("skip", function () {

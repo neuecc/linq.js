@@ -7,14 +7,13 @@
     <script type="text/javascript" src="lib/jQuery/jquery-1.4.1.js"></script>
     <script type="text/javascript" src="../extensions/linq.jquery.js"></script>
     <script type="text/javascript" src="../extensions/linq.rx.js"></script>
+    <script type="text/javascript" src="lib/benchmark.js"></script>
     <script type="text/javascript">
 
-        var seq = Enumerable.range(1, 10);
 
-        Enumerable.empty().alternate(-1).writeLine();
-        
-        
-        
+        var tes = Enumerable.range(1, 10).firstOrDefault("i=>i*3==6", 4);
+
+        alert(tes);
 
     </script>
 </head>
