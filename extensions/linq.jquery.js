@@ -21,7 +21,7 @@
         return this.aggregate($(), function (j, x) { return j.add(x); });
     };
 
-    Enumerable.prototype.tojQueryRaw = function () {
+    Enumerable.prototype.tojQueryAsArray = function () {
         /// <summary>Enumerable to jQuery. This behavior is $(this.toArray()).</summary>
         return $(this.toArray());
     };
