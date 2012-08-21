@@ -224,13 +224,15 @@
 
     Enumerable.choice = function () // variable argument
     {
-        var args = (arguments[0] instanceof Array) ? arguments[0]
-                 : (arguments[0].getEnumerator != null) ? arguments[0].toArray()
-                 : arguments;
+        var args = arguments;
 
         return new Enumerable(function () {
             return new IEnumerator(
-                Functions.Blank,
+                function () {
+                    args = (args[0] instanceof Array) ? args[0]
+                        : (args[0].getEnumerator != null) ? args[0].toArray()
+                        : args;
+                },
                 function () {
                     return this.yieldReturn(args[Math.floor(Math.random() * args.length)]);
                 },
@@ -240,14 +242,16 @@
 
     Enumerable.cycle = function () // variable argument
     {
-        var args = (arguments[0] instanceof Array) ? arguments[0]
-                 : (arguments[0].getEnumerator != null) ? arguments[0].toArray()
-                 : arguments;
+        var args = arguments;
 
         return new Enumerable(function () {
             var index = 0;
             return new IEnumerator(
-                Functions.Blank,
+                function () {
+                    args = (args[0] instanceof Array) ? args[0]
+                        : (args[0].getEnumerator != null) ? args[0].toArray()
+                        : args;
+                },
                 function () {
                     if (index >= args.length) index = 0;
                     return this.yieldReturn(args[index++]);

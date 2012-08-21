@@ -296,6 +296,23 @@
 
     Enumerable.choice = function (elements) // variable argument
     {
+        /// <signature>
+        ///   <summary>
+        ///   Random choice from arguments.
+        ///   &#10;Usage: choice(1,2,3) => 1,3,2,3,3,2,1...
+        ///   &#10;Usage: choice([1,2,3]) => 1,3,2,3,3,2,1...
+        ///   </summary>
+        ///   <param type="params T[]" name="elements">Array or variable elements</param>
+        ///   <returns type="Enumerable"></returns>
+        /// </signature>
+        /// <signature>
+        ///   <summary>
+        ///   Random choice from arguments.
+        ///   &#10;Usage: choice(Enumerable.range(1,3)) => 1,3,2,3,3,2,1...
+        ///   </summary>
+        ///   <param type="Enumerable" name="elements">Enumerable elements</param>
+        ///   <returns type="Enumerable"></returns>
+        /// </signature>
         /// <summary>
         /// Random choice from arguments.
         /// &#10;Usage: choice(1,2,3) => 1,3,2,3,3,2,1...
@@ -303,13 +320,15 @@
         /// </summary>
         /// <param type="params T[]" name="elements">Array or Enumerable or variable elements</param>
         /// <returns type="Enumerable"></returns>
-        var args = (arguments[0] instanceof Array) ? arguments[0]
-                 : (arguments[0].getEnumerator != null) ? arguments[0].toArray()
-                 : arguments;
+        var args = arguments;
 
         return new Enumerable(function () {
             return new IEnumerator(
-                Functions.Blank,
+                function () {
+                    args = (args[0] instanceof Array) ? args[0]
+                        : (args[0].getEnumerator != null) ? args[0].toArray()
+                        : args;
+                },
                 function () {
                     return this.yieldReturn(args[Math.floor(Math.random() * args.length)]);
                 },
@@ -319,6 +338,23 @@
 
     Enumerable.cycle = function (elements) // variable argument
     {
+        /// <signature>
+        ///   <summary>
+        ///   Cycle repeat from arguments.
+        ///   &#10;Usage: cycle(1,2,3) => 1,2,3,1,2,3,1,2,3...
+        ///   &#10;Usage: cycle([1,2,3]) => 1,2,3,1,2,3,1,2,3...
+        ///   </summary>
+        ///   <param type="params T[]" name="elements">Array or variable elements</param>
+        ///   <returns type="Enumerable"></returns>
+        /// </signature>
+        /// <signature>
+        ///   <summary>
+        ///   Cycle repeat from arguments.
+        ///   &#10;Usage: cycle(Enumerable.range(1,3)) => 1,2,3,1,2,3,1,2,3...
+        ///   </summary>
+        ///   <param type="Enumerable" name="elements">Enumerable elements</param>
+        ///   <returns type="Enumerable"></returns>
+        /// </signature>
         /// <summary>
         /// Cycle repeat from arguments.
         /// &#10;Usage: cycle(1,2,3) => 1,2,3,1,2,3,1,2,3...
@@ -326,14 +362,16 @@
         /// </summary>
         /// <param type="params T[]" name="elements">Array or Enumerable or variable elements</param>
         /// <returns type="Enumerable"></returns>
-        var args = (arguments[0] instanceof Array) ? arguments[0]
-                 : (arguments[0].getEnumerator != null) ? arguments[0].toArray()
-                 : arguments;
+        var args = arguments;
 
         return new Enumerable(function () {
             var index = 0;
             return new IEnumerator(
-                Functions.Blank,
+                function () {
+                    args = (args[0] instanceof Array) ? args[0]
+                        : (args[0].getEnumerator != null) ? args[0].toArray()
+                        : args;
+                },
                 function () {
                     if (index >= args.length) index = 0;
                     return this.yieldReturn(args[index++]);

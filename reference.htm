@@ -122,18 +122,26 @@
         </thead>
         <tbody>
             <tr>
-                <td>
+                <td rowspan="2">
                     choice
                 </td>
-                <td>
+                <td rowspan="2">
                     Enumerable
                 </td>
                 <td>
-                    params T obj
+                    params T[] elements
                 </td>
                 <td>
                     <pre>Enumerable.choice("a","b","c","d").take(10)</pre>
                     <pre>Enumerable.choice(["a","b","c","d"]).take(10)</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Enumerable elements
+                </td>
+                <td>
+                    <pre>Enumerable.choice(Enumerable.range(1,3)).take(10)</pre>
                 </td>
             </tr>
             <tr>

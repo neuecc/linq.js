@@ -10,19 +10,8 @@
     <script type="text/javascript" src="lib/benchmark.js"></script>
     <script type="text/javascript">
 
+        
 
-
-        var teko = Enumerable.range(1, 10);
-
-        var enumerator;
-        var hoge = Enumerable.Utils.createEnumerator(
-            function () { enumerator = Enumerable.range(1, 10).getEnumerator(); },
-            function () {
-                return (enumerator.moveNext())
-                    ? this.yieldReturn(enumerator.current())
-                    : this.yieldBreak();
-            },
-            function () { enumerator.dispose(); });
 
     </script>
 </head>
