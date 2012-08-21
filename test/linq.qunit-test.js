@@ -42,8 +42,10 @@ test("function.is", function () {
 test("function.expression", function () {
 
     Math.abs(-100).is(function (x) { return x < 200; });
-
     Math.abs(-100).isExpr("$ < 200");
+
+    Math.abs(-100).isNot(function (x) { return x !== 100; });
+    Math.abs(-100).isNotExpr("$ !== 100");
 });
 
 test("primitive.isNot", function () {
@@ -77,10 +79,12 @@ test("function.isNot", function () {
 
 test("isTrue", function () {
     (true).isTrue();
+    (Enumerable.empty().firstOrDefault() === null).isTrue();
 });
 
 test("isFalse", function () {
     (false).isFalse();
+    Enumerable.range(1, 10).all("$<5").isFalse();
 });
 
 test("catch", function () {

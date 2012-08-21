@@ -1,4 +1,4 @@
-﻿// binding for jQuery
+﻿// extension for jQuery
 
 (function (root) {
     if (root.Enumerable == null) {

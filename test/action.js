@@ -11,7 +11,7 @@ test("doAction", function ()
     var array = [];
     actual = Enumerable.range(1, 10).doAction(function (i) { array.push(i) }).toArray();
     deepEqual(actual, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-
+    
     array = []
     var array2 = []
     actual = Enumerable.range(1, 10).doAction(function (v, i) { array.push(v); array2.push(i); }).toArray();

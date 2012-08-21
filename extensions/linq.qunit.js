@@ -56,7 +56,7 @@
         /// </signature>
         /// <signature>
         ///   <summary>ok(true). expected function is passed actual. if result is true then ok.</summary>
-        ///   <param name="expected" type="Function">function checker, return boolean</param>
+        ///   <param name="expected" type="Func&lt;T,bool>">function checker, return boolean</param>
         ///   <param name="message" type="String" optional="true">assertion message</param>
         ///   <returns type="void"></returns>
         /// </signature>
@@ -92,7 +92,7 @@
         /// </signature>
         /// <signature>
         ///   <summary>ok(false). expected function pass actual. if result is false then ok.</summary>
-        ///   <param name="expected" type="Function">function checker, return boolean</param>
+        ///   <param name="expected" type="Func&lt;T,bool>">function checker, return boolean</param>
         ///   <param name="message" type="String" optional="true">assertion message</param>
         ///   <returns type="void"></returns>
         /// </signature>
@@ -122,9 +122,16 @@
         ok(Enumerable.Utils.createLambda(expression)(this.valueOf()), message);
     });
 
+    defineToObject("isNotExpr", function (expression, message) {
+        /// <summary>ok(false). string expression is converted lambda. lambda is passed actual. if result is false then ok.</summary>
+        /// <param name="expression" type="String">expression string converted to function checker, lambda return boolean</param>
+        /// <param name="message" type="String" optional="true">assertion message</param>
+        /// <returns type="void"></returns>
+        ok(!Enumerable.Utils.createLambda(expression)(this.valueOf()), message);
+    });
+    
     defineToObject("isTrue", function (message) {
         /// <summary>shorthand of is(true).</summary>
-        /// <param name="expected" type="Object">expected value.</param>
         /// <param name="message" type="String" optional="true">assertion message.</param>
         /// <returns type="void"></returns>
         this.is(true, message);
@@ -132,7 +139,6 @@
 
     defineToObject("isFalse", function (message) {
         /// <summary>shorthand of is(false).</summary>
-        /// <param name="expected" type="Object">expected value.</param>
         /// <param name="message" type="String" optional="true">assertion message.</param>
         /// <returns type="void"></returns>
         this.is(false, message);
@@ -140,7 +146,7 @@
 
     Enumerable.Assert.expectError = function (testAction, message) {
         /// <summary>Throw error in testCode.</summary>
-        /// <param name="testCode" type="Function">action function.</param>
+        /// <param name="testCode" type="Action">action function.</param>
         /// <param name="message" type="String" optional="true">assertion message.</param>
         /// <returns type="Error"></returns>
         var error = executeCode(testAction);
@@ -159,6 +165,7 @@
         /// <summary>Does not throw error in testCode.</summary>
         /// <param name="testCode" type="Function">action function.</param>
         /// <param name="message" type="String" optional="true">assertion message.</param>
+        /// <returns type="void"></returns>
         var error = executeCode(testAction);
 
         if (error != null) {

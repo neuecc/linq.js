@@ -2763,7 +2763,7 @@ grouping.where("$.x % 10 == 0").select("$.id + ':' + $.x")</pre>
         </thead>
     </table>
     <h2>
-        jQuery Binding</h2>
+        jQuery Extension(linq.jquery.js)</h2>
     <table>
         <thead>
             <tr>
@@ -2798,6 +2798,20 @@ grouping.where("$.x % 10 == 0").select("$.id + ':' + $.x")</pre>
             </tr>
             <tr>
                 <td>
+                    tojQueryAsArray
+                </td>
+                <td>
+                    jQuery
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>// Enumerable.repeat("foo",10).tojQueryAsArray()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     toEnumerable
                 </td>
                 <td>
@@ -2813,7 +2827,7 @@ grouping.where("$.x % 10 == 0").select("$.id + ':' + $.x")</pre>
         </tbody>
     </table>
     <h2>
-        RxJS Binding</h2>
+        RxJS Extension(linq.rx.js)</h2>
     <table>
         <thead>
             <tr>
@@ -2858,6 +2872,172 @@ grouping.where("$.x % 10 == 0").select("$.id + ':' + $.x")</pre>
                 </td>
                 <td>
                     <pre>// Rx.Observable.range(1,10).toEnumerable()</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>
+        QUnit Extension(linq.qunit.js)</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan="3">
+                    is
+                </td>
+                <td rowspan="3">
+                    void
+                </td>
+                <td>
+                    Object expected, [string message]
+                </td>
+                <td>
+                    <pre>// Math.pow(10, 2).is(100, "all objects are extended")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    params Object[] expected
+                </td>
+                <td>
+                    <pre>// Enumerable.range(1,3).is(1,2,3) // collection deepEqual</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Func&lt;T,bool> checker, [string message]
+                </td>
+                <td>
+                    <pre>// ({ a: "foo", b: "bar" }).is(function (x) { return x.a == "foo" && x.b == "bar" }, "checker must be function(can not use string lambda)")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td rowspan="3">
+                    isNot
+                </td>
+                <td rowspan="3">
+                    void
+                </td>
+                <td>
+                    Object expected, [string message]
+                </td>
+                <td>
+                    <pre>// Math.pow(10, 2).isNot(-5, "all objects are extended")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    params Object[] expected
+                </td>
+                <td>
+                    <pre>// Enumerable.range(1,3).isNot(1,2,3,4) // collection deepEqual</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Func&lt;T,bool> checker, [string message]
+                </td>
+                <td>
+                    <pre>// ({ a: "foo", b: "bar" }).isNot(function (x) { return x.a == "hee" && x.b == "bee" }, "checker must be function(can not use string lambda)")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    isExpr
+                </td>
+                <td>
+                    void
+                </td>
+                <td>
+                    string expression, [string message]
+                </td>
+                <td>
+                    <pre>// ({ a: "foo", b: "bar" }).isExpr("$.a == 'foo' && $.b == 'bar'", "checker string is converted to lambda")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    isNotExpr
+                </td>
+                <td>
+                    void
+                </td>
+                <td>
+                    string expression, [string message]
+                </td>
+                <td>
+                    <pre>// ({ a: "foo", b: "bar" }).isNotExpr("$.a == 'bar' && $.b == 'foo'", "checker string is converted to lambda")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    isTrue
+                </td>
+                <td>
+                    void
+                </td>
+                <td>
+                    [string message]
+                </td>
+                <td>
+                    <pre>// (Enumerable.empty().firstOrDefault() === null).isTrue()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    isFalse
+                </td>
+                <td>
+                    void
+                </td>
+                <td>
+                    [string message]
+                </td>
+                <td>
+                    <pre>// Enumerable.range(1, 10).all("$<5").isFalse()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    expectError
+                </td>
+                <td>
+                    Error
+                </td>
+                <td>
+                    Action testCode, [string message]
+                </td>
+                <td>
+                    <pre>// Enumerable.Assert.expectError(function () { throw new Error("ERROOOOOR"); })</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    doesNotThrow
+                </td>
+                <td>
+                    void
+                </td>
+                <td>
+                    Action testCode, [string message]
+                </td>
+                <td>
+                    <pre>// Enumerable.Assert.doesNotThrow(function () { })</pre>
                 </td>
             </tr>
         </tbody>

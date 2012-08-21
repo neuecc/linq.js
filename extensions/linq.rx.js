@@ -1,4 +1,4 @@
-﻿// binding for RxJS
+﻿// extension for RxJS
 
 (function (root) {
     if (root.Enumerable == null) {
