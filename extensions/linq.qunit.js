@@ -47,15 +47,18 @@
         ///   <summary>strictEqual. if "this" is Array or Enumerable then deepEqual with expected and both normalized to array.</summary>
         ///   <param name="expected" type="Object">expected value</param>
         ///   <param name="message" type="String" optional="true">assertion message</param>
+        ///   <returns type="void"></returns>
         /// </signature>
         /// <signature>
         ///   <summary>collection deepEqual. argument is variable.</summary>
         ///   <param name="variableExpected" type="params Object[]">mulitple arguments. Usage: [1,2,3].is(1,2,3).</param>
+        ///   <returns type="void"></returns>
         /// </signature>
         /// <signature>
         ///   <summary>ok(true). expected function is passed actual. if result is true then ok.</summary>
         ///   <param name="expected" type="Function">function checker, return boolean</param>
         ///   <param name="message" type="String" optional="true">assertion message</param>
+        ///   <returns type="void"></returns>
         /// </signature>
         if (isCollection(this)) {
             if (arguments.length <= 2 && isCollection(expected)) {
@@ -80,15 +83,18 @@
         ///   <summary>notStrictEqual. if "this" is Array or Enumerable then notDeepEqual with expected and both normalized to array.</summary>
         ///   <param name="expected" type="Object">expected value.</param>
         ///   <param name="message" type="String" optional="true">assertion message.</param>
+        ///   <returns type="void"></returns>
         /// </signature>
         /// <signature>
         ///   <summary>collection notDeepEqual. argument is variable.</summary>
         ///   <param name="variableExpected" type="params Object[]">variable arguments. Usage: [1,2,3].isNot(-1,2,3).</param>
+        ///   <returns type="void"></returns>
         /// </signature>
         /// <signature>
         ///   <summary>ok(false). expected function pass actual. if result is false then ok.</summary>
         ///   <param name="expected" type="Function">function checker, return boolean</param>
         ///   <param name="message" type="String" optional="true">assertion message</param>
+        ///   <returns type="void"></returns>
         /// </signature>
         if (isCollection(this)) {
             if (arguments.length <= 2 && isCollection(expected)) {
@@ -112,6 +118,7 @@
         /// <summary>ok(true). string expression is converted lambda. lambda is passed actual. if result is true then ok.</summary>
         /// <param name="expression" type="String">expression string converted to function checker, lambda return boolean</param>
         /// <param name="message" type="String" optional="true">assertion message</param>
+        /// <returns type="void"></returns>
         ok(Enumerable.Utils.createLambda(expression)(this.valueOf()), message);
     });
 
@@ -119,6 +126,7 @@
         /// <summary>shorthand of is(true).</summary>
         /// <param name="expected" type="Object">expected value.</param>
         /// <param name="message" type="String" optional="true">assertion message.</param>
+        /// <returns type="void"></returns>
         this.is(true, message);
     });
 
@@ -126,6 +134,7 @@
         /// <summary>shorthand of is(false).</summary>
         /// <param name="expected" type="Object">expected value.</param>
         /// <param name="message" type="String" optional="true">assertion message.</param>
+        /// <returns type="void"></returns>
         this.is(false, message);
     });
 
@@ -133,6 +142,7 @@
         /// <summary>Throw error in testCode.</summary>
         /// <param name="testCode" type="Function">action function.</param>
         /// <param name="message" type="String" optional="true">assertion message.</param>
+        /// <returns type="Error"></returns>
         var error = executeCode(testAction);
 
         if (error != null) {
