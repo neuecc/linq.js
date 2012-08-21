@@ -1476,7 +1476,7 @@ Enumerable.from(list).orderBy("$.a").thenByDescending("$.c").thenByDescending("$
             </tr>
             <tr>
                 <td rowspan="2">
-                    Max
+                    max
                 </td>
                 <td rowspan="2">
                     Number
@@ -1485,7 +1485,7 @@ Enumerable.from(list).orderBy("$.a").thenByDescending("$.c").thenByDescending("$
                     ()
                 </td>
                 <td>
-                    <pre>Enumerable.range(1,10).Max()</pre>
+                    <pre>Enumerable.range(1,10).max()</pre>
                 </td>
             </tr>
             <tr>
@@ -1494,7 +1494,7 @@ Enumerable.from(list).orderBy("$.a").thenByDescending("$.c").thenByDescending("$
                 </td>
                 <td>
                     <pre>Enumerable.from([{a:"foo",b:5},{a:"bar",b:20},{a:"foobar",b:10}])
-.Max("$.b")</pre>
+.max("$.b")</pre>
                 </td>
             </tr>
             <tr>
@@ -2415,6 +2415,209 @@ Enumerable.range(1,10).trace().force()</pre>
         </tbody>
     </table>
     <h2>
+        DisposableEnumerable(inherit Eunmerable)</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    dispose
+                </td>
+                <td>
+                    void
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>Enumerable.range(1,10).share().dispose()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    All Enumerable Methods
+                </td>
+                <td>
+                    -
+                </td>
+                <td>
+                    -
+                </td>
+                <td>
+                    <pre>-</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>
+        Grouping(inherit Eunmerable)</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    key
+                </td>
+                <td>
+                    TKey
+                </td>
+                <td>
+                    ()
+                </td>
+                <td>
+                    <pre>Enumerable.from([{id:"foo",x:10},{id:"bar",x:20},{id:"foo",x:100}])
+.groupBy("$.id").toArray()[0] // grouping
+.key()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    All Enumerable Methods
+                </td>
+                <td>
+                    -
+                </td>
+                <td>
+                    -
+                </td>
+                <td>
+                    <pre>-</pre>
+                </td>
+            </tr>
+        </thead>
+    </table>
+    <h2>
+        Utils</h2>
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    method name
+                </td>
+                <td>
+                    return type
+                </td>
+                <td>
+                    arguments
+                </td>
+                <td>
+                    example (click code)
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan="3">
+                    createLambda
+                </td>
+                <td rowspan="3">
+                    Function
+                </td>
+                <td>
+                    null/undefined
+                </td>
+                <td>
+                    <pre>Enumerable.Utils.createLambda()</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Function expression
+                </td>
+                <td>
+                    <pre>Enumerable.Utils.createLambda(function(x){ return x % 2 == 0})</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    string expression
+                </td>
+                <td>
+                    <pre>Enumerable.Utils.createLambda("")</pre>
+                    <pre>Enumerable.Utils.createLambda("x, y => x + y")</pre>
+                    <pre>Enumerable.Utils.createLambda("$ * $$ * $$$")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    createEnumerable
+                </td>
+                <td>
+                    Enumerable
+                </td>
+                <td>
+                    Func&lt;IEnumerator> getEnumerator
+                </td>
+                <td>
+                    <pre>Enumerable.Utils.createEnumerable(function(){ return Enumerable.Utils.createEnumerator(); })</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    createEnumerator
+                </td>
+                <td>
+                    Enumerable
+                </td>
+                <td>
+                    Action initialize, Action tryGetNext, Action dispose
+                </td>
+                <td>
+                    <pre>var enumerator;
+Enumerable.Utils.createEnumerator(
+    function(){ enumerator = Enumerable.range(1,10).getEnumerator(); },
+    // tryGetNext's "this" is yielder, it have yieldReturn and yieldBreak
+    function(){ return (enumerator.moveNext()) 
+                    ? this.yieldReturn(enumerator.current())
+                    : this.yieldBreak();},
+    function(){ enumerator.dispose(); })</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    extendTo
+                </td>
+                <td>
+                    void
+                </td>
+                <td>
+                    Constructor type
+                </td>
+                <td>
+                    <pre>Enumerable.Utils.extendTo(Array)</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>
         IEnumerator</h2>
     <table>
         <thead>
@@ -2709,58 +2912,6 @@ dict.toEnumerable().select("$.key + ':' + $.value")</pre>
                 </td>
             </tr>
         </tbody>
-    </table>
-    <h2>
-        Grouping(inherit Eunmerable)</h2>
-    <table>
-        <thead>
-            <tr>
-                <td>
-                    method name
-                </td>
-                <td>
-                    return type
-                </td>
-                <td>
-                    arguments
-                </td>
-                <td>
-                    example (click code)
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Key
-                </td>
-                <td>
-                    TKey
-                </td>
-                <td>
-                    ()
-                </td>
-                <td>
-                    <pre>Enumerable.from([{id:"foo",x:10},{id:"bar",x:20},{id:"foo",x:100}])
-.groupBy("$.id").toArray()[0] // grouping
-.key()</pre>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    All Enumerable Methods
-                </td>
-                <td>
-                    -
-                </td>
-                <td>
-                    -
-                </td>
-                <td>
-                    <pre>var grouping = Enumerable.from([{id:"foo",x:10},{id:"foo",x:25},{id:"foo",x:100}])
-.groupBy("$.id").toArray()[0];
-grouping.where("$.x % 10 == 0").select("$.id + ':' + $.x")</pre>
-                </td>
-            </tr>
-        </thead>
     </table>
     <h2>
         jQuery Extension(linq.jquery.js)</h2>

@@ -178,6 +178,7 @@
 
     // Enumerable constuctor
     var Enumerable = function (getEnumerator) {
+        /// <summary>Entry point of linq.js all methods.</summary>
         /// <field name="getEnumerator" type="Function">Returns an enumerator that iterates through the collection.</field>
         this.getEnumerator = getEnumerator;
 
@@ -227,7 +228,7 @@
         /// <summary>
         /// Create anonymous enumerable.
         /// </summary>
-        /// <param name="getEnumerator" type="Function">getEnumerator factory</param>
+        /// <param name="getEnumerator" type="Func&lt;IEnumerator>">getEnumerator factory</param>
         /// <returns type="Enumerable"></returns>
         return new Enumerable(getEnumerator);
     };
@@ -236,14 +237,14 @@
         /// <summary>
         /// Create anonymous enumerator.
         /// </summary>
-        /// <param name="initialize" type="Function">Invoke when enumerator called moveNext at first.</param>
-        /// <param name="tryGetNext" type="Function">
+        /// <param name="initialize" type="Action">Invoke when enumerator called moveNext at first.</param>
+        /// <param name="tryGetNext" type="Action">
         /// Invoke when enumerator called moveNext.
         /// &#10;return this.yieldReturn(x); then moveNext success and set current() on x.
         /// &#10;return this.yieldBreak(); then moveNext fail.
         /// &#10;Usage: return (enumerator.moveNext()) ? this.yieldReturn(enumerator.current()) : this.yieldBreak();
         /// </param>
-        /// <param name="dispose" type="Function">Invoke when enumerator called dispose.</param>
+        /// <param name="dispose" type="Action">Invoke when enumerator called dispose.</param>
         /// <returns type="IEnumerator"></returns>
         return new IEnumerator(initialize, tryGetNext, dispose);
     };
@@ -255,7 +256,7 @@
         /// &#10;Otherwise extends type.prototype directly.
         /// &#10;Usage: Enumerable.Utils.extendTo(Array);
         /// </summary>
-        /// <param name="type" type="Function">Type Constructor.</param>
+        /// <param name="type" type="Constructor">Type Constructor.</param>
         /// <returns type="void"></returns>
         var typeProto = type.prototype;
         var enumerableProto;
