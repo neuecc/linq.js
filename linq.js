@@ -312,6 +312,23 @@
                         Functions.Blank);
                 });
             }
+
+            // WinMD IIterable<T>
+            if (typeof Windows === Types.Object && typeof obj.first === Types.Function) {
+                return new Enumerable(function () {
+                    var isFirst = true;
+                    var enumerator;
+                    return new IEnumerator(
+                        function () { enumerator = obj.first(); },
+                        function () {
+                            if (isFirst) isFirst = false;
+                            else enumerator.moveNext();
+
+                            return (enumerator.hasCurrent) ? this.yieldReturn(enumerator.current) : this.yieldBreak();
+                        },
+                        Functions.Blank);
+                });
+            }
         }
 
         // case function/object : Create keyValuePair[]
