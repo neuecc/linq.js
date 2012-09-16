@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>linq.js-RxJS</id>
-        <version>3.0.1-beta2</version>
+        <version>3.0.2-rc</version>
         <title>linq.js - RxJS Binding</title>
         <authors>neuecc</authors>
         <owners>neuecc</owners>
@@ -13,8 +13,7 @@
         <projectUrl>http://linqjs.codeplex.com/</projectUrl>
         <tags>linq javascript Rx RxJS</tags>
         <dependencies>
-            <dependency id="linq.js" version="3.0.1-beta2"></dependency>
-            <dependency id="RxJS-Main" version="2.0.20327-beta"></dependency>
+            <dependency id="linq.js" version="3.0.2-rc"></dependency>
         </dependencies>
     </metadata>
     <files>
