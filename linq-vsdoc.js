@@ -438,6 +438,11 @@
         ///   <param name="ienumerable">JScript's IEnumerable</param>
         ///   <returns type="Enumerable"></returns>
         /// </signature>
+        /// <signature>
+        ///   <summary>Make Enumerable using IIterator&lt;T&gt;.</summary>
+        ///   <param name="iiterable">WinMD's IIterable&lt;T&gt;</param>
+        ///   <returns type="Enumerable"></returns>
+        /// </signature>
         /// <summary>
         /// Make Enumerable from obj.
         /// &#10;1. null = Enumerable.empty().
@@ -447,6 +452,7 @@
         /// &#10;5. Object/Function = own property to KeyValuePairs. Usage: "{a:0}" => (.key = "a", .value = 0).
         /// &#10;6. Array or ArrayLikeObject(has length) = to Enumerable.
         /// &#10;7. JScript's IEnumerable = to Enumerable(using Enumerator).
+        /// &#10;8. WinMD's IIterable&lt;T&gt; = to Enumerable(using IIterator&lt;T&gt;).
         /// </summary>
         /// <param name="obj">object</param>
         /// <returns type="Enumerable"></returns>
@@ -489,6 +495,23 @@
                             else enumerator.moveNext();
 
                             return (enumerator.atEnd()) ? false : this.yieldReturn(enumerator.item());
+                        },
+                        Functions.Blank);
+                });
+            }
+
+            // WinMD IIterable<T>
+            if (typeof Windows === Types.Object && typeof obj.first === Types.Function) {
+                return new Enumerable(function () {
+                    var isFirst = true;
+                    var enumerator;
+                    return new IEnumerator(
+                        function () { enumerator = obj.first(); },
+                        function () {
+                            if (isFirst) isFirst = false;
+                            else enumerator.moveNext();
+
+                            return (enumerator.hasCurrent) ? this.yieldReturn(enumerator.current) : this.yieldBreak();
                         },
                         Functions.Blank);
                 });

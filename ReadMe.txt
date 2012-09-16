@@ -1,16 +1,27 @@
 /*--------------------------------------------------------------------------
  * linq.js - LINQ for JavaScript
- * ver 3.0.1-Beta2 (July. 26th, 2012)
+ * ver 3.0.2-RC (Sep. 16th, 2012)
  *
  * created and maintained by neuecc <ils@neue.cc>
  * licensed under MIT License
  * http://linqjs.codeplex.com/
  *------------------------------------------------------------------------*/
- 
- fix orderByDescending to stable sort
 
+2012-09-16 v3.0.2-RC::Notice
 
- //
+fix orderByDescending to stable sort
+remove scan resultSelector overload
+rename tojQueryRaw to tojQueryAsArray
+flip argument of firstOrDefault,lastOrDefault,singleOrDefault. first is predicate, second is defaultValue.
+defaultValue of orDefault changed to null
+Enumerable.choice and Enumerable.cycle allow Enumerable
+Enumerable.from supports IIterable<T>(WinMD)
+argument of alternate allows Enumerable
+add AMD support("linqjs")
+improved fit to latest RxJS(on GitHub Sep 10, 2012 version)
+repositry convert to git
+
+//
 
 2012-07-26 v3.0.1-Beta2::Notice
 

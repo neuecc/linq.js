@@ -75,103 +75,45 @@
         subscribed: 200,
         disposed: 1000,
         onNext: function (ticks, value) {
-            /// <summary>
-            /// Factory method for an OnNext notification record at a given time with a given value or a predicate function.
-            /// &#10;
-            /// &#10;1 - ReactiveTest.onNext(200, 42);
-            /// &#10;2 - ReactiveTest.onNext(200, function (x) { return x.length == 2; });
-            /// </summary>
-            /// <param name="ticks">Recorded virtual time the OnNext notification occurs.</param>
-            /// <param name="value">Recorded value stored in the OnNext notification or a predicate.</param>
-            /// <returns>Recorded OnNext notification.</returns>
             if (typeof value === 'function') {
                 return new Recorded(ticks, new OnNextPredicate(value));
             }
             return new Recorded(ticks, Notification.createOnNext(value));
         },
         onError: function (ticks, exception) {
-            /// <summary>
-            /// Factory method for an OnError notification record at a given time with a given error.
-            /// &#10;
-            /// &#10;1 - ReactiveTest.onNext(200, new Error('error'));
-            /// &#10;2 - ReactiveTest.onNext(200, function (e) { return e.message === 'error'; });
-            /// </summary>
-            /// <param name="ticks">Recorded virtual time the OnError notification occurs.</param>
-            /// <param name="exception">Recorded exception stored in the OnError notification.</param>
-            /// <returns>Recorded OnError notification.</returns>
             if (typeof exception === 'function') {
                 return new Recorded(ticks, new OnErrorPredicate(exception));
             }
             return new Recorded(ticks, Notification.createOnError(exception));
         },
         onCompleted: function (ticks) {
-            /// <summary>
-            /// Factory method for an OnCompleted notification record at a given time.
-            /// </summary>
-            /// <param name="ticks">Recorded virtual time the OnCompleted notification occurs.</param>
-            /// <returns>Recorded OnCompleted notification.</returns>
             return new Recorded(ticks, Notification.createOnCompleted());
         },
         subscribe: function (start, end) {
-            /// <summary>
-            /// Factory method for a subscription record based on a given subscription and disposal time.
-            /// </summary>
-            /// <param name="start">Virtual time indicating when the subscription was created.</param>
-            /// <param name="end">Virtual time indicating when the subscription was disposed.</param>
-            /// <returns>Subscription object.</returns>
             return new Subscription(start, end);
         }
     };
 
     var Recorded = root.Recorded = function (time, value, comparer) {
-        /// <summary>
-        /// Creates a new object recording the production of the specified value at the given virtual time.
-        /// </summary>
-        /// <param name="time">Virtual time the value was produced on.</param>
-        /// <param name="value">Value that was produced.</param>
-        /// <param name="comparer">An optional comparer.</param>
         this.time = time;
         this.value = value;
         this.comparer = comparer || defaultComparer;
     };
     Recorded.prototype.equals = function (other) {
-        /// <summary>
-        /// Checks whether the given recorded object is equal to the current instance.
-        /// </summary>
-        /// <param name="other">Recorded object to check for equality.</param>
-        /// <returns>true if both objects are equal; false otherwise.</returns>
         return this.time === other.time && this.comparer(this.value, other.value);
     };
     Recorded.prototype.toString = function () {
-        /// <summary>
-        /// Returns a string representation of the current Recorded value.
-        /// </summary>
-        /// <returns>String representation of the current Recorded value.</returns>
         return this.value.toString() + '@' + this.time;
     };
 
     var Subscription = root.Subscription = function (start, end) {
-        /// <summary>
-        /// Creates a new subscription object with the given virtual subscription and unsubscription time.
-        /// </summary>
-        /// <param name="subscribe">Virtual time at which the subscription occurred.</param>
-        /// <param name="unsubscribe">Virtual time at which the unsubscription occurred.</param>
         this.subscribe = start;
         this.unsubscribe = end || Number.MAX_VALUE;
     };
     Subscription.prototype.equals = function (other) {
-        /// <summary>
-        /// Checks whether the given subscription is equal to the current instance.
-        /// </summary>
-        /// <param name="other">Subscription object to check for equality.</param>
-        /// <returns>true if both objects are equal; false otherwise.</returns>
         return this.subscribe === other.subscribe && this.unsubscribe === other.unsubscribe;
     };
     Subscription.prototype.toString = function () {
-        /// <summary>
-        /// Returns a string representation of the current Subscription value.
-        /// </summary>
-        /// <returns>String representation of the current Subscription value.</returns>
         return '(' + this.subscribe + ', ' + this.unsubscribe === Number.MAX_VALUE ? 'Infinite' : this.unsubscribe + ')';
     };
 
@@ -280,52 +222,21 @@
         }
 
         TestScheduler.prototype.scheduleAbsoluteWithState = function (state, dueTime, action) {
-            /// <summary>
-            /// Schedules an action to be executed at the specified virtual time.
-            /// </summary>
-            /// <param name="state">State passed to the action to be executed.</param>
-            /// <param name="dueTime">Absolute virtual time at which to execute the action.</param>
-            /// <param name="action">Action to be executed.</param>
-            /// <returns>Disposable object used to cancel the scheduled action (best effort).</returns>
             if (dueTime <= this.clock) {
                 dueTime = this.clock + 1;
             }
             return TestScheduler.super_.scheduleAbsoluteWithState.call(this, state, dueTime, action);
         };
         TestScheduler.prototype.add = function (absolute, relative) {
-            /// <summary>
-            /// Adds a relative virtual time to an absolute virtual time value.
-            /// </summary>
-            /// <param name="absolute">Absolute virtual time value.</param>
-            /// <param name="relative">Relative virtual time value to add.</param>
-            /// <returns>Resulting absolute virtual time sum value.</returns>
             return absolute + relative;
         };
         TestScheduler.prototype.toDateTimeOffset = function (absolute) {
-            /// <summary>
-            /// Converts the absolute virtual time value to a DateTimeOffset value.
-            /// </summary>
-            /// <param name="absolute">Absolute virtual time value to convert.</param>
-            /// <returns>Corresponding DateTimeOffset value.</returns>
             return new Date(absolute).getTime();
         };
         TestScheduler.prototype.toRelative = function (timeSpan) {
-            /// <summary>
-            /// Converts the TimeSpan value to a relative virtual time value.
-            /// </summary>
-            /// <param name="timeSpan">TimeSpan value to convert.</param>
-            /// <returns>Corresponding relative virtual time value.</returns>
             return timeSpan;
         };
         TestScheduler.prototype.startWithTiming = function (create, created, subscribed, disposed) {
-            /// <summary>
-            /// Starts the test scheduler and uses the specified virtual times to invoke the factory function, subscribe to the resulting sequence, and dispose the subscription.
-            /// </summary>
-            /// <param name="create">Factory method to create an observable sequence.</param>
-            /// <param name="created">Virtual time at which to invoke the factory to create an observable sequence.</param>
-            /// <param name="subscribed">Virtual time at which to subscribe to the created observable sequence.</param>
-            /// <param name="disposed">Virtual time at which to dispose the subscription.</param>
-            /// <returns>Observer with timestamped recordings of notification messages that were received during the virtual time window when the subscription to the source sequence was active.</returns>
             var observer = this.createObserver(), source, subscription;
             this.scheduleAbsoluteWithState(null, created, function () {
                 source = create();
@@ -343,47 +254,20 @@
             return observer;
         };
         TestScheduler.prototype.startWithDispose = function (create, disposed) {
-            /// <summary>
-            /// Starts the test scheduler and uses the specified virtual time to dispose the subscription to the sequence obtained through the factory function.
-            /// Default virtual times are used for factory invocation and sequence subscription.
-            /// </summary>
-            /// <param name="create">Factory method to create an observable sequence.</param>
-            /// <param name="disposed">Virtual time at which to dispose the subscription.</param>
-            /// <returns>Observer with timestamped recordings of notification messages that were received during the virtual time window when the subscription to the source sequence was active.</returns>
             return this.startWithTiming(create, ReactiveTest.created, ReactiveTest.subscribed, disposed);
         };
         TestScheduler.prototype.startWithCreate = function (create) {
-            /// <summary>
-            /// Starts the test scheduler and uses default virtual times to invoke the factory function, to subscribe to the resulting sequence, and to dispose the subscription</see>.
-            /// </summary>
-            /// <param name="create">Factory method to create an observable sequence.</param>
-            /// <returns>Observer with timestamped recordings of notification messages that were received during the virtual time window when the subscription to the source sequence was active.</returns>
             return this.startWithTiming(create, ReactiveTest.created, ReactiveTest.subscribed, ReactiveTest.disposed);
         };
         TestScheduler.prototype.createHotObservable = function () {
-            /// <summary>
-            /// Creates a hot observable using the specified timestamped notification messages either as an array or arguments.
-            /// </summary>
-            /// <param name="messages">Notifications to surface through the created sequence at their specified absolute virtual times.</param>
-            /// <returns>Hot observable sequence that can be used to assert the timing of subscriptions and notifications.</returns>
             var messages = argsOrArray(arguments, 0);
             return new HotObservable(this, messages);
         };
         TestScheduler.prototype.createColdObservable = function () {
-            /// <summary>
-            /// Creates a cold observable using the specified timestamped notification messages either as an array or arguments.
-            /// </summary>
-            /// <param name="messages">Notifications to surface through the created sequence at their specified virtual time offsets from the sequence subscription time.</param>
-            /// <returns>Cold observable sequence that can be used to assert the timing of subscriptions and notifications.</returns>
             var messages = argsOrArray(arguments, 0);
             return new ColdObservable(this, messages);
         };
         TestScheduler.prototype.createObserver = function () {
-            /// <summary>
-            /// Creates an observer that records received notification messages and timestamps those.
-            /// </summary>
-            /// <typeparam name="T">The element type of the observer being created.</typeparam>
-            /// <returns>Observer that can be used to assert the timing of received notifications.</returns>
             return new MockObserver(this);
         };
 

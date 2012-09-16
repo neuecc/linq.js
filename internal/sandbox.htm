@@ -3,17 +3,27 @@
 <head>
     <title>test page</title>
     <script type="text/javascript" src="../linq.js"></script>
-    <script type="text/javascript" src="lib/rx/rx.min.js"></script>
+    <script src="lib/rx/rx.js"></script>
     <script type="text/javascript" src="lib/jQuery/jquery-1.4.1.js"></script>
     <script type="text/javascript" src="../extensions/linq.jquery.js"></script>
     <script type="text/javascript" src="../extensions/linq.rx.js"></script>
     <script type="text/javascript" src="lib/benchmark.js"></script>
     <script type="text/javascript">
 
-        
+     var c =   Enumerable.range(1, 3)
+            //.doAction(function (x) { if (x == 2) throw new Error(); })
+            .toObservable()
+            .subscribe(function (x) {
+
+                alert(x);
+            }, function (x) { alert(x) }, function () { alert("comp") });
+
+     c.dispose();
 
 
     </script>
+
+
 </head>
 <body>
 </body>

@@ -77,22 +77,31 @@
     <Content Include="internal\lib\jQuery\jquery-1.7.2.min.js" />
     <Content Include="internal\lib\old\linq-2.2.0.2-vsdoc.js" />
     <Content Include="internal\lib\old\linq-2.2.0.2.js" />
+    <Content Include="internal\lib\rx\authors.txt" />
     <Content Include="internal\lib\rx\rx-vsdoc.js" />
     <Content Include="internal\lib\rx\rx.aggregates-vsdoc.js" />
+    <Content Include="internal\lib\rx\rx.aggregates.js" />
     <Content Include="internal\lib\rx\rx.aggregates.min.js" />
+    <None Include="internal\lib\rx\rx.binding-vsdoc.js" />
+    <Content Include="internal\lib\rx\rx.binding.js" />
+    <Content Include="internal\lib\rx\rx.binding.min.js" />
     <Content Include="internal\lib\rx\rx.coincidence-vsdoc.js" />
+    <Content Include="internal\lib\rx\rx.coincidence.js" />
     <Content Include="internal\lib\rx\rx.coincidence.min.js" />
     <Content Include="internal\lib\rx\rx.experimental-vsdoc.js" />
+    <Content Include="internal\lib\rx\rx.experimental.js" />
     <Content Include="internal\lib\rx\rx.experimental.min.js" />
     <Content Include="internal\lib\rx\rx.joinpatterns-vsdoc.js" />
+    <Content Include="internal\lib\rx\rx.joinpatterns.js" />
     <Content Include="internal\lib\rx\rx.joinpatterns.min.js" />
-    <Content Include="internal\lib\rx\rx.jquery-vsdoc.js" />
-    <Content Include="internal\lib\rx\rx.jquery.js" />
-    <Content Include="internal\lib\rx\rx.jquery.min.js" />
+    <Content Include="internal\lib\rx\rx.js" />
     <Content Include="internal\lib\rx\rx.min.js" />
+    <Content Include="internal\lib\rx\rx.node.js" />
     <Content Include="internal\lib\rx\rx.testing-vsdoc.js" />
+    <Content Include="internal\lib\rx\rx.testing.js" />
     <Content Include="internal\lib\rx\rx.testing.min.js" />
     <Content Include="internal\lib\rx\rx.time-vsdoc.js" />
+    <Content Include="internal\lib\rx\rx.time.js" />
     <Content Include="internal\lib\rx\rx.time.min.js" />
     <Content Include="internal\nuget-package\NuGet.exe" />
     <Content Include="internal\sandbox.htm" />
@@ -129,6 +138,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="internal\minifier.fsx" />
+    <Content Include="internal\lib\rx\license.md" />
+    <Content Include="internal\lib\rx\package.json" />
+    <Content Include="internal\lib\rx\readme.md" />
     <None Include="internal\nuget-package\linq.js-jquery.nuspec" />
     <None Include="internal\nuget-package\linq.js.nuspec">
       <SubType>Designer</SubType>
