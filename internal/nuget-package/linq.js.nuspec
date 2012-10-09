@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>linq.js</id>
-        <version>3.0.2-rc</version>
+        <version>3.0.3-beta4</version>
         <title>linq.js</title>
         <authors>neuecc</authors>
         <owners>neuecc</owners>
@@ -11,9 +11,10 @@
         <language>en-US</language>
         <licenseUrl>http://linqjs.codeplex.com/license</licenseUrl>
         <projectUrl>http://linqjs.codeplex.com/</projectUrl>
-        <tags>linq javascript</tags>
+        <tags>linq javascript typescript</tags>
     </metadata>
     <files>
         <file src="..\..\linq*.js" target="Content\Scripts" />
+        <file src="..\..\typescript\linq.js.d.ts" target="Content\Scripts" />
     </files>
 </package>

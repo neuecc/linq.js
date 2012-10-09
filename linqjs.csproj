@@ -131,6 +131,9 @@
     <Content Include="test\set.js" />
     <Content Include="test\testrunner.htm" />
     <Content Include="linq-vsdoc.js" />
+    <Content Include="typescript\file1.js.map">
+      <DependentUpon>file1.ts</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="sample\LinqJS.cs" />
@@ -160,6 +163,11 @@
     <None Include="snippets\FuncZ.snippet" />
     <None Include="snippets\Func1.snippet" />
     <None Include="snippets\Func2.snippet" />
+    <TypeScriptCompile Include="typescript\file1.ts" />
+    <Content Include="typescript\file1.js">
+      <DependentUpon>file1.ts</DependentUpon>
+    </Content>
+    <Content Include="typescript\linq.js.d.ts" />
     <Content Include="web.config" />
     <Content Include="snippets\DocumentWriteLine.snippet" />
     <Content Include="snippets\EnumerableRangeTo.snippet" />

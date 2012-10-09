@@ -1,13 +1,17 @@
 /*--------------------------------------------------------------------------
  * linq.js - LINQ for JavaScript
- * ver 3.0.2-RC (Sep. 16th, 2012)
+ * ver 3.0.3-Beta4 (Oct. 9th, 2012)
  *
  * created and maintained by neuecc <ils@neue.cc>
  * licensed under MIT License
  * http://linqjs.codeplex.com/
  *------------------------------------------------------------------------*/
 
-2012-09-16 v3.0.2-RC::Notice
+2012-10-09 v3.0.3-Beta4
+
+add TypeScript type declaraion file(typescript/linq.js.d.ts, linq.jquery.d.ts)
+
+2012-09-16 s/v3.0.2-RC/v3.0.2-Beta3/::Notice
 
 fix orderByDescending to stable sort
 remove scan resultSelector overload
