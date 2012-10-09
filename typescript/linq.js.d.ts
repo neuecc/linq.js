@@ -1,4 +1,4 @@
-// Typing for linq.js, ver.3.0.3-RC
+// Typing for linq.js, ver 3.0.3-Beta4
 
 declare module linqjs {
     interface IEnumerator {

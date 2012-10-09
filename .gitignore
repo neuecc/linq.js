@@ -94,3 +94,5 @@ Thumbs.db
 # Folder config file
 Desktop.ini
 *.ncrunchsolution
+internal/archive.zip
+*.nupkg

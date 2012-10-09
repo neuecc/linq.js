@@ -16,7 +16,7 @@ let top =
     |> Seq.filter (fun x -> Regex.IsMatch(x.Name, "^.*\.(js|txt|htm)$"))
 
 let sub = 
-    let allowDirs = Set(["bindings"; "sample"; "snippets"; "test" ])
+    let allowDirs = Set(["extensions"; "snippets"; "test"; "typescript" ])
     rootDir.EnumerateDirectories()
     |> Seq.filter (fun x -> allowDirs.Contains x.Name)
     |> Seq.collect (fun x -> x.EnumerateFiles("*", SearchOption.AllDirectories))
