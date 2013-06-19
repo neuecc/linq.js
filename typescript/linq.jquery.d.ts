@@ -1,10 +1,10 @@
 declare module linqjs {
-    interface Enumerable {
+    interface IEnumerable<T> {
         tojQuery(): JQuery;
         tojQueryAsArray(): JQuery;
     }
 }
 
 interface JQuery {
-    toEnumerable(): linqjs.Enumerable;
+    toEnumerable(): linqjs.IEnumerable<JQuery>;
 }

@@ -1,6 +1,6 @@
 ﻿/*--------------------------------------------------------------------------
  * linq.js - LINQ for JavaScript
- * ver 3.0.3-Beta4 (Oct. 9th, 2012)
+ * ver 3.0.4-Beta5 (Jun. 20th, 2013)
  *
  * created and maintained by neuecc <ils@neue.cc>
  * licensed under MIT License
@@ -25,21 +25,27 @@
         Function: typeof function () { }
     };
 
+    // createLambda cache
+    var funcCache = { "": Functions.Identity };
+
     // private utility methods
     var Utils = {
         // Create anonymous function from lambda expression string
         createLambda: function (expression) {
             if (expression == null) return Functions.Identity;
-            if (typeof expression == Types.String) {
-                if (expression == "") {
-                    return Functions.Identity;
+            if (typeof expression === Types.String) {
+                // get from cache
+                var f = funcCache[expression];
+                if (f != null) {
+                    return f;
                 }
-                else if (expression.indexOf("=>") == -1) {
+
+                if (expression.indexOf("=>") === -1) {
                     var regexp = new RegExp("[$]+", "g");
 
                     var maxLength = 0;
                     var match;
-                    while (match = regexp.exec(expression)) {
+                    while ((match = regexp.exec(expression)) != null) {
                         var paramNumber = match[0].length;
                         if (paramNumber > maxLength) {
                             maxLength = paramNumber;
@@ -57,26 +63,18 @@
 
                     var args = Array.prototype.join.call(argArray, ",");
 
-                    return new Function(args, "return " + expression);
+                    f = new Function(args, "return " + expression);
+                    funcCache[expression] = f;
+                    return f;
                 }
                 else {
                     var expr = expression.match(/^[(\s]*([^()]*?)[)\s]*=>(.*)/);
-                    return new Function(expr[1], "return " + expr[2]);
+                    f = new Function(expr[1], "return " + expr[2]);
+                    funcCache[expression] = f;
+                    return f;
                 }
             }
             return expression;
-        },
-
-        isIEnumerable: function (obj) {
-            if (typeof Enumerator !== Types.Undefined) {
-                try {
-                    new Enumerator(obj); // check JScript(IE)'s Enumerator
-                    return true;
-                }
-                catch (e) { }
-            }
-
-            return false;
         },
 
         // IE8's defineProperty is defined but cannot use, therefore check defineProperties
@@ -2644,6 +2642,10 @@
     };
 
     /* Convert Methods */
+
+    Enumerable.prototype.cast = function () {
+        return this;
+    };
 
     Enumerable.prototype.asEnumerable = function () {
         /// <summary>Convert sequence as enumerable. This same as Enumerable.from(seq).</summary>

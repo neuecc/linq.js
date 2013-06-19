@@ -1,6 +1,6 @@
 ﻿/*--------------------------------------------------------------------------
  * linq.js - LINQ for JavaScript
- * ver 3.0.3-Beta4 (Oct. 9th, 2012)
+ * ver 3.0.4-Beta5 (Jun. 20th, 2013)
  *
  * created and maintained by neuecc <ils@neue.cc>
  * licensed under MIT License
@@ -25,21 +25,27 @@
         Function: typeof function () { }
     };
 
+    // createLambda cache
+    var funcCache = { "": Functions.Identity };
+
     // private utility methods
     var Utils = {
         // Create anonymous function from lambda expression string
         createLambda: function (expression) {
             if (expression == null) return Functions.Identity;
-            if (typeof expression == Types.String) {
-                if (expression == "") {
-                    return Functions.Identity;
+            if (typeof expression === Types.String) {
+                // get from cache
+                var f = funcCache[expression];
+                if (f != null) {
+                    return f;
                 }
-                else if (expression.indexOf("=>") == -1) {
+
+                if (expression.indexOf("=>") === -1) {
                     var regexp = new RegExp("[$]+", "g");
 
                     var maxLength = 0;
                     var match;
-                    while (match = regexp.exec(expression)) {
+                    while ((match = regexp.exec(expression)) != null) {
                         var paramNumber = match[0].length;
                         if (paramNumber > maxLength) {
                             maxLength = paramNumber;
@@ -57,11 +63,15 @@
 
                     var args = Array.prototype.join.call(argArray, ",");
 
-                    return new Function(args, "return " + expression);
+                    f = new Function(args, "return " + expression);
+                    funcCache[expression] = f;
+                    return f;
                 }
                 else {
                     var expr = expression.match(/^[(\s]*([^()]*?)[)\s]*=>(.*)/);
-                    return new Function(expr[1], "return " + expr[2]);
+                    f = new Function(expr[1], "return " + expr[2]);
+                    funcCache[expression] = f;
+                    return f;
                 }
             }
             return expression;
@@ -2128,6 +2138,10 @@
 
     /* Convert Methods */
 
+    Enumerable.prototype.cast = function () {
+        return this;
+    };
+
     Enumerable.prototype.asEnumerable = function () {
         return Enumerable.from(this);
     };
@@ -2460,12 +2474,15 @@
     OrderedEnumerable.prototype.createOrderedEnumerable = function (keySelector, descending) {
         return new OrderedEnumerable(this.source, keySelector, descending, this);
     };
+
     OrderedEnumerable.prototype.thenBy = function (keySelector) {
         return this.createOrderedEnumerable(keySelector, false);
     };
+
     OrderedEnumerable.prototype.thenByDescending = function (keySelector) {
         return this.createOrderedEnumerable(keySelector, true);
     };
+
     OrderedEnumerable.prototype.getEnumerator = function () {
         var self = this;
         var buffer;
@@ -2500,11 +2517,13 @@
         this.child = child;
         this.keys = null;
     };
+
     SortContext.create = function (orderedEnumerable, currentContext) {
         var context = new SortContext(orderedEnumerable.keySelector, orderedEnumerable.descending, currentContext);
         if (orderedEnumerable.parent != null) return SortContext.create(orderedEnumerable.parent, context);
         return context;
     };
+
     SortContext.prototype.GenerateKeys = function (source) {
         var len = source.length;
         var keySelector = this.keySelector;
@@ -2514,6 +2533,7 @@
 
         if (this.child != null) this.child.GenerateKeys(source);
     };
+
     SortContext.prototype.compare = function (index1, index2) {
         var comparison = Utils.compare(this.keys[index1], this.keys[index2]);
 
