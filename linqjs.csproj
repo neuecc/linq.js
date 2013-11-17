@@ -82,6 +82,7 @@
     <Content Include="internal\lib\rx\rx.aggregates-vsdoc.js" />
     <Content Include="internal\lib\rx\rx.aggregates.js" />
     <Content Include="internal\lib\rx\rx.aggregates.min.js" />
+    <Content Include=".gitignore" />
     <None Include="internal\lib\rx\rx.binding-vsdoc.js" />
     <Content Include="internal\lib\rx\rx.binding.js" />
     <Content Include="internal\lib\rx\rx.binding.min.js" />
@@ -103,6 +104,10 @@
     <Content Include="internal\lib\rx\rx.time-vsdoc.js" />
     <Content Include="internal\lib\rx\rx.time.js" />
     <Content Include="internal\lib\rx\rx.time.min.js" />
+    <Content Include="internal\lib\ts\jquery.d.ts" />
+    <Content Include="internal\lib\ts\lib.d.ts" />
+    <Content Include="internal\lib\ts\winjs.d.ts" />
+    <Content Include="internal\lib\ts\winrt.d.ts" />
     <Content Include="internal\nuget-package\NuGet.exe" />
     <Content Include="internal\sandbox.htm" />
     <Content Include="internal\perf.htm" />
@@ -131,9 +136,6 @@
     <Content Include="test\set.js" />
     <Content Include="test\testrunner.htm" />
     <Content Include="linq-vsdoc.js" />
-    <Content Include="typescript\file1.js.map">
-      <DependentUpon>file1.ts</DependentUpon>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="sample\LinqJS.cs" />
@@ -163,11 +165,8 @@
     <None Include="snippets\FuncZ.snippet" />
     <None Include="snippets\Func1.snippet" />
     <None Include="snippets\Func2.snippet" />
-    <TypeScriptCompile Include="typescript\file1.ts" />
-    <Content Include="typescript\file1.js">
-      <DependentUpon>file1.ts</DependentUpon>
-    </Content>
-    <Content Include="typescript\linq.js.d.ts" />
+    <Content Include="typescript\linq.d.ts" />
+    <Content Include="typescript\linq.jquery.d.ts" />
     <Content Include="web.config" />
     <Content Include="snippets\DocumentWriteLine.snippet" />
     <Content Include="snippets\EnumerableRangeTo.snippet" />

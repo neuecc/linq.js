@@ -567,7 +567,6 @@
     };
 
     Enumerable.defer = function (enumerableFactory) {
-
         return new Enumerable(function () {
             var enumerator;
 
