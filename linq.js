@@ -189,6 +189,11 @@
                 return x.equals(y);
             }
 
+            // specialize for Date
+            if (x instanceof Date && y instanceof Date) {
+                return x.getTime() === y.getTime();
+            }
+
             return x === y;
         },
         function (obj) {

@@ -1,17 +1,76 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>test page</title>
     <script type="text/javascript" src="../linq.js"></script>
     <script type="text/javascript">
 
-        var dict = Enumerable.empty().toDictionary();
+        var Types = {
+            Boolean: typeof true,
+            Number: typeof 0,
+            String: typeof "",
+            Object: typeof {},
+            Undefined: typeof undefined,
+            Function: typeof function () { }
+        };
+        // TODO:use default equalityComparer
+        var TupleArray = function () {
+            this.items = arguments;
+        }
+        TupleArray.prototype.equals = function (other) {
+            if (other == null) return false;
+            if (!(other instanceof TupleArray)) return false;
+            if (this === other) return true;
 
-        dict.add("a", 1);
-        dict.add("b", 2);
-        dict.add("c", 3);
-        dict.add("c", 100);
+            var len = this.items.length;
+            if (len != other.length) return false;
+
+            for (var i = 0; i < len; i++) {
+                var item = this.items[i];
+                if (item != null && typeof item.equals === Types.Function) {
+                    if (!item.equals(other.items[i])) return false;
+                }
+                else {
+                    if (item !== other.items[i]) return false;
+                }
+            }
+            return true;
+        }
+        TupleArray.prototype.getHashCode = function () {
+            var len = this.items.length;
+            var sb = [];
+            for (var i = 0; i < len; i++) {
+                var item = this.items[i];
+
+                if (item === null) {
+                    sb.push(i + ":" + "null");
+                } else if (item === undefined) {
+                    sb.push(i + ":" + "undefined");
+                } else if (typeof item.getHashCode === Types.Function) {
+                    sb.push(i + ":" + item.getHashCode());
+                }
+                else {
+                    sb.push(i + ":" + item.toString());
+                }
+            }
+            return sb.join("-");
+        }
+
+
+        var v = new TupleArray(1, new TupleArray("hoge", "huga"), 3, 4, 5).getHashCode();
+
+
         
+        
+
+        // DateTim
+
+
+
+
+        alert(v);
+
+
 
 
 

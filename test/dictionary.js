@@ -4,15 +4,26 @@
 
 module("Dictionary");
 
-var expected, actual; // will be removed
-
-var result;
-var correct;
 var aComparer = function (x) { return x.a }
 var obj1 = { a: 1 }
 var obj1_ = { a: 1 }
 var obj2 = { a: 2 }
 var obj2_ = { a: 2 }
+
+var Tuple = function (x, y) {
+    this.x = x;
+    this.y = y;
+}
+Tuple.prototype.equals = function (other) {
+    return this.x === other.x && this.y === other.y;
+}
+Tuple.prototype.getHashCode = function () {
+    return "X:" + this.x + "_" + "Y:" + this.y;
+}
+
+
+
+
 
 test("AddGetCountRemoveClear", function ()
 {
@@ -156,4 +167,22 @@ test("toEnumerable", function ()
     equal(2, ar[0].value);
     equal(obj2_, ar[1].key);
     equal(4, ar[1].value);
+
+    dict.add
+});
+
+test("tupleCheck", function () {
+    var dict = Enumerable.Utils.createDictionary();
+    
+    dict.add(new Tuple(10, 20), 1000);
+    dict.get(new Tuple(10, 20)).is(1000);
+
+    dict.add(new Tuple(10, 20), 10000);
+    dict.get(new Tuple(10, 20)).is(10000);
+
+    dict.count().is(1);
+    
+    
+
+
 });
