@@ -111,7 +111,7 @@
 
         dispose: function (obj) {
             if (obj != null) obj.dispose();
-        }
+        },
     };
 
     // IEnumerator State
@@ -174,6 +174,51 @@
         };
     };
 
+    // for dictionary, equals = x:T, y:T => bool, getHashCode = obj:any => string, 
+    var EqualityComparer = function (equals, getHashCode) {
+        this.equals = equals;
+        this.getHashCode = getHashCode;
+    }
+
+    EqualityComparer.Default = new EqualityComparer(
+        function (x, y) {
+            if (x === y) return true;
+            if (x == null || y == null) return false;
+
+            if (typeof x.equals === Types.Function) {
+                return x.equals(y);
+            }
+
+            return x === y;
+        },
+        function (obj) {
+            if (obj === null) return "null";
+            if (obj === undefined) return "undefined";
+
+            if (typeof obj.getHashCode === Types.Function) {
+                return obj.getHashCode();
+            }
+
+            // string as HashCode
+            return (typeof obj.toString === Types.Function)
+                ? obj.toString()
+                : Object.prototype.toString.call(obj);
+        });
+
+    EqualityComparer.createKeyComparer = function (compareKeySelector) {
+        return new EqualityComparer(function (x, y) {
+            if (x === y) return true;
+            if (x == null || y == null) return false;
+
+            return EqualityComparer.Default.equals(compareKeySelector(x), compareKeySelector(y));
+        }, function (obj) {
+            if (obj === null) return "null";
+            if (obj === undefined) return "undefined";
+
+            return EqualityComparer.Default.getHashCode(compareKeySelector(obj));
+        });
+    };
+
     // Enumerable constuctor
     var Enumerable = function (getEnumerator) {
         this.getEnumerator = getEnumerator;
@@ -193,6 +238,18 @@
 
     Enumerable.Utils.createEnumerator = function (initialize, tryGetNext, dispose) {
         return new IEnumerator(initialize, tryGetNext, dispose);
+    };
+
+    Enumerable.Utils.createEqualityComparer = function (equals, getHashCode) {
+        return new EqualityComparer(equals, getHashCode);
+    };
+
+    Enumerable.Utils.createKeyedEqualityComparer = function (keySelector) {
+        return EqualityComparer.createKeyComparer(keySelector);
+    };
+
+    Enumerable.Utils.createDictionary = function (compareSelectorOrEqualityComparer) {
+        return new Dictionary(compareSelectorOrEqualityComparer);
     };
 
     Enumerable.Utils.extendTo = function (type) {
@@ -1349,7 +1406,7 @@
     // Overload:function()
     // Overload:function(compareSelector)
     Enumerable.prototype.distinct = function (compareSelector) {
-        return this.except(Enumerable.empty(), compareSelector);
+        return this.union(Enumerable.empty(), compareSelector);
     };
 
     Enumerable.prototype.distinctUntilChanged = function (compareSelector) {
@@ -2801,15 +2858,6 @@
             return Object.prototype.hasOwnProperty.call(target, key);
         };
 
-        var computeHashCode = function (obj) {
-            if (obj === null) return "null";
-            if (obj === undefined) return "undefined";
-
-            return (typeof obj.toString === Types.Function)
-                ? obj.toString()
-                : Object.prototype.toString.call(obj);
-        };
-
         // LinkedList for Dictionary
         var HashEntry = function (key, value) {
             this.key = key;
@@ -2855,23 +2903,26 @@
         };
 
         // Overload:function()
-        // Overload:function(compareSelector)
-        var Dictionary = function (compareSelector) {
+        // Overload:function(compareSelectorOrEqualityComparer)
+        var Dictionary = function (compareSelectorOrEqualityComparer) {
             this.countField = 0;
             this.entryList = new EntryList();
             this.buckets = {}; // as Dictionary<string,List<object>>
-            this.compareSelector = (compareSelector == null) ? Functions.Identity : compareSelector;
+            this.equalityComparer = (compareSelectorOrEqualityComparer == null) ? EqualityComparer.Default
+                : (typeof compareSelectorOrEqualityComparer === Types.Function) ? EqualityComparer.createKeyComparer(compareSelectorOrEqualityComparer)
+                : compareSelectorOrEqualityComparer instanceof EqualityComparer ? compareSelectorOrEqualityComparer
+                : null;
+            if (this.equalityComparer == null) throw new Error("compareSelectorOrEqualityComparer must be null or function or EqualityComparer");
         };
         Dictionary.prototype =
         {
             add: function (key, value) {
-                var compareKey = this.compareSelector(key);
-                var hash = computeHashCode(compareKey);
+                var hash = this.equalityComparer.getHashCode(key);
                 var entry = new HashEntry(key, value);
                 if (callHasOwnProperty(this.buckets, hash)) {
                     var array = this.buckets[hash];
                     for (var i = 0; i < array.length; i++) {
-                        if (this.compareSelector(array[i].key) === compareKey) {
+                        if (this.equalityComparer.equals(array[i].key, key)) {
                             this.entryList.replace(array[i], entry);
                             array[i] = entry;
                             return;
@@ -2886,25 +2937,23 @@
             },
 
             get: function (key) {
-                var compareKey = this.compareSelector(key);
-                var hash = computeHashCode(compareKey);
+                var hash = this.equalityComparer.getHashCode(key);
                 if (!callHasOwnProperty(this.buckets, hash)) return undefined;
 
                 var array = this.buckets[hash];
                 for (var i = 0; i < array.length; i++) {
                     var entry = array[i];
-                    if (this.compareSelector(entry.key) === compareKey) return entry.value;
+                    if (this.equalityComparer.equals(entry.key, key)) return entry.value;
                 }
                 return undefined;
             },
 
             set: function (key, value) {
-                var compareKey = this.compareSelector(key);
-                var hash = computeHashCode(compareKey);
+                var hash = this.equalityComparer.getHashCode(key);
                 if (callHasOwnProperty(this.buckets, hash)) {
                     var array = this.buckets[hash];
                     for (var i = 0; i < array.length; i++) {
-                        if (this.compareSelector(array[i].key) === compareKey) {
+                        if (this.equalityComparer.equals(array[i].key, key)) {
                             var newEntry = new HashEntry(key, value);
                             this.entryList.replace(array[i], newEntry);
                             array[i] = newEntry;
@@ -2916,13 +2965,12 @@
             },
 
             contains: function (key) {
-                var compareKey = this.compareSelector(key);
-                var hash = computeHashCode(compareKey);
+                var hash = this.equalityComparer.getHashCode(key);
                 if (!callHasOwnProperty(this.buckets, hash)) return false;
 
                 var array = this.buckets[hash];
                 for (var i = 0; i < array.length; i++) {
-                    if (this.compareSelector(array[i].key) === compareKey) return true;
+                    if (this.equalityComparer.equals(array[i].key, key)) return true;
                 }
                 return false;
             },
@@ -2934,13 +2982,12 @@
             },
 
             remove: function (key) {
-                var compareKey = this.compareSelector(key);
-                var hash = computeHashCode(compareKey);
+                var hash = this.equalityComparer.getHashCode(key);
                 if (!callHasOwnProperty(this.buckets, hash)) return;
 
                 var array = this.buckets[hash];
                 for (var i = 0; i < array.length; i++) {
-                    if (this.compareSelector(array[i].key) === compareKey) {
+                    if (this.equalityComparer.equals(array[i].key, key)) {
                         this.entryList.remove(array[i]);
                         array.splice(i, 1);
                         if (array.length == 0) delete this.buckets[hash];
