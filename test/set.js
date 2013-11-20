@@ -151,3 +151,46 @@ test("union", function () {
         .toArray();
     deepEqual(actual, [{ test: 1 }, { test: 2 }, { test: 3 }, { test: 4 }]);
 });
+
+test("Loop Reduce C#Compatibility Intersect", function () {
+    var xsReduce = [];
+    var xs = Enumerable.range(1, 3).select(function (x) { xsReduce.push(x); return x; });
+    var ysReduce = [];
+    var ys = Enumerable.range(1, 3).select(function (x) { ysReduce.push(x); return x; });
+
+    xs.intersect(ys).take(1).force();
+
+    xsReduce.is(1);
+    ysReduce.is(1, 2, 3);
+});
+
+test("Loop Reduce C#Compatibility Union", function () {
+    var xsReduce = [];
+    var xs = Enumerable.range(1, 3).select(function (x) { xsReduce.push(-x); return -x; }); // return minus
+    var ysReduce = [];
+    var ys = Enumerable.range(1, 3).select(function (x) { ysReduce.push(x); return x; });
+
+    xs.union(ys).take(1).force();
+
+    xsReduce.is(-1);
+    ysReduce.isEmpty();
+
+    xsReduce = [];
+    
+    xs.union(ys).take(4).force();
+
+    xsReduce.is(-1, -2, -3);
+    ysReduce.is(1);
+});
+
+test("Loop Reduce C#Compatibility Except", function () {
+    var xsReduce = [];
+    var xs = Enumerable.range(1, 3).select(function (x) { xsReduce.push(x); return x; });
+    var ysReduce = [];
+    var ys = Enumerable.range(1, 3).select(function (x) { ysReduce.push(x); return x; });
+
+    xs.intersect(ys).take(1).force();
+
+    xsReduce.is(1);
+    ysReduce.is(1, 2, 3);
+});
