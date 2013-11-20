@@ -224,6 +224,49 @@
         });
     };
 
+    // Tuples
+
+    var Tuple = function (item1, item2) {
+        this.item1 = item1;
+        this.item2 = item2;
+    }
+    Tuple.prototype.equals = function (other) {
+        if (!EqualityComparer.Default.equals(this.item1, other.item1)) return false;
+        if (!EqualityComparer.Default.equals(this.item2, other.item2)) return false;
+        return true;
+    }
+    Tuple.prototype.getHashCode = function () {
+        return "1:" + EqualityComparer.Default.getHashCode(this.item1) + "-"
+             + "2:" + EqualityComparer.Default.getHashCode(this.item2);
+    }
+
+    var TupleArray = function () {
+        this.items = arguments;
+    }
+    TupleArray.prototype.equals = function (other) {
+        if (other == null) return false;
+        if (!(other instanceof TupleArray)) return false;
+        if (this === other) return true;
+
+        var len = this.items.length;
+        if (len != other.length) return false;
+
+        for (var i = 0; i < len; i++) {
+            if (!EqualityComparer.Default.equals(this.items[i] && other.items[i])) return false;
+        }
+        return true;
+    }
+    TupleArray.prototype.getHashCode = function () {
+        var len = this.items.length;
+        var sb = [];
+        for (var i = 0; i < len; i++) {
+            var item = this.items[i];
+            var code = EqualityComparer.Default.getHashCode(item);
+            sb.push(i + ":" + code);
+        }
+        return sb.join("-");
+    }
+
     // Enumerable constuctor
     var Enumerable = function (getEnumerator) {
         this.getEnumerator = getEnumerator;
@@ -255,6 +298,14 @@
 
     Enumerable.Utils.createDictionary = function (compareSelectorOrEqualityComparer) {
         return new Dictionary(compareSelectorOrEqualityComparer);
+    };
+
+    Enumerable.Utils.createTuple = function (item1, item2) {
+        return new Tuple(item1, item2);
+    };
+
+    Enumerable.Utils.createTupleArray = function () {
+        return new TupleArray(arguments);
     };
 
     Enumerable.Utils.extendTo = function (type) {
