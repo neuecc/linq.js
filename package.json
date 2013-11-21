@@ -1,0 +1,10 @@
+{
+  "name": "linqjs",
+  "version": "0.0.0",
+  "description": "linqjs",
+  "main": "app.js",
+  "author": {
+    "name": "neuecc",
+    "email": ""
+  }
+}
