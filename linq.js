@@ -240,8 +240,8 @@
              + "2:" + EqualityComparer.Default.getHashCode(this.item2);
     }
 
-    var TupleArray = function () {
-        this.items = arguments;
+    var TupleArray = function (itemsArray) {
+        this.items = itemsArray;
     }
     TupleArray.prototype.equals = function (other) {
         if (other == null) return false;
@@ -249,10 +249,10 @@
         if (this === other) return true;
 
         var len = this.items.length;
-        if (len != other.length) return false;
+        if (len != other.items.length) return false;
 
         for (var i = 0; i < len; i++) {
-            if (!EqualityComparer.Default.equals(this.items[i] && other.items[i])) return false;
+            if (!EqualityComparer.Default.equals(this.items[i], other.items[i])) return false;
         }
         return true;
     }

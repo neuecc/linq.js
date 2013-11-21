@@ -5,59 +5,9 @@
     <script type="text/javascript" src="../linq.js"></script>
     <script type="text/javascript">
 
-        var Types = {
-            Boolean: typeof true,
-            Number: typeof 0,
-            String: typeof "",
-            Object: typeof {},
-            Undefined: typeof undefined,
-            Function: typeof function () { }
-        };
-        // TODO:use default equalityComparer
-        var TupleArray = function () {
-            this.items = arguments;
-        }
-        TupleArray.prototype.equals = function (other) {
-            if (other == null) return false;
-            if (!(other instanceof TupleArray)) return false;
-            if (this === other) return true;
+   
 
-            var len = this.items.length;
-            if (len != other.length) return false;
-
-            for (var i = 0; i < len; i++) {
-                var item = this.items[i];
-                if (item != null && typeof item.equals === Types.Function) {
-                    if (!item.equals(other.items[i])) return false;
-                }
-                else {
-                    if (item !== other.items[i]) return false;
-                }
-            }
-            return true;
-        }
-        TupleArray.prototype.getHashCode = function () {
-            var len = this.items.length;
-            var sb = [];
-            for (var i = 0; i < len; i++) {
-                var item = this.items[i];
-
-                if (item === null) {
-                    sb.push(i + ":" + "null");
-                } else if (item === undefined) {
-                    sb.push(i + ":" + "undefined");
-                } else if (typeof item.getHashCode === Types.Function) {
-                    sb.push(i + ":" + item.getHashCode());
-                }
-                else {
-                    sb.push(i + ":" + item.toString());
-                }
-            }
-            return sb.join("-");
-        }
-
-
-        var v = new TupleArray(1, new TupleArray("hoge", "huga"), 3, 4, 5).getHashCode();
+        
 
 
         
@@ -68,7 +18,12 @@
 
 
 
-        alert(v);
+
+        var tuple1 = Enumerable.Utils.createTupleArray(1, 2);
+        var tuple2 = Enumerable.Utils.createTupleArray(1, 2);
+        var tuple3 = Enumerable.Utils.createTupleArray(1, 20);
+
+        var _ = tuple1.equals(tuple2);
 
 
 

@@ -10,14 +10,14 @@ var obj1_ = { a: 1 }
 var obj2 = { a: 2 }
 var obj2_ = { a: 2 }
 
-var Tuple = function (x, y) {
+var SimpleTuple = function (x, y) {
     this.x = x;
     this.y = y;
 }
-Tuple.prototype.equals = function (other) {
+SimpleTuple.prototype.equals = function (other) {
     return this.x === other.x && this.y === other.y;
 }
-Tuple.prototype.getHashCode = function () {
+SimpleTuple.prototype.getHashCode = function () {
     return "X:" + this.x + "_" + "Y:" + this.y;
 }
 
@@ -174,11 +174,11 @@ test("toEnumerable", function ()
 test("tupleCheck", function () {
     var dict = Enumerable.Utils.createDictionary();
     
-    dict.add(new Tuple(10, 20), 1000);
-    dict.get(new Tuple(10, 20)).is(1000);
+    dict.add(new SimpleTuple(10, 20), 1000);
+    dict.get(new SimpleTuple(10, 20)).is(1000);
 
-    dict.add(new Tuple(10, 20), 10000);
-    dict.get(new Tuple(10, 20)).is(10000);
+    dict.add(new SimpleTuple(10, 20), 10000);
+    dict.get(new SimpleTuple(10, 20)).is(10000);
 
     dict.count().is(1);
     

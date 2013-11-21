@@ -139,6 +139,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="sample\LinqJS.cs" />
+    <Content Include="test\tuple.js" />
     <Content Include="test\whereSelectEnumerable.js" />
   </ItemGroup>
   <ItemGroup>
