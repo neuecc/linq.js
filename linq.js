@@ -228,19 +228,25 @@
 
     var Tuple = function (item1, item2, item3, item4, item5, item6, item7, item8) {
         this.item1 = item1;
+        // item2~8 is option, no passing argument assings undefined
         this.item2 = item2;
-        if (item3 === undefined) { return; } else { this.item3 = item3; }
-        if (item4 === undefined) { return; } else { this.item4 = item4; }
-        if (item5 === undefined) { return; } else { this.item5 = item5; }
-        if (item6 === undefined) { return; } else { this.item6 = item6; }
-        if (item7 === undefined) { return; } else { this.item7 = item7; }
-        if (item8 === undefined) { return; } else { this.item8 = item8; }
+        this.item3 = item3;
+        this.item4 = item4;
+        this.item5 = item5;
+        this.item6 = item6;
+        this.item7 = item7;
+        this.item8 = item8;
     }
     Tuple.prototype.equals = function (other) {
+        if (other == null) return false;
+        if (!(other instanceof Tuple)) return false;
+        if (this === other) return true;
+
         var comparer = EqualityComparer.Default;
         if (!comparer.equals(this.item1, other.item1)) return false;
-        if (!comparer.equals(this.item2, other.item2)) return false;
 
+        if (this.item2 === undefined) return true;
+        if (!comparer.equals(this.item2, other.item2)) return false;
         if (this.item3 === undefined) return true;
         if (!comparer.equals(this.item3, other.item3)) return false;
         if (this.item4 === undefined) return true;
@@ -259,8 +265,9 @@
     Tuple.prototype.getHashCode = function () {
         var sb = []; // sb as StringBuilder
         sb.push("1:" + EqualityComparer.Default.getHashCode(this.item1));
+
+        if (this.item2 === undefined) return sb.join("-");
         sb.push("2:" + EqualityComparer.Default.getHashCode(this.item2));
-                     
         if (this.item3 === undefined) return sb.join("-");
         sb.push("3:" + EqualityComparer.Default.getHashCode(this.item3));
         if (this.item4 === undefined) return sb.join("-");
