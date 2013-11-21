@@ -33,6 +33,24 @@ test("Tuple", function () {
     combTuple.getHashCode().is("1:a-2:1:1-2:2");
 });
 
+test("TupleOverload", function () {
+    var tuple = Enumerable.Utils.createTuple("a", "b", "c", "d", "e", "f", "g", "h");
+    tuple.item1.is("a");
+    tuple.item2.is("b");
+    tuple.item3.is("c");
+    tuple.item4.is("d");
+    tuple.item5.is("e");
+    tuple.item6.is("f");
+    tuple.item7.is("g");
+    tuple.item8.is("h");
+    
+    var tuple2 = Enumerable.Utils.createTuple("a", "b", "c", "d", "e", "f", "g", "h");
+    var tuple3 = Enumerable.Utils.createTuple("a", "b", "c", "d", "e", "f", "g", "z");
+
+    tuple.equals(tuple2).isTrue();
+    tuple.equals(tuple3).isFalse();
+});
+
 test("TupleArray", function () {
     var tuple1 = Enumerable.Utils.createTupleArray(1, 2);
     var tuple2 = Enumerable.Utils.createTupleArray(1, 2);

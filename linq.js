@@ -226,18 +226,55 @@
 
     // Tuples
 
-    var Tuple = function (item1, item2) {
+    var Tuple = function (item1, item2, item3, item4, item5, item6, item7, item8) {
         this.item1 = item1;
         this.item2 = item2;
+        if (item3 === undefined) { return; } else { this.item3 = item3; }
+        if (item4 === undefined) { return; } else { this.item4 = item4; }
+        if (item5 === undefined) { return; } else { this.item5 = item5; }
+        if (item6 === undefined) { return; } else { this.item6 = item6; }
+        if (item7 === undefined) { return; } else { this.item7 = item7; }
+        if (item8 === undefined) { return; } else { this.item8 = item8; }
     }
     Tuple.prototype.equals = function (other) {
-        if (!EqualityComparer.Default.equals(this.item1, other.item1)) return false;
-        if (!EqualityComparer.Default.equals(this.item2, other.item2)) return false;
+        var comparer = EqualityComparer.Default;
+        if (!comparer.equals(this.item1, other.item1)) return false;
+        if (!comparer.equals(this.item2, other.item2)) return false;
+
+        if (this.item3 === undefined) return true;
+        if (!comparer.equals(this.item3, other.item3)) return false;
+        if (this.item4 === undefined) return true;
+        if (!comparer.equals(this.item4, other.item4)) return false;
+        if (this.item5 === undefined) return true;
+        if (!comparer.equals(this.item5, other.item5)) return false;
+        if (this.item6 === undefined) return true;
+        if (!comparer.equals(this.item6, other.item6)) return false;
+        if (this.item7 === undefined) return true;
+        if (!comparer.equals(this.item7, other.item7)) return false;
+        if (this.item8 === undefined) return true;
+        if (!comparer.equals(this.item8, other.item8)) return false;
+
         return true;
     }
     Tuple.prototype.getHashCode = function () {
-        return "1:" + EqualityComparer.Default.getHashCode(this.item1) + "-"
-             + "2:" + EqualityComparer.Default.getHashCode(this.item2);
+        var sb = []; // sb as StringBuilder
+        sb.push("1:" + EqualityComparer.Default.getHashCode(this.item1));
+        sb.push("2:" + EqualityComparer.Default.getHashCode(this.item2));
+                     
+        if (this.item3 === undefined) return sb.join("-");
+        sb.push("3:" + EqualityComparer.Default.getHashCode(this.item3));
+        if (this.item4 === undefined) return sb.join("-");
+        sb.push("4:" + EqualityComparer.Default.getHashCode(this.item4));
+        if (this.item5 === undefined) return sb.join("-");
+        sb.push("5:" + EqualityComparer.Default.getHashCode(this.item5));
+        if (this.item6 === undefined) return sb.join("-");
+        sb.push("6:" + EqualityComparer.Default.getHashCode(this.item6));
+        if (this.item7 === undefined) return sb.join("-");
+        sb.push("7:" + EqualityComparer.Default.getHashCode(this.item7));
+        if (this.item8 === undefined) return sb.join("-");
+        sb.push("8:" + EqualityComparer.Default.getHashCode(this.item8));
+
+        return sb.join("-");
     }
 
     var TupleArray = function (itemsArray) {
@@ -300,8 +337,8 @@
         return new Dictionary(compareSelectorOrEqualityComparer);
     };
 
-    Enumerable.Utils.createTuple = function (item1, item2) {
-        return new Tuple(item1, item2);
+    Enumerable.Utils.createTuple = function (item1, item2, item3, item4, item5, item6, item7, item8) {
+        return new Tuple(item1, item2, item3, item4, item5, item6, item7, item8);
     };
 
     Enumerable.Utils.createTupleArray = function () {
