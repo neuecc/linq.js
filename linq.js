@@ -332,6 +332,15 @@
         return new IEnumerator(initialize, tryGetNext, dispose);
     };
 
+    Enumerable.Utils.getDefaultEqualityComparer = function() {
+        return EqualityComparer.Default;
+    };
+
+    /**
+     * Create new EqualityComparer
+     * @param equals => (x:T y:T) => bool
+     * @param getHashCode(obj:T) => string
+     */
     Enumerable.Utils.createEqualityComparer = function (equals, getHashCode) {
         return new EqualityComparer(equals, getHashCode);
     };

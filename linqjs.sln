@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "linqjs", "linqjs.njsproj", "{86F01232-E568-4842-9C6C-D77D640AF320}"
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "linqjs.node", "linqjs.node.njsproj", "{86F01232-E568-4842-9C6C-D77D640AF320}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "linqjs.cs", "linqjs.cs.csproj", "{DC812232-055B-44AD-AA48-DB38CD012ABE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{86F01232-E568-4842-9C6C-D77D640AF320}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86F01232-E568-4842-9C6C-D77D640AF320}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{86F01232-E568-4842-9C6C-D77D640AF320}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC812232-055B-44AD-AA48-DB38CD012ABE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC812232-055B-44AD-AA48-DB38CD012ABE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC812232-055B-44AD-AA48-DB38CD012ABE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC812232-055B-44AD-AA48-DB38CD012ABE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
