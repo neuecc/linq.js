@@ -383,13 +383,16 @@
         });
     };
 
+    // private singleton
+    var emptyEnumerable = new Enumerable(function () {
+        return new IEnumerator(
+            Functions.Blank,
+            function () { return false; },
+            Functions.Blank);
+    });
+
     Enumerable.empty = function () {
-        return new Enumerable(function () {
-            return new IEnumerator(
-                Functions.Blank,
-                function () { return false; },
-                Functions.Blank);
-        });
+        return emptyEnumerable;
     };
 
     Enumerable.from = function (obj) {
