@@ -31,6 +31,7 @@
 *.vspscc
 .builds
 *.dotCover
+*.sln.ide
 
 packages/
 
