@@ -3081,9 +3081,7 @@
                     var array = this.buckets[hash];
                     for (var i = 0; i < array.length; i++) {
                         if (this.equalityComparer.equals(array[i].key, key)) {
-                            this.entryList.replace(array[i], entry);
-                            array[i] = entry;
-                            return;
+                            return false;
                         }
                     }
                     array.push(entry);
@@ -3092,6 +3090,7 @@
                 }
                 this.countField++;
                 this.entryList.addLast(entry);
+                return true;
             },
 
             get: function (key) {
@@ -3108,18 +3107,22 @@
 
             set: function (key, value) {
                 var hash = this.equalityComparer.getHashCode(key);
+                var entry = new HashEntry(key, value);
                 if (callHasOwnProperty(this.buckets, hash)) {
                     var array = this.buckets[hash];
                     for (var i = 0; i < array.length; i++) {
                         if (this.equalityComparer.equals(array[i].key, key)) {
-                            var newEntry = new HashEntry(key, value);
-                            this.entryList.replace(array[i], newEntry);
-                            array[i] = newEntry;
-                            return true;
+                            this.entryList.replace(array[i], entry);
+                            array[i] = entry;
+                            return;
                         }
                     }
+                    array.push(entry);
+                } else {
+                    this.buckets[hash] = [entry];
                 }
-                return false;
+                this.countField++;
+                this.entryList.addLast(entry);
             },
 
             contains: function (key) {
