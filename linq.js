@@ -1606,8 +1606,7 @@
                 function () {
                     while (enumerator.moveNext()) {
                         var current = enumerator.current();
-                        if (!keys.contains(current)) {
-                            keys.add(current);
+                        if (keys.add(current)) {
                             return this.yieldReturn(current);
                         }
                     }
@@ -1639,8 +1638,7 @@
                 function () {
                     while (enumerator.moveNext()) {
                         var current = enumerator.current();
-                        if (!outs.contains(current) && keys.contains(current)) {
-                            outs.add(current);
+                        if (keys.contains(current) && outs.add(current)) {
                             return this.yieldReturn(current);
                         }
                     }
@@ -1697,8 +1695,7 @@
                     if (secondEnumerator === undefined) {
                         while (firstEnumerator.moveNext()) {
                             current = firstEnumerator.current();
-                            if (!keys.contains(current)) {
-                                keys.add(current);
+                            if (keys.add(current)) {
                                 return this.yieldReturn(current);
                             }
                         }
@@ -1706,8 +1703,7 @@
                     }
                     while (secondEnumerator.moveNext()) {
                         current = secondEnumerator.current();
-                        if (!keys.contains(current)) {
-                            keys.add(current);
+                        if (keys.add(current)) {
                             return this.yieldReturn(current);
                         }
                     }
