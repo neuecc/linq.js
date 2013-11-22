@@ -64,6 +64,7 @@
     <Content Include="test\convert.js" />
     <Content Include="test\dictionary.js" />
     <Content Include="test\enumerable.js" />
+    <Content Include="test\list.js" />
     <Content Include="test\equalityComparer.js" />
     <Content Include="test\errorHandling.js" />
     <Content Include="test\functional.js" />

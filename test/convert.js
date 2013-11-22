@@ -62,6 +62,14 @@ test("toDictionary", function ()
     equal(12, actual.get({ key: 3 }));
 });
 
+test("toList", function () {
+    var l = Enumerable.range(1, 10).toList();
+    l.is(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+    l.push(1000);
+    l.is(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1000);
+});
+
 test("toJoinedString", function ()
 {
     actual = Enumerable.range(1, 3).toJoinedString();
