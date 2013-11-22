@@ -134,6 +134,8 @@ test("takeFromLast", function () {
     deepEqual(actual, []);
     actual = Enumerable.range(1, 10).takeFromLast(-10).toArray();
     deepEqual(actual, []);
+
+    Enumerable.empty().takeFromLast(5).isEmpty().isTrue();
 });
 
 test("indexOf", function () {

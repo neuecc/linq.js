@@ -337,7 +337,7 @@
         return new IEnumerator(initialize, tryGetNext, dispose);
     };
 
-    Enumerable.Utils.getDefaultEqualityComparer = function() {
+    Enumerable.Utils.getDefaultEqualityComparer = function () {
         return EqualityComparer.Default;
     };
 
@@ -359,7 +359,7 @@
         return new Dictionary(compareSelectorOrEqualityComparer);
     };
 
-    Enumerable.Utils.createList = function(){
+    Enumerable.Utils.createList = function () {
         return new List();
     };
 
@@ -2254,11 +2254,11 @@
             return new IEnumerator(
                 function () { sourceEnumerator = source.getEnumerator(); },
                 function () {
-                    while (sourceEnumerator.moveNext()) {
-                        if (q.length == count) q.shift();
-                        q.push(sourceEnumerator.current());
-                    }
                     if (enumerator == null) {
+                        while (sourceEnumerator.moveNext()) {
+                            if (q.length == count) q.shift();
+                            q.push(sourceEnumerator.current());
+                        }
                         enumerator = Enumerable.from(q).getEnumerator();
                     }
                     return (enumerator.moveNext())
@@ -2331,7 +2331,7 @@
         return array;
     };
 
-    Enumerable.prototype.toList = function() {
+    Enumerable.prototype.toList = function () {
         var list = new List();
         this.forEach(function (x) { list.push(x); });
         return list;
@@ -3179,7 +3179,7 @@
     };
     Grouping.prototype = new ArrayEnumerable();
 
-    var List = function(){
+    var List = function () {
     };
     List.prototype = new Array(); // TODO:is this inheritance ok?
     Enumerable.Utils.extendTo(List, true); // forceAppend, rewrite original methods
