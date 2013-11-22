@@ -76,8 +76,8 @@ test("contains", function () {
     ok(!seq.contains(13));
 
     seq = Enumerable.range(1, 10).select("{test:$%2}");
-    ok(seq.contains(1, "$.test"));
-    ok(!seq.contains(3, "$.test"));
+    ok(seq.contains({ test: 1 }, "$.test"));
+    ok(!seq.contains({ test: 3 }, "$.test"));
 });
 
 test("defaultIfEmpty", function () {
@@ -176,7 +176,7 @@ test("Loop Reduce C#Compatibility Union", function () {
     ysReduce.isEmpty();
 
     xsReduce = [];
-    
+
     xs.union(ys).take(4).force();
 
     xsReduce.is(-1, -2, -3);

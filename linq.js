@@ -77,6 +77,24 @@
             return expression;
         },
 
+        createEqualityComparerFrom: function (compareSelectorOrEqualityComparer) {
+            var equalityComparer = (compareSelectorOrEqualityComparer == null) ? EqualityComparer.Default
+                : (typeof compareSelectorOrEqualityComparer === Types.Function) ? EqualityComparer.createKeyComparer(compareSelectorOrEqualityComparer)
+                : (typeof compareSelectorOrEqualityComparer === Types.String) ? EqualityComparer.createKeyComparer(compareSelectorOrEqualityComparer)
+                : compareSelectorOrEqualityComparer instanceof EqualityComparer ? compareSelectorOrEqualityComparer
+                : null;
+            if (equalityComparer == null) {
+                // structural subtyping - getHashCode and equals
+                if (typeof compareSelectorOrEqualityComparer.getHashCode === Types.Function && typeof compareSelectorOrEqualityComparer.equals === Types.Function) {
+                    equalityComparer = compareSelectorOrEqualityComparer;
+                }
+                else {
+                    throw new Error("compareSelectorOrEqualityComparer must be null or function or EqualityComparer or implements equal and getHashCode.");
+                }
+            }
+            return equalityComparer;
+        },
+
         isIEnumerable: function (obj) {
             if (typeof Enumerator !== Types.Undefined) {
                 try {
@@ -216,6 +234,8 @@
         });
 
     EqualityComparer.createKeyComparer = function (compareKeySelector) {
+        compareKeySelector = Utils.createLambda(compareKeySelector);
+
         return new EqualityComparer(function (x, y) {
             if (x === y) return true;
             if (x == null || y == null) return false;
@@ -351,7 +371,6 @@
     };
 
     Enumerable.Utils.createKeyedEqualityComparer = function (keySelector) {
-        keySelector = Utils.createLambda(keySelector);
         return EqualityComparer.createKeyComparer(keySelector);
     };
 
@@ -1486,13 +1505,13 @@
     };
 
     // Overload:function(value)
-    // Overload:function(value, compareSelector)
-    Enumerable.prototype.contains = function (value, compareSelector) {
-        compareSelector = Utils.createLambda(compareSelector);
+    // Overload:function(value, compareSelectorOrEqualityComparer)
+    Enumerable.prototype.contains = function (value, compareSelectorOrEqualityComparer) {
+        var equalityComparer = Utils.createEqualityComparerFrom(compareSelectorOrEqualityComparer);
         var enumerator = this.getEnumerator();
         try {
             while (enumerator.moveNext()) {
-                if (compareSelector(enumerator.current()) === value) return true;
+                if (equalityComparer.equals(enumerator.current(), value)) return true;
             }
             return false;
         }
@@ -3051,11 +3070,7 @@
             this.countField = 0;
             this.entryList = new EntryList();
             this.buckets = {}; // as Dictionary<string,List<object>>
-            this.equalityComparer = (compareSelectorOrEqualityComparer == null) ? EqualityComparer.Default
-                : (typeof compareSelectorOrEqualityComparer === Types.Function) ? EqualityComparer.createKeyComparer(compareSelectorOrEqualityComparer)
-                : compareSelectorOrEqualityComparer instanceof EqualityComparer ? compareSelectorOrEqualityComparer
-                : null;
-            if (this.equalityComparer == null) throw new Error("compareSelectorOrEqualityComparer must be null or function or EqualityComparer");
+            this.equalityComparer = Utils.createEqualityComparerFrom(compareSelectorOrEqualityComparer);
         };
         Dictionary.prototype =
         {
