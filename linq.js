@@ -204,6 +204,11 @@
                 return obj.getHashCode();
             }
 
+            // specialize for Date
+            if (obj instanceof Date) {
+                return "" + obj.getTime();
+            }
+
             // string as HashCode
             return (typeof obj.toString === Types.Function)
                 ? obj.toString()
@@ -346,6 +351,7 @@
     };
 
     Enumerable.Utils.createKeyedEqualityComparer = function (keySelector) {
+        keySelector = Utils.createLambda(keySelector);
         return EqualityComparer.createKeyComparer(keySelector);
     };
 
