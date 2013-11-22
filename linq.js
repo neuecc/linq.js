@@ -353,6 +353,10 @@
         return new Dictionary(compareSelectorOrEqualityComparer);
     };
 
+    Enumerable.Utils.createList = function(){
+        return new List();
+    };
+
     Enumerable.Utils.createTuple = function (item1, item2, item3, item4, item5, item6, item7, item8) {
         return new Tuple(item1, item2, item3, item4, item5, item6, item7, item8);
     };
@@ -361,11 +365,12 @@
         return new TupleArray(arguments);
     };
 
-    Enumerable.Utils.extendTo = function (type) {
+    Enumerable.Utils.extendTo = function (type, forceAppend) {
+        forceAppend = (forceAppend == null) ? false : forceAppend;
         var typeProto = type.prototype;
         var enumerableProto;
 
-        if (type === Array) {
+        if (type === Array || type === List) {
             enumerableProto = ArrayEnumerable.prototype;
             Utils.defineProperty(typeProto, "getSource", function () {
                 return this;
@@ -385,7 +390,7 @@
             if (typeProto[methodName] == func) continue;
 
             // already defined(example Array#reverse/join/forEach...)
-            if (typeProto[methodName] != null) {
+            if (typeProto[methodName] != null && !forceAppend) {
                 methodName = methodName + "ByLinq";
                 if (typeProto[methodName] == func) continue; // recheck
             }
@@ -2320,6 +2325,12 @@
         return array;
     };
 
+    Enumerable.prototype.toList = function() {
+        var list = new List();
+        this.forEach(function (x) { list.push(x); });
+        return list;
+    };
+
     // Overload:function(keySelector)
     // Overload:function(keySelector, elementSelector)
     // Overload:function(keySelector, elementSelector, compareSelector)
@@ -3161,6 +3172,11 @@
         ArrayEnumerable.call(this, elements);
     };
     Grouping.prototype = new ArrayEnumerable();
+
+    var List = function(){
+    };
+    List.prototype = new Array(); // TODO:is this inheritance ok?
+    Enumerable.Utils.extendTo(List, true); // forceAppend, rewrite original methods
 
     // module export
     if (typeof define === Types.Function && define.amd) { // AMD
