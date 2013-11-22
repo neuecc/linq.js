@@ -32,6 +32,20 @@ test("orderBy", function () {
     Enumerable.rangeTo(10, 1).orderBy("$%5").is(10, 5, 6, 1, 7, 2, 8, 3, 9, 4);
 });
 
+test("orderBy2", function () {
+    actual = Enumerable.from([1, 52, 7, 822, 85, 31, 50, 99])
+        .orderBy("i=>i", function (x, y) {
+            // even is smaller comparison
+            if (x === y) return 0;
+            if (x % 2 == 0 && y % 2 == 0) return 0; // to ThenBy
+            if (x % 2 == 0) return -1;
+            return 1;
+        })
+        .thenBy() // smaller is first
+        .take(3)
+        .is(50, 52, 822); // odd's order is unknown
+});
+
 test("orderByDescending", function () {
     actual = Enumerable.from([1, 51, 7, 823, 85, 31, 51, 99])
         .orderByDescending("i=>i")
@@ -39,6 +53,20 @@ test("orderByDescending", function () {
     deepEqual(actual, [823, 99, 85, 51, 51, 31, 7, 1]);
 
     Enumerable.rangeTo(1, 10).orderByDescending("$%5").is(4, 9, 3, 8, 2, 7, 1, 6, 5, 10);
+});
+
+test("orderByDescending2", function () {
+    actual = Enumerable.from([1, 52, 7, 822, 85, 31, 50, 99])
+        .orderByDescending("i=>i", function (x, y) {
+            // even is smaller comparison
+            if (x === y) return 0;
+            if (x % 2 == 0 && y % 2 == 0) return 0; // to ThenBy
+            if (x % 2 == 0) return -1;
+            return 1;
+        })
+        .thenBy() // smaller is first
+        .takeFromLast(3)
+        .is(50, 52, 822); // odd's order is unknown
 });
 
 test("thenBy", function () {
@@ -72,6 +100,29 @@ test("thenBy", function () {
     deepEqual(actual, expected);
 });
 
+test("thenBy2", function () {
+    actual = Enumerable.from(list)
+        .orderBy("l=>l.a")
+        .thenBy("l=>l.b", function (x, y) {
+            // even is smaller comparison
+            if (x === y) return 0;
+            if (x % 2 == 0 && y % 2 == 0) return 0; // to ThenBy
+            if (x % 2 == 0) return -1;
+            return 1;
+        })
+        .thenBy("l=>l.c")
+        .toArray();
+    expected = [
+        { a: 2, b: 4, c: 1 },
+        { a: 2, b: 3, c: 7 },
+        { a: 4, b: 4, c: 3 },
+        { a: 4, b: 4, c: 5 },
+        { a: 6, b: 6, c: 3 },
+        { a: 7, b: 3, c: 2 }
+    ];
+    deepEqual(actual, expected);
+});
+
 test("thenByDescending", function () {
     actual = Enumerable.from(list)
         .orderByDescending("l=>l.a")
@@ -99,6 +150,29 @@ test("thenByDescending", function () {
         { a: "n", b: "d", c: "o" },
         { a: "a", b: "z", c: "b" },
         { a: "a", b: "c", c: "k" }
+    ];
+    deepEqual(actual, expected);
+});
+
+test("thenByDescending2", function () {
+    actual = Enumerable.from(list)
+        .orderByDescending("l=>l.a")
+        .thenByDescending("l=>l.b", function (x, y) {
+            // even is smaller comparison
+            if (x === y) return 0;
+            if (x % 2 == 0 && y % 2 == 0) return 0; // to ThenBy
+            if (x % 2 == 0) return -1;
+            return 1;
+        })
+        .thenByDescending("l=>l.c")
+        .toArray();
+    expected = [
+        { a: 7, b: 3, c: 2 },
+        { a: 6, b: 6, c: 3 },
+        { a: 4, b: 4, c: 5 },
+        { a: 4, b: 4, c: 3 },
+        { a: 2, b: 3, c: 7 },
+        { a: 2, b: 4, c: 1 }
     ];
     deepEqual(actual, expected);
 });
