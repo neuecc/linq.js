@@ -6,6 +6,8 @@ Info
 ---
 Archive, import from Codeplex.
 
+I recommend use fork version - [mihaifm/linq](https://github.com/mihaifm/linq)
+
 Features
 ---
 * implement all .NET 4.0 methods and many extra methods (inspired from Rx, Haskell, Ruby, etc...)
